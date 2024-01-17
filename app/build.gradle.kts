@@ -54,6 +54,7 @@ android {
 }
 
 dependencies {
+    implementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso)
@@ -87,6 +88,7 @@ dependencies {
 
     // di
     implementation(libs.hilt.android)
+    androidTestImplementation(platform(libs.androidx.compose.bom))
     kapt(libs.hilt.android.compiler)
 
     // room
