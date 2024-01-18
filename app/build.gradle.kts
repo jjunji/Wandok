@@ -69,14 +69,18 @@ dependencies {
     implementation(libs.compose.ui)
     implementation(libs.compose.ui.graphics)
     implementation(libs.compose.ui.preview)
-    implementation(libs.compose.material3)
+//    implementation(libs.compose.material3)
     implementation(platform(libs.androidx.compose.bom))
+    implementation(libs.compose.material)
 
     // compose - optional
     implementation(libs.compose.activity)
     implementation(libs.compose.viewmodel)
     implementation(libs.compose.livedata)
     implementation(libs.compose.rxjava2)
+
+    // ui
+    implementation(libs.navigation.compose)
 
     // liveData, viewModel, savedState, runtime-ktx
     implementation(libs.bundles.lifecycle)

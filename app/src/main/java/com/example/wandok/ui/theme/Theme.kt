@@ -1,30 +1,24 @@
 package com.example.wandok.ui.theme
 
 import android.app.Activity
-import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.darkColorScheme
-import androidx.compose.material3.dynamicDarkColorScheme
-import androidx.compose.material3.dynamicLightColorScheme
-import androidx.compose.material3.lightColorScheme
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.darkColors
+import androidx.compose.material.lightColors
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.SideEffect
 import androidx.compose.ui.graphics.toArgb
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.core.view.WindowCompat
 
-private val DarkColorScheme = darkColorScheme(
+private val DarkColorPalette = darkColors(
     primary = Purple80,
     secondary = PurpleGrey80,
-    tertiary = Pink80
 )
 
-private val LightColorScheme = lightColorScheme(
+private val LightColorPalette = lightColors(
     primary = Red100,
     secondary = Red200,
-    tertiary = Red300,
     background = WhiteOrange
     /* Other default colors to override
     background = Color(0xFFFFFBFE),
@@ -43,8 +37,8 @@ fun WandokTheme(
     content: @Composable () -> Unit
 ) {
     val colorScheme = when {
-        darkTheme -> DarkColorScheme
-        else -> LightColorScheme
+        darkTheme -> DarkColorPalette
+        else -> LightColorPalette
     }
     val view = LocalView.current
     if (!view.isInEditMode) {
@@ -56,7 +50,7 @@ fun WandokTheme(
     }
 
     MaterialTheme(
-        colorScheme = colorScheme,
+        colors = colorScheme,
         typography = Typography,
         content = content
     )
