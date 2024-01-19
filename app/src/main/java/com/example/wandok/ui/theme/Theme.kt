@@ -19,7 +19,7 @@ private val DarkColorPalette = darkColors(
 private val LightColorPalette = lightColors(
     primary = Red100,
     secondary = Red200,
-    background = WhiteOrange
+    background = BackGround
     /* Other default colors to override
     background = Color(0xFFFFFBFE),
     surface = Color(0xFFFFFBFE),

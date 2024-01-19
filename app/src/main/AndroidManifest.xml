@@ -13,12 +13,12 @@
         android:theme="@style/Theme.Wandok"
         tools:targetApi="31">
         <activity
-            android:name=".MainActivity"
+            android:name=".ui.MainActivity"
             android:exported="false"
             android:label="@string/title_activity_launcher"
             android:theme="@style/Theme.Wandok" />
         <activity
-            android:name=".ui.LauncherActivity"
+            android:name=".LauncherActivity"
             android:exported="true"
             android:theme="@style/Theme.Wandok">
             <intent-filter>
