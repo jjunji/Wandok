@@ -1,4 +1,4 @@
-package com.example.wandok
+package com.example.wandok.ui
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -15,6 +15,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.navigation.NavController
+import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
@@ -27,7 +29,7 @@ fun MainScreen() {
 
     val bottomNavRoutes = listOf(
         RootScreen.Home,
-        RootScreen.Add,
+        RootScreen.Search,
         RootScreen.WandokList,
         RootScreen.MyPage
     )
@@ -74,15 +76,19 @@ fun BottomNavBar(
                 },
                 selected = currentRoute == item.route,
                 onClick = {
-                    navController.navigate(item.route) {
-                        navController.graph.startDestinationRoute?.let {
-                            popUpTo(it) { saveState = true }
-                        }
-                        launchSingleTop = true
-                        restoreState = true
-                    }
+                    navController.navigateToRootScreen(item)
                 }
             )
+        }
+    }
+}
+
+private fun NavController.navigateToRootScreen(rootScreen: RootScreen) {
+    navigate(rootScreen.route) {
+        launchSingleTop = true
+        restoreState = true
+        popUpTo(graph.findStartDestination().id) {
+            saveState = true
         }
     }
 }
