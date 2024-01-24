@@ -15,6 +15,7 @@ import androidx.lifecycle.lifecycleScope
 import com.example.wandok.common.constants.AppConstant.SPLASH_TIME
 import com.example.wandok.common.extension.IntentExt.navigateActivity
 import com.example.wandok.ui.MainActivity
+import com.example.wandok.ui.login.LoginActivity
 import com.example.wandok.ui.theme.WandokTheme
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -28,7 +29,7 @@ class LauncherActivity : ComponentActivity() {
         lifecycleScope.launch {
             delay(SPLASH_TIME)
             finishAffinity()
-            navigateActivity(MainActivity::class.java)
+            navigateActivity(LoginActivity::class.java)
         }
     }
 }

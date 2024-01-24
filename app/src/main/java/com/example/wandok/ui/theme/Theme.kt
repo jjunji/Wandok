@@ -2,13 +2,17 @@ package com.example.wandok.ui.theme
 
 import android.app.Activity
 import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Shapes
 import androidx.compose.material.darkColors
 import androidx.compose.material.lightColors
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.SideEffect
+import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalView
+import androidx.compose.ui.unit.dp
 import androidx.core.view.WindowCompat
 
 private val DarkColorPalette = darkColors(
@@ -29,6 +33,10 @@ private val LightColorPalette = lightColors(
     onBackground = Color(0xFF1C1B1F),
     onSurface = Color(0xFF1C1B1F),
     */
+)
+
+private val shapes = Shapes(
+    small = RoundedCornerShape(10.dp)
 )
 
 @Composable
@@ -52,6 +60,7 @@ fun WandokTheme(
     MaterialTheme(
         colors = colorScheme,
         typography = Typography,
-        content = content
+        content = content,
+        shapes = shapes
     )
 }
