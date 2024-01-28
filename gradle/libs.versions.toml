@@ -5,7 +5,7 @@ lifeCycleViewModelCompose = "2.5.1"
 jUnit = "4.13.2"
 androidxTestExt = "1.1.5"
 espressoCore = "3.5.1"
-composeBom = "2023.06.01"
+composeBom = "2024.01.00"
 ktx = "1.9.0"
 androidxLifecycle = "2.6.2"
 okhttp = "4.9.0"
@@ -22,6 +22,7 @@ spinkit = "1.4.0"
 room = "2.6.1"
 navigation = "2.7.6"
 material = "1.4.3"
+preview = "1.6.0"
 
 [libraries]
 androidx-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "ktx" }
@@ -29,7 +30,7 @@ lifecycle-runtime-ktx = { group = "androidx.lifecycle", name = "lifecycle-runtim
 androidx-compose-bom = { group = "androidx.compose", name = "compose-bom", version.ref = "composeBom" }
 compose-ui = { group = "androidx.compose.ui", name = "ui" }
 compose-ui-graphics = { group = "androidx.compose.ui", name = "ui-graphics" }
-compose-ui-preview = { group = "androidx.compose.ui", name = "ui-tooling-preview" }
+compose-ui-preview = { group = "androidx.compose.ui", name = "ui-tooling-preview", version.ref = "preview" }
 compose-ui-tooling = { group = "androidx.compose.ui", name = "ui-tooling" }
 compose-ui-manifest = { group = "androidx.compose.ui", name = "ui-test-manifest" }
 compose-ui-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4" }
