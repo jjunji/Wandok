@@ -23,5 +23,9 @@ private val baseTextStyle = TextStyle(
 
 // Set of Material typography styles to start with
 val Typography = Typography(
-
+    subtitle2 = TextStyle(
+        fontFamily = notosansFamily,
+        fontWeight = FontWeight.Bold,
+        fontSize = 14.sp
+    )
 )

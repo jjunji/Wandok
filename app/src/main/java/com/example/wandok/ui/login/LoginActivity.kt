@@ -19,9 +19,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Text
-import androidx.compose.material.TextField
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -39,6 +38,7 @@ import com.example.wandok.ui.core.EditText
 import com.example.wandok.ui.theme.BackGround
 import com.example.wandok.ui.theme.GrayC1
 import com.example.wandok.ui.theme.Red50
+import com.example.wandok.ui.theme.Typography
 import com.example.wandok.ui.theme.WandokTheme
 
 class LoginActivity : ComponentActivity() {
@@ -90,34 +90,53 @@ fun Logo() {
 @Composable
 fun LoginForm() {
     Column(
-        modifier = Modifier.padding(top = 52.dp)
+        modifier = Modifier.padding(top = 52.dp, start = 20.dp, end = 20.dp)
     ) {
         Text(
+            style = Typography.subtitle2,
             text = stringResource(id = R.string.common_id),
             color = GrayC1,
             fontSize = 14.sp
         )
 
         val id = remember { mutableStateOf("") }
-        EditText(
-            text = id.value,
-            onValueChange = { id.value = it },
-            hint = stringResource(id = R.string.common_id)
-        )
+
+        Box(
+            modifier = Modifier
+                .border(width = 2.dp, color = GrayC1, shape = RoundedCornerShape(10.dp))
+        ) {
+            EditText(
+                text = id.value,
+                onValueChange = { id.value = it },
+                hint = stringResource(id = R.string.common_id)
+            )
+        }
 
         Text(
+            modifier = Modifier.padding(top = 10.dp),
+            style = Typography.subtitle2,
             text = stringResource(id = R.string.common_pwd),
             color = GrayC1,
             fontSize = 14.sp
         )
 
         val pwd = remember { mutableStateOf("") }
-        EditText(
-            text = pwd.value,
-            onValueChange = { pwd.value = it },
-            hint = stringResource(id = R.string.common_pwd)
-        )
+        Box(
+            modifier = Modifier
+                .border(width = 2.dp, color = GrayC1, shape = RoundedCornerShape(10.dp))
+        ) {
+            EditText(
+                text = pwd.value,
+                onValueChange = { pwd.value = it },
+                hint = stringResource(id = R.string.common_pwd)
+            )
+        }
     }
+}
+
+@Composable
+fun LoginOption() {
+
 }
 
 @Composable
