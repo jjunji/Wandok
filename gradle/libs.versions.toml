@@ -21,8 +21,7 @@ kotlin = "1.8.10"
 spinkit = "1.4.0"
 room = "2.6.1"
 navigation = "2.7.6"
-material = "1.4.3"
-preview = "1.6.0"
+#material = "1.4.3"
 
 [libraries]
 androidx-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "ktx" }
@@ -30,11 +29,11 @@ lifecycle-runtime-ktx = { group = "androidx.lifecycle", name = "lifecycle-runtim
 androidx-compose-bom = { group = "androidx.compose", name = "compose-bom", version.ref = "composeBom" }
 compose-ui = { group = "androidx.compose.ui", name = "ui" }
 compose-ui-graphics = { group = "androidx.compose.ui", name = "ui-graphics" }
-compose-ui-preview = { group = "androidx.compose.ui", name = "ui-tooling-preview", version.ref = "preview" }
+compose-ui-preview = { group = "androidx.compose.ui", name = "ui-tooling-preview" }
 compose-ui-tooling = { group = "androidx.compose.ui", name = "ui-tooling" }
 compose-ui-manifest = { group = "androidx.compose.ui", name = "ui-test-manifest" }
 compose-ui-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4" }
-compose-material = { group = "androidx.compose.material", name = "material", version.ref = "material" }
+compose-material = { group = "androidx.compose.material", name = "material" }
 #compose-material3 = { group = "androidx.compose.material3", name = "material3" }
 
 # Optional - Integration with activities
@@ -80,7 +79,6 @@ room-ktx = { module = "androidx.room:room-ktx", version.ref = "room" }
 glide = { group = "com.github.bumptech.glide", name = "glide", version.ref = "glide" }
 glide-compiler = { group = "com.github.bumptech.glide", name = "compiler", version.ref = "glide" }
 spinkit = { group = "com.github.ybq", name = "Android-SpinKit", version.ref = "spinkit" }
-material3 = { group = "androidx.compose.material3", name = "material3" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "androidGradlePlugin" }

@@ -18,8 +18,11 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.Button
+import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
@@ -30,9 +33,11 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight.Companion.Bold
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.wandok.R
 import com.example.wandok.ui.core.EditText
 import com.example.wandok.ui.theme.BackGround
@@ -40,6 +45,7 @@ import com.example.wandok.ui.theme.GrayC1
 import com.example.wandok.ui.theme.Red50
 import com.example.wandok.ui.theme.Typography
 import com.example.wandok.ui.theme.WandokTheme
+import com.example.wandok.ui.theme.WhiteOrange
 
 class LoginActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -62,6 +68,8 @@ fun LoginScreen() {
         Column {
             Logo()
             LoginForm()
+            LoginOption()
+            LoginButton()
             AccountHelp()
         }
     }
@@ -87,6 +95,7 @@ fun Logo() {
     }
 }
 
+@Preview(showBackground = true)
 @Composable
 fun LoginForm() {
     Column(
@@ -134,17 +143,47 @@ fun LoginForm() {
     }
 }
 
+@Preview(showBackground = true)
 @Composable
 fun LoginOption() {
-
-}
-
-@Composable
-fun LoginButton() {
-
+    Row(
+        modifier = Modifier
+            .wrapContentSize()
+            .padding(start = 20.dp, top = 30.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Image(painter = painterResource(id = R.drawable.ic_checkbox_on), contentDescription = "")
+        Text(text = stringResource(id = R.string.common_save_id))
+        Image(
+            modifier = Modifier.padding(start = 30.dp),
+            painter = painterResource(id = R.drawable.ic_checkbox_off), contentDescription = ""
+        )
+        Text(text = stringResource(id = R.string.common_auto_login))
+    }
 }
 
 @Preview
+@Composable
+fun LoginButton() {
+    Button(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 20.dp),
+        onClick = { /*TODO*/ },
+        shape = RoundedCornerShape(4.dp),
+        colors = ButtonDefaults.outlinedButtonColors(
+            backgroundColor = if (true) WhiteOrange else WhiteOrange
+        )
+    ) {
+        Text(
+            text = stringResource(id = R.string.common_login),
+            color = Color.White,
+            fontWeight = Bold
+        )
+    }
+}
+
+@Preview(showBackground = true)
 @Composable
 fun AccountHelp() {
     Column(

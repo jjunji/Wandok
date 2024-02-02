@@ -54,7 +54,7 @@ android {
 }
 
 dependencies {
-    implementation(libs.material3)
+//    implementation(libs.material3)
     androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.androidx.espresso)
     androidTestImplementation(libs.junit)
@@ -69,6 +69,7 @@ dependencies {
     implementation(libs.compose.ui)
     implementation(libs.compose.ui.graphics)
     implementation(libs.compose.ui.preview)
+    debugImplementation(libs.compose.ui.tooling)
     implementation(libs.compose.material)
 
     // compose - optional
