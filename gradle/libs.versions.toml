@@ -22,6 +22,7 @@ spinkit = "1.4.0"
 room = "2.6.1"
 navigation = "2.7.6"
 #material = "1.4.3"
+hiltNavigationFragment = "1.0.0"
 
 [libraries]
 androidx-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "ktx" }
@@ -69,6 +70,7 @@ retrofit-kotlinx-serialization-converter = { group = "com.jakewharton.retrofit",
 # DI
 hilt-android = { group = "com.google.dagger", name = "hilt-android", version.ref = "hilt" }
 hilt-android-compiler = { group = "com.google.dagger", name = "hilt-compiler", version.ref = "hilt" }
+#hilt-navigation-fragment = { group = "androidx.navigation", name = "navigation-compose", version.ref = "hiltNavigationFragment"}
 
 # Room
 room-runtime = { module = "androidx.room:room-runtime", version.ref = "room" }

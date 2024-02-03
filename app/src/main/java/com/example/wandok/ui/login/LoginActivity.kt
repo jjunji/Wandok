@@ -1,6 +1,7 @@
 package com.example.wandok.ui.login
 
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.Image
@@ -25,8 +26,11 @@ import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Modifier
@@ -38,17 +42,21 @@ import androidx.compose.ui.text.font.FontWeight.Companion.Bold
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.wandok.R
 import com.example.wandok.ui.core.EditText
 import com.example.wandok.ui.core.grayRoundCorner
 import com.example.wandok.ui.theme.BackGround
 import com.example.wandok.ui.theme.DarkGray
 import com.example.wandok.ui.theme.GrayC1
+import com.example.wandok.ui.theme.Orange
 import com.example.wandok.ui.theme.Red50
 import com.example.wandok.ui.theme.Typography
 import com.example.wandok.ui.theme.WandokTheme
 import com.example.wandok.ui.theme.WhiteOrange
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class LoginActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -61,17 +69,21 @@ class LoginActivity : ComponentActivity() {
 }
 
 @Composable
-fun LoginScreen() {
+fun LoginScreen(
+    viewModel: LoginViewModel = viewModel()
+) {
     Box(
         modifier = Modifier
             .fillMaxSize()
             .background(BackGround)
     ) {
+        val loginEnableState by viewModel.loginEnable.collectAsState(initial = false)
+
         Column {
             Logo()
-            LoginForm()     // 계정 정보 입력
-            LoginOption()   // 로그인 옵션
-            LoginButton()
+            LoginForm(viewModel)    // 계정 정보 입력
+            LoginOption()           // 로그인 옵션
+            LoginButton(loginEnableState)
             AccountHelp()
         }
     }
@@ -98,9 +110,13 @@ fun Logo() {
     }
 }
 
-@Preview(showBackground = true)
 @Composable
-fun LoginForm() {
+fun LoginForm(
+    viewModel: LoginViewModel
+) {
+    val id by viewModel.id.collectAsState()
+    val pwd by viewModel.password.collectAsState()
+
     Column(
         modifier = Modifier.padding(start = 20.dp, top = 52.dp, bottom = 30.dp, end = 20.dp)
     ) {
@@ -111,7 +127,6 @@ fun LoginForm() {
             fontSize = 14.sp
         )
 
-        val id = remember { mutableStateOf("") }
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -125,9 +140,11 @@ fun LoginForm() {
                     .fillMaxWidth()
                     .weight(1f)
                     .padding(start = 10.dp),
-                text = id.value,
+                text = id,
                 textSize = 14.sp,
-                onValueChange = { id.value = it },
+                onValueChange = {
+                    viewModel.onIdChanged(it)
+                },
                 hint = stringResource(id = R.string.common_id)
             )
 
@@ -148,7 +165,6 @@ fun LoginForm() {
             fontSize = 14.sp
         )
 
-        val pwd = remember { mutableStateOf("") }
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -162,9 +178,11 @@ fun LoginForm() {
                     .fillMaxWidth()
                     .weight(1f)
                     .padding(start = 10.dp),
-                text = pwd.value,
+                text = pwd,
                 textSize = 14.sp,
-                onValueChange = { pwd.value = it },
+                onValueChange = {
+                    viewModel.onPasswordChanged(it)
+                },
                 hint = stringResource(id = R.string.common_pwd)
             )
 
@@ -198,9 +216,11 @@ fun LoginOption() {
     }
 }
 
-@Preview(showBackground = true)
 @Composable
-fun LoginButton() {
+fun LoginButton(
+    loginEnable: Boolean
+) {
+    Log.e("tag", "state : $loginEnable")
     Button(
         modifier = Modifier
             .fillMaxWidth()
@@ -209,7 +229,7 @@ fun LoginButton() {
         onClick = { /*TODO*/ },
         shape = RoundedCornerShape(26.dp),
         colors = ButtonDefaults.outlinedButtonColors(
-            backgroundColor = if (true) WhiteOrange else WhiteOrange
+            backgroundColor = if (loginEnable) Orange else WhiteOrange
         )
     ) {
         Text(

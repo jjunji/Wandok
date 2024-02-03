@@ -12,6 +12,7 @@ val Red200 = Color(0xFFEF9A9A)
 val Red300 = Color(0xFFE57373)
 
 val WhiteOrange = Color(0xFFFFD3BA)
+val Orange = Color(0xFFFA8441)
 val BackGround = Color(0xFFFFFFFF)
 
 val GrayC1 = Color(0xFFC1C1C1)
