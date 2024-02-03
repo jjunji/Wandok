@@ -15,4 +15,6 @@ val WhiteOrange = Color(0xFFFFD3BA)
 val BackGround = Color(0xFFFFFFFF)
 
 val GrayC1 = Color(0xFFC1C1C1)
+val LightGray = Color(0xFFb8b8b8)
+val DarkGray = Color(0xFF8B8B8B)
 

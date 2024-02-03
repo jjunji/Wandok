@@ -28,6 +28,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
@@ -37,10 +38,11 @@ import androidx.compose.ui.text.font.FontWeight.Companion.Bold
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.wandok.R
 import com.example.wandok.ui.core.EditText
+import com.example.wandok.ui.core.grayRoundCorner
 import com.example.wandok.ui.theme.BackGround
+import com.example.wandok.ui.theme.DarkGray
 import com.example.wandok.ui.theme.GrayC1
 import com.example.wandok.ui.theme.Red50
 import com.example.wandok.ui.theme.Typography
@@ -67,14 +69,15 @@ fun LoginScreen() {
     ) {
         Column {
             Logo()
-            LoginForm()
-            LoginOption()
+            LoginForm()     // 계정 정보 입력
+            LoginOption()   // 로그인 옵션
             LoginButton()
             AccountHelp()
         }
     }
 }
 
+@Preview
 @Composable
 fun Logo() {
     Box(
@@ -99,7 +102,7 @@ fun Logo() {
 @Composable
 fun LoginForm() {
     Column(
-        modifier = Modifier.padding(top = 52.dp, start = 20.dp, end = 20.dp)
+        modifier = Modifier.padding(start = 20.dp, top = 52.dp, bottom = 30.dp, end = 20.dp)
     ) {
         Text(
             style = Typography.subtitle2,
@@ -109,15 +112,31 @@ fun LoginForm() {
         )
 
         val id = remember { mutableStateOf("") }
-
-        Box(
+        Row(
             modifier = Modifier
-                .border(width = 2.dp, color = GrayC1, shape = RoundedCornerShape(10.dp))
+                .fillMaxWidth()
+                .height(52.dp)
+                .padding(top = 5.dp)
+                .grayRoundCorner(),
+            verticalAlignment = CenterVertically
         ) {
             EditText(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .weight(1f)
+                    .padding(start = 10.dp),
                 text = id.value,
+                textSize = 14.sp,
                 onValueChange = { id.value = it },
                 hint = stringResource(id = R.string.common_id)
+            )
+
+            Image(
+                modifier = Modifier
+                    .wrapContentSize()
+                    .padding(end = 10.dp),
+                painter = painterResource(id = R.drawable.ic_circle_close),
+                contentDescription = ""
             )
         }
 
@@ -130,14 +149,31 @@ fun LoginForm() {
         )
 
         val pwd = remember { mutableStateOf("") }
-        Box(
+        Row(
             modifier = Modifier
-                .border(width = 2.dp, color = GrayC1, shape = RoundedCornerShape(10.dp))
+                .fillMaxWidth()
+                .height(52.dp)
+                .padding(top = 5.dp)
+                .grayRoundCorner(),
+            verticalAlignment = CenterVertically
         ) {
             EditText(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .weight(1f)
+                    .padding(start = 10.dp),
                 text = pwd.value,
+                textSize = 14.sp,
                 onValueChange = { pwd.value = it },
                 hint = stringResource(id = R.string.common_pwd)
+            )
+
+            Image(
+                modifier = Modifier
+                    .wrapContentSize()
+                    .padding(end = 10.dp),
+                painter = painterResource(id = R.drawable.ic_circle_close),
+                contentDescription = ""
             )
         }
     }
@@ -147,10 +183,10 @@ fun LoginForm() {
 @Composable
 fun LoginOption() {
     Row(
+        verticalAlignment = CenterVertically,
         modifier = Modifier
             .wrapContentSize()
-            .padding(start = 20.dp, top = 30.dp),
-        verticalAlignment = Alignment.CenterVertically
+            .padding(start = 20.dp)
     ) {
         Image(painter = painterResource(id = R.drawable.ic_checkbox_on), contentDescription = "")
         Text(text = stringResource(id = R.string.common_save_id))
@@ -162,15 +198,16 @@ fun LoginOption() {
     }
 }
 
-@Preview
+@Preview(showBackground = true)
 @Composable
 fun LoginButton() {
     Button(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = 20.dp),
+            .padding(horizontal = 20.dp, vertical = 30.dp)
+            .height(52.dp),
         onClick = { /*TODO*/ },
-        shape = RoundedCornerShape(4.dp),
+        shape = RoundedCornerShape(26.dp),
         colors = ButtonDefaults.outlinedButtonColors(
             backgroundColor = if (true) WhiteOrange else WhiteOrange
         )
@@ -186,30 +223,35 @@ fun LoginButton() {
 @Preview(showBackground = true)
 @Composable
 fun AccountHelp() {
-    Column(
+    Box(
         modifier = Modifier
-            .fillMaxWidth(),
-        horizontalAlignment = Alignment.CenterHorizontally
+            .fillMaxWidth()
+            .padding(top = 30.dp),
+        contentAlignment = Alignment.Center
     ) {
         Row(
             modifier = Modifier
-                .fillMaxWidth()
+                .wrapContentSize()
                 .height(IntrinsicSize.Min)
         ) {
             Text(
-                text = stringResource(id = R.string.common_find_id)
+                text = stringResource(id = R.string.common_find_id),
+                fontSize = 14.sp,
+                color = DarkGray
             )
 
             Spacer(
                 modifier = Modifier
+                    .fillMaxHeight(1f)
                     .padding(horizontal = 6.dp, vertical = 2.dp)
                     .width(1.dp)
-                    .fillMaxHeight()
-                    .background(color = Color.Gray)
+                    .background(color = DarkGray)
             )
 
             Text(
-                text = stringResource(id = R.string.common_find_pwd)
+                text = stringResource(id = R.string.common_find_pwd),
+                fontSize = 14.sp,
+                color = DarkGray
             )
         }
     }
