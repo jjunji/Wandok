@@ -7,6 +7,7 @@ import androidx.activity.compose.setContent
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.focusable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
@@ -28,13 +29,13 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -55,6 +56,7 @@ import com.example.wandok.ui.theme.Typography
 import com.example.wandok.ui.theme.WandokTheme
 import com.example.wandok.ui.theme.WhiteOrange
 import dagger.hilt.android.AndroidEntryPoint
+import timber.log.Timber
 
 @AndroidEntryPoint
 class LoginActivity : ComponentActivity() {
@@ -77,11 +79,24 @@ fun LoginScreen(
             .fillMaxSize()
             .background(BackGround)
     ) {
+        val id by viewModel.id.collectAsState()
+        val pwd by viewModel.password.collectAsState()
+        val idClearVisible by viewModel.idClearVisible.collectAsState(initial = false)
+        val pwdClearVisible by viewModel.pwdClearVisible.collectAsState(initial = false)
         val loginEnableState by viewModel.loginEnable.collectAsState(initial = false)
 
         Column {
             Logo()
-            LoginForm(viewModel)    // 계정 정보 입력
+            LoginForm(
+                id,
+                pwd,
+                onIdChanged = { viewModel.onIdChanged(it) },
+                onPwdChanged = { viewModel.onPasswordChanged(it) },
+                onIdFocused = { viewModel.onIdFocusChanged(it) },
+                onPwdFocused = { viewModel.onPwdFocusChanged(it) },
+                idClearVisible = idClearVisible,
+                pwdClearVisible = pwdClearVisible
+            )
             LoginOption()           // 로그인 옵션
             LoginButton(loginEnableState)
             AccountHelp()
@@ -112,14 +127,24 @@ fun Logo() {
 
 @Composable
 fun LoginForm(
-    viewModel: LoginViewModel
+    id: String,
+    password: String,
+    onIdChanged: (String) -> Unit,
+    onIdFocused: (Boolean) -> Unit,
+    onPwdChanged: (String) -> Unit,
+    onPwdFocused: (Boolean) -> Unit,
+    idClearVisible: Boolean,
+    pwdClearVisible: Boolean
 ) {
-    val id by viewModel.id.collectAsState()
-    val pwd by viewModel.password.collectAsState()
-
     Column(
         modifier = Modifier.padding(start = 20.dp, top = 52.dp, bottom = 30.dp, end = 20.dp)
     ) {
+        if (idClearVisible) {
+            Timber.e("visible")
+        } else {
+            Timber.e("noooooo")
+        }
+
         Text(
             style = Typography.subtitle2,
             text = stringResource(id = R.string.common_id),
@@ -139,22 +164,26 @@ fun LoginForm(
                 modifier = Modifier
                     .fillMaxWidth()
                     .weight(1f)
-                    .padding(start = 10.dp),
+                    .padding(start = 10.dp)
+                    .focusRequester(FocusRequester())
+                    .onFocusChanged { onIdFocused(it.isFocused) },
                 text = id,
                 textSize = 14.sp,
                 onValueChange = {
-                    viewModel.onIdChanged(it)
+                    onIdChanged(it)
                 },
                 hint = stringResource(id = R.string.common_id)
             )
 
-            Image(
-                modifier = Modifier
-                    .wrapContentSize()
-                    .padding(end = 10.dp),
-                painter = painterResource(id = R.drawable.ic_circle_close),
-                contentDescription = ""
-            )
+            if (idClearVisible) {
+                Image(
+                    modifier = Modifier
+                        .wrapContentSize()
+                        .padding(end = 10.dp),
+                    painter = painterResource(id = R.drawable.ic_circle_close),
+                    contentDescription = ""
+                )
+            }
         }
 
         Text(
@@ -177,22 +206,26 @@ fun LoginForm(
                 modifier = Modifier
                     .fillMaxWidth()
                     .weight(1f)
-                    .padding(start = 10.dp),
-                text = pwd,
+                    .padding(start = 10.dp)
+                    .focusRequester(FocusRequester())
+                    .onFocusChanged { onPwdFocused(it.isFocused) },
+                text = password,
                 textSize = 14.sp,
                 onValueChange = {
-                    viewModel.onPasswordChanged(it)
+                    onPwdChanged(it)
                 },
                 hint = stringResource(id = R.string.common_pwd)
             )
 
-            Image(
-                modifier = Modifier
-                    .wrapContentSize()
-                    .padding(end = 10.dp),
-                painter = painterResource(id = R.drawable.ic_circle_close),
-                contentDescription = ""
-            )
+            if (pwdClearVisible) {
+                Image(
+                    modifier = Modifier
+                        .wrapContentSize()
+                        .padding(end = 10.dp),
+                    painter = painterResource(id = R.drawable.ic_circle_close),
+                    contentDescription = ""
+                )
+            }
         }
     }
 }

@@ -23,6 +23,7 @@ room = "2.6.1"
 navigation = "2.7.6"
 #material = "1.4.3"
 hiltNavigationFragment = "1.0.0"
+timber = "5.0.1"
 
 [libraries]
 androidx-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "ktx" }
@@ -81,6 +82,7 @@ room-ktx = { module = "androidx.room:room-ktx", version.ref = "room" }
 glide = { group = "com.github.bumptech.glide", name = "glide", version.ref = "glide" }
 glide-compiler = { group = "com.github.bumptech.glide", name = "compiler", version.ref = "glide" }
 spinkit = { group = "com.github.ybq", name = "Android-SpinKit", version.ref = "spinkit" }
+timber = { group = "com.jakewharton.timber", name = "timber", version.ref = "timber" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "androidGradlePlugin" }
