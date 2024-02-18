@@ -7,6 +7,7 @@ import androidx.activity.compose.setContent
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.focusable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -57,6 +58,7 @@ import com.example.wandok.ui.theme.WandokTheme
 import com.example.wandok.ui.theme.WhiteOrange
 import dagger.hilt.android.AndroidEntryPoint
 import timber.log.Timber
+import kotlin.math.log
 
 @AndroidEntryPoint
 class LoginActivity : ComponentActivity() {
@@ -95,10 +97,12 @@ fun LoginScreen(
                 onIdFocused = { viewModel.onIdFocusChanged(it) },
                 onPwdFocused = { viewModel.onPwdFocusChanged(it) },
                 idClearVisible = idClearVisible,
-                pwdClearVisible = pwdClearVisible
+                pwdClearVisible = pwdClearVisible,
+                idClear = { viewModel.clearId() },
+                pwdClear = { viewModel.clearPassword() }
             )
-            LoginOption()           // 로그인 옵션
-            LoginButton(loginEnableState)
+            LoginOption()
+            LoginButton(loginEnableState) { viewModel.login() }
             AccountHelp()
         }
     }
@@ -134,17 +138,13 @@ fun LoginForm(
     onPwdChanged: (String) -> Unit,
     onPwdFocused: (Boolean) -> Unit,
     idClearVisible: Boolean,
-    pwdClearVisible: Boolean
+    pwdClearVisible: Boolean,
+    idClear: () -> Unit,
+    pwdClear: () -> Unit
 ) {
     Column(
         modifier = Modifier.padding(start = 20.dp, top = 52.dp, bottom = 30.dp, end = 20.dp)
     ) {
-        if (idClearVisible) {
-            Timber.e("visible")
-        } else {
-            Timber.e("noooooo")
-        }
-
         Text(
             style = Typography.subtitle2,
             text = stringResource(id = R.string.common_id),
@@ -179,7 +179,10 @@ fun LoginForm(
                 Image(
                     modifier = Modifier
                         .wrapContentSize()
-                        .padding(end = 10.dp),
+                        .padding(end = 10.dp)
+                        .clickable {
+                            idClear()
+                        },
                     painter = painterResource(id = R.drawable.ic_circle_close),
                     contentDescription = ""
                 )
@@ -221,9 +224,12 @@ fun LoginForm(
                 Image(
                     modifier = Modifier
                         .wrapContentSize()
-                        .padding(end = 10.dp),
+                        .padding(end = 10.dp)
+                        .clickable {
+                            pwdClear()
+                        },
                     painter = painterResource(id = R.drawable.ic_circle_close),
-                    contentDescription = ""
+                    contentDescription = "",
                 )
             }
         }
@@ -251,15 +257,16 @@ fun LoginOption() {
 
 @Composable
 fun LoginButton(
-    loginEnable: Boolean
+    loginEnable: Boolean,
+    login: () -> Unit
 ) {
-    Log.e("tag", "state : $loginEnable")
     Button(
         modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = 20.dp, vertical = 30.dp)
             .height(52.dp),
-        onClick = { /*TODO*/ },
+        onClick = { login() },
+        enabled = loginEnable,
         shape = RoundedCornerShape(26.dp),
         colors = ButtonDefaults.outlinedButtonColors(
             backgroundColor = if (loginEnable) Orange else WhiteOrange

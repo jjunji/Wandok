@@ -11,8 +11,8 @@ import javax.inject.Inject
 class LoginViewModel @Inject constructor() : ViewModel() {
     var id = MutableStateFlow("")
     var password = MutableStateFlow("")
-    var idFocus = MutableStateFlow(false)
-    var pwdFocus = MutableStateFlow(false)
+    private var idFocus = MutableStateFlow(false)
+    private var pwdFocus = MutableStateFlow(false)
 
     fun onIdChanged(value: String) {
         id.value = value
@@ -45,5 +45,17 @@ class LoginViewModel @Inject constructor() : ViewModel() {
         val idEntered = id.isNotEmpty()
         val pwdEntered = pwd.isNotEmpty()
         idEntered && pwdEntered
+    }
+
+    fun clearId() {
+        id.value = ""
+    }
+
+    fun clearPassword() {
+        password.value = ""
+    }
+
+    fun login() {
+
     }
 }
