@@ -32,6 +32,13 @@ android {
                 "proguard-rules.pro"
             )
         }
+        debug {
+            isMinifyEnabled = false
+            proguardFiles(
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro"
+            )
+        }
     }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
@@ -42,6 +49,7 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig = true
     }
     composeOptions {
         kotlinCompilerExtensionVersion = "1.4.3"
@@ -54,23 +62,23 @@ android {
 }
 
 dependencies {
-    implementation(platform(libs.androidx.compose.bom))
+//    implementation(libs.material3)
     androidTestImplementation(platform(libs.androidx.compose.bom))
-    androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso)
     androidTestImplementation(libs.junit)
     androidTestImplementation(libs.compose.ui.tooling)
     androidTestImplementation(libs.compose.ui.manifest)
     androidTestImplementation(libs.compose.ui.junit4)
-
     implementation(libs.androidx.ktx)
+    testImplementation(libs.androidx.junit)
 
     // compose
+    implementation(platform(libs.androidx.compose.bom))
+    implementation(libs.lifecycle.compose)
     implementation(libs.compose.ui)
     implementation(libs.compose.ui.graphics)
     implementation(libs.compose.ui.preview)
-//    implementation(libs.compose.material3)
-    implementation(platform(libs.androidx.compose.bom))
+    debugImplementation(libs.compose.ui.tooling)
     implementation(libs.compose.material)
 
     // compose - optional
@@ -92,7 +100,6 @@ dependencies {
 
     // di
     implementation(libs.hilt.android)
-    androidTestImplementation(platform(libs.androidx.compose.bom))
     kapt(libs.hilt.android.compiler)
 
     // room
@@ -105,4 +112,6 @@ dependencies {
 
     // loading indicator
     implementation(libs.spinkit)
+
+    implementation(libs.timber)
 }
