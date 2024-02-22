@@ -16,6 +16,7 @@ import com.example.wandok.common.constants.AppConstant.SPLASH_TIME
 import com.example.wandok.common.extension.IntentExt.navigateActivity
 import com.example.wandok.ui.MainActivity
 import com.example.wandok.ui.login.LoginActivity
+import com.example.wandok.ui.theme.Red100
 import com.example.wandok.ui.theme.WandokTheme
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -37,15 +38,13 @@ class LauncherActivity : ComponentActivity() {
 @Preview
 @Composable
 fun LauncherScreen() {
-    WandokTheme {
         Surface(
             modifier = Modifier.fillMaxSize(),
-            color = MaterialTheme.colors.primary
+            color = Red100
         ) {
             Image(
                 painter = painterResource(id = R.drawable.img_logo),
                 contentDescription = "logo"
             )
         }
-    }
 }

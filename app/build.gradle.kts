@@ -74,6 +74,7 @@ dependencies {
 
     // compose
     implementation(platform(libs.androidx.compose.bom))
+    implementation(libs.lifecycle.compose)
     implementation(libs.compose.ui)
     implementation(libs.compose.ui.graphics)
     implementation(libs.compose.ui.preview)

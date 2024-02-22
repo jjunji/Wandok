@@ -1,9 +1,17 @@
 package com.example.wandok.ui.login
 
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.example.wandok.common.Event
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.channels.BufferOverflow
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.launch
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -14,6 +22,8 @@ class LoginViewModel @Inject constructor() : ViewModel() {
     private var idFocus = MutableStateFlow(false)
     private var pwdFocus = MutableStateFlow(false)
 
+    val navigateToMain: MutableSharedFlow<Boolean> = MutableSharedFlow(replay = 0)
+
     fun onIdChanged(value: String) {
         id.value = value
     }
@@ -23,7 +33,6 @@ class LoginViewModel @Inject constructor() : ViewModel() {
     }
 
     fun onIdFocusChanged(value: Boolean) {
-        Timber.e("focus : $value")
         idFocus.value = value
     }
 
@@ -56,6 +65,8 @@ class LoginViewModel @Inject constructor() : ViewModel() {
     }
 
     fun login() {
-
+        viewModelScope.launch {
+            navigateToMain.emit(true)
+        }
     }
 }

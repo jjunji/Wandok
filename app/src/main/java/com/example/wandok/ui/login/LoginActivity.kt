@@ -1,14 +1,13 @@
 package com.example.wandok.ui.login
 
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.viewModels
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.focusable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
@@ -28,7 +27,6 @@ import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.CenterVertically
@@ -44,29 +42,39 @@ import androidx.compose.ui.text.font.FontWeight.Companion.Bold
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.lifecycleScope
 import com.example.wandok.R
+import com.example.wandok.common.extension.IntentExt.navigateActivity
+import com.example.wandok.ui.MainActivity
 import com.example.wandok.ui.core.EditText
 import com.example.wandok.ui.core.grayRoundCorner
 import com.example.wandok.ui.theme.BackGround
 import com.example.wandok.ui.theme.DarkGray
 import com.example.wandok.ui.theme.GrayC1
-import com.example.wandok.ui.theme.Orange
-import com.example.wandok.ui.theme.Red50
+import com.example.wandok.ui.theme.Orange100
+import com.example.wandok.ui.theme.Orange300
 import com.example.wandok.ui.theme.Typography
 import com.example.wandok.ui.theme.WandokTheme
-import com.example.wandok.ui.theme.WhiteOrange
 import dagger.hilt.android.AndroidEntryPoint
-import timber.log.Timber
-import kotlin.math.log
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class LoginActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        val viewModel: LoginViewModel by viewModels()
+
         setContent {
             WandokTheme {
-                LoginScreen()
+                LoginScreen(viewModel)
+            }
+        }
+
+        lifecycleScope.launch {
+            viewModel.navigateToMain.collect {
+                finishAffinity()
+                navigateActivity(MainActivity::class.java)
             }
         }
     }
@@ -74,18 +82,18 @@ class LoginActivity : ComponentActivity() {
 
 @Composable
 fun LoginScreen(
-    viewModel: LoginViewModel = viewModel()
+    viewModel: LoginViewModel
 ) {
     Box(
         modifier = Modifier
             .fillMaxSize()
             .background(BackGround)
     ) {
-        val id by viewModel.id.collectAsState()
-        val pwd by viewModel.password.collectAsState()
-        val idClearVisible by viewModel.idClearVisible.collectAsState(initial = false)
-        val pwdClearVisible by viewModel.pwdClearVisible.collectAsState(initial = false)
-        val loginEnableState by viewModel.loginEnable.collectAsState(initial = false)
+        val id by viewModel.id.collectAsStateWithLifecycle()
+        val pwd by viewModel.password.collectAsStateWithLifecycle()
+        val idClearVisible by viewModel.idClearVisible.collectAsStateWithLifecycle(initialValue = false)
+        val pwdClearVisible by viewModel.pwdClearVisible.collectAsStateWithLifecycle(initialValue = false)
+        val loginEnableState by viewModel.loginEnable.collectAsStateWithLifecycle(initialValue = false)
 
         Column {
             Logo()
@@ -118,7 +126,7 @@ fun Logo() {
             .clip(CircleShape)
             .border(
                 width = 12.dp,
-                color = Red50,
+                color = Orange300,
                 shape = CircleShape
             )
     ) {
@@ -269,7 +277,7 @@ fun LoginButton(
         enabled = loginEnable,
         shape = RoundedCornerShape(26.dp),
         colors = ButtonDefaults.outlinedButtonColors(
-            backgroundColor = if (loginEnable) Orange else WhiteOrange
+            backgroundColor = if (loginEnable) Orange300 else Orange100
         )
     ) {
         Text(
