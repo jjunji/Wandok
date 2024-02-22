@@ -1,3 +1,13 @@
 <resources>
     <string name="app_name">Wandok</string>
+    <string name="title_activity_launcher">LauncherActivity</string>
+    <string name="title_activity_login">LoginActivity</string>
+
+    <string name="common_id">아이디</string>
+    <string name="common_pwd">비밀번호</string>
+    <string name="common_login">로그인</string>
+    <string name="common_find_id">아이디 찾기</string>
+    <string name="common_find_pwd">비밀번호 찾기</string>
+    <string name="common_save_id">아이디 저장</string>
+    <string name="common_auto_login">자동 로그인</string>
 </resources>
