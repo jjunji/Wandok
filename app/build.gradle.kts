@@ -106,6 +106,8 @@ dependencies {
     implementation(libs.bundles.room)
     kapt(libs.room.compiler)
 
+    implementation(libs.preference)
+
     // image load
     implementation(libs.glide)
     kapt(libs.glide.compiler)

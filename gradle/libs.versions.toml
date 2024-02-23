@@ -24,6 +24,7 @@ navigation = "2.7.6"
 #material = "1.4.3"
 hiltNavigationFragment = "1.0.0"
 timber = "5.0.1"
+preference = "1.2.0"
 
 [libraries]
 androidx-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "ktx" }
@@ -78,6 +79,8 @@ hilt-android-compiler = { group = "com.google.dagger", name = "hilt-compiler", v
 room-runtime = { module = "androidx.room:room-runtime", version.ref = "room" }
 room-compiler = { module = "androidx.room:room-compiler", version.ref = "room" }
 room-ktx = { module = "androidx.room:room-ktx", version.ref = "room" }
+
+preference = { module = "androidx.preference:preference", version.ref = "preference" }
 
 # Third Party
 glide = { group = "com.github.bumptech.glide", name = "glide", version.ref = "glide" }
