@@ -17,6 +17,7 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -94,6 +95,8 @@ fun LoginScreen(
         val idClearVisible by viewModel.idClearVisible.collectAsStateWithLifecycle(initialValue = false)
         val pwdClearVisible by viewModel.pwdClearVisible.collectAsStateWithLifecycle(initialValue = false)
         val loginEnableState by viewModel.loginEnable.collectAsStateWithLifecycle(initialValue = false)
+        val saveIdOpt by viewModel.saveIdOpt.collectAsStateWithLifecycle()
+        val autoLoginOpt by viewModel.autoLoginOpt.collectAsStateWithLifecycle()
 
         Column {
             Logo()
@@ -109,7 +112,12 @@ fun LoginScreen(
                 idClear = { viewModel.clearId() },
                 pwdClear = { viewModel.clearPassword() }
             )
-            LoginOption()
+            LoginOption(
+                saveIdOpt = saveIdOpt,
+                autoLoginOpt = autoLoginOpt,
+                saveId = { viewModel.setSaveIdOpt() },
+                autoLogin = { viewModel.setAutoLogin() }
+            )
             LoginButton(loginEnableState) { viewModel.login() }
             AccountHelp()
         }
@@ -244,22 +252,55 @@ fun LoginForm(
     }
 }
 
-@Preview(showBackground = true)
 @Composable
-fun LoginOption() {
+fun LoginOption(
+    saveIdOpt: Boolean,
+    autoLoginOpt: Boolean,
+    saveId: () -> Unit,
+    autoLogin: () -> Unit
+) {
     Row(
         verticalAlignment = CenterVertically,
         modifier = Modifier
-            .wrapContentSize()
-            .padding(start = 20.dp)
+            .padding(horizontal = 20.dp)
+            .fillMaxWidth()
     ) {
-        Image(painter = painterResource(id = R.drawable.ic_checkbox_on), contentDescription = "")
-        Text(text = stringResource(id = R.string.common_save_id))
+        val saveIdRes = if (saveIdOpt) {
+            R.drawable.ic_checkbox_on
+        } else {
+            R.drawable.ic_checkbox_off
+        }
+
         Image(
-            modifier = Modifier.padding(start = 30.dp),
-            painter = painterResource(id = R.drawable.ic_checkbox_off), contentDescription = ""
+            modifier = Modifier
+                .clickable { saveId() },
+            painter = painterResource(id = saveIdRes),
+            contentDescription = ""
         )
-        Text(text = stringResource(id = R.string.common_auto_login))
+        Text(text = stringResource(id = R.string.common_save_id))
+
+        val autoLoginRes = if (autoLoginOpt) {
+            R.drawable.ic_checkbox_on
+        } else {
+            R.drawable.ic_checkbox_off
+        }
+
+        Row(
+            modifier = Modifier.offset(20.dp)
+        ) {
+            Image(
+                modifier = Modifier
+                    .clickable { autoLogin() },
+                painter = painterResource(id = autoLoginRes),
+                contentDescription = ""
+            )
+            Text(
+                modifier = Modifier
+                    .wrapContentSize()
+                    .align(CenterVertically),
+                text = stringResource(id = R.string.common_auto_login)
+            )
+        }
     }
 }
 
@@ -323,4 +364,10 @@ fun AccountHelp() {
             )
         }
     }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun previewLoginOpt() {
+    LoginOption(saveIdOpt = true, autoLoginOpt = false, saveId = {}) {}
 }
