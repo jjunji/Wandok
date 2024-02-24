@@ -23,7 +23,7 @@ import com.example.wandok.ui.theme.LightGray
 @Composable
 fun EditText(
     modifier: Modifier = Modifier,
-    text: String,
+    text: String = "",
     textSize: TextUnit = 10.sp,
     hint: String = "",
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default,

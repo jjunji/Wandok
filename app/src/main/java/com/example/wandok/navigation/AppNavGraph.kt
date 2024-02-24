@@ -10,6 +10,7 @@ import androidx.navigation.navigation
 import com.example.wandok.ui.EmptyScreen
 import com.example.wandok.ui.home.HomeScreen
 import com.example.wandok.ui.home.ReadingProgressScreen
+import com.example.wandok.ui.home.search.SearchScreen
 
 @Composable
 fun AppNavGraph(
@@ -67,7 +68,7 @@ private fun NavGraphBuilder.addSearchRoute(navController: NavController) {
 
 private fun NavGraphBuilder.showSearch(navController: NavController) {
     composable(route = LeafScreen.Search.route) {
-        EmptyScreen()
+        SearchScreen()
     }
 }
 

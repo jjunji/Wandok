@@ -368,6 +368,6 @@ fun AccountHelp() {
 
 @Preview(showBackground = true)
 @Composable
-fun previewLoginOpt() {
+fun PreviewLoginOpt() {
     LoginOption(saveIdOpt = true, autoLoginOpt = false, saveId = {}) {}
 }

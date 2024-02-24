@@ -46,13 +46,6 @@ class LauncherActivity : ComponentActivity() {
                 }
             }
         }
-
-//        lifecycleScope.launch {
-//            delay(SPLASH_TIME)
-//            finishAffinity()
-//
-//            navigateActivity(LoginActivity::class.java)
-//        }
     }
 }
 
