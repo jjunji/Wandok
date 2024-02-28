@@ -11,4 +11,7 @@ interface Repository {
     fun clearId()
     fun setLoginHistory(login: Boolean)     // 로그인 이력
     fun getLoginHistory(): Boolean
+
+    /* remote */
+    fun getSearchList(keyword: String)
 }

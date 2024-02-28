@@ -117,4 +117,6 @@ dependencies {
     implementation(libs.spinkit)
 
     implementation(libs.timber)
+
+    implementation(libs.bookContentParser)
 }

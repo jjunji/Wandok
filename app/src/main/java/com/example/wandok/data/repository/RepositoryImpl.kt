@@ -1,10 +1,12 @@
 package com.example.wandok.data.repository
 
 import com.example.wandok.data.datasource.local.LocalDatasource
+import com.example.wandok.data.datasource.remote.RemoteDatasource
 import javax.inject.Inject
 
 class RepositoryImpl @Inject constructor(
-    private val localDataSource: LocalDatasource
+    private val localDataSource: LocalDatasource,
+    private val remoteDatasource: RemoteDatasource
 ) : Repository {
     override fun setSaveIdOpt(option: Boolean) {
         localDataSource.setSaveIdOpt(option)
@@ -40,5 +42,9 @@ class RepositoryImpl @Inject constructor(
 
     override fun getLoginHistory(): Boolean {
         return localDataSource.getLoginHistory()
+    }
+
+    override fun getSearchList(keyword: String) {
+        return remoteDatasource.getSearchList(keyword)
     }
 }

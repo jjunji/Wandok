@@ -26,6 +26,7 @@ hiltNavigationFragment = "1.0.0"
 timber = "5.0.1"
 preference = "1.2.0"
 hiltNavigationCompose = "1.0.0"
+bookContentParser = "1.0.19"
 
 [libraries]
 androidx-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "ktx" }
@@ -88,6 +89,7 @@ glide = { group = "com.github.bumptech.glide", name = "glide", version.ref = "gl
 glide-compiler = { group = "com.github.bumptech.glide", name = "compiler", version.ref = "glide" }
 spinkit = { group = "com.github.ybq", name = "Android-SpinKit", version.ref = "spinkit" }
 timber = { group = "com.jakewharton.timber", name = "timber", version.ref = "timber" }
+bookContentParser = { group = "com.github.ejjang2030", name = "BookContentParser", version.ref ="bookContentParser"}
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "androidGradlePlugin" }

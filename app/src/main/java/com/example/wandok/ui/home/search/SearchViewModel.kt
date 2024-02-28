@@ -23,7 +23,7 @@ class SearchViewModel @Inject constructor(
     }
 
     fun onSearch(keyword: String) {
-        Timber.e(keyword)
+        repository.getSearchList(keyword)
     }
 }
 

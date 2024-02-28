@@ -43,6 +43,7 @@ import androidx.compose.ui.text.font.FontWeight.Companion.Bold
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import com.example.wandok.R
@@ -68,7 +69,7 @@ class LoginActivity : ComponentActivity() {
 
         setContent {
             WandokTheme {
-                LoginScreen(viewModel)
+                LoginScreen()
             }
         }
 
@@ -83,7 +84,7 @@ class LoginActivity : ComponentActivity() {
 
 @Composable
 fun LoginScreen(
-    viewModel: LoginViewModel
+    viewModel: LoginViewModel = hiltViewModel()
 ) {
     Box(
         modifier = Modifier
