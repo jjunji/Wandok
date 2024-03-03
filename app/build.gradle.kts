@@ -119,4 +119,7 @@ dependencies {
     implementation(libs.timber)
 
     implementation(libs.bookContentParser)
+
+    implementation(libs.paging3)
+    implementation(libs.paging.compose)
 }

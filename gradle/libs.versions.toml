@@ -27,6 +27,8 @@ timber = "5.0.1"
 preference = "1.2.0"
 hiltNavigationCompose = "1.0.0"
 bookContentParser = "1.0.19"
+paging3 = "3.2.1"
+pagingCompose = "3.3.0-alpha03"
 
 [libraries]
 androidx-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "ktx" }
@@ -83,6 +85,10 @@ room-compiler = { module = "androidx.room:room-compiler", version.ref = "room" }
 room-ktx = { module = "androidx.room:room-ktx", version.ref = "room" }
 
 preference = { module = "androidx.preference:preference", version.ref = "preference" }
+
+# Paging3
+paging3 = { group = "androidx.paging", name = "paging-runtime", version.ref = "paging3"}
+paging-compose = { group = "androidx.paging", name = "paging-compose", version.ref = "pagingCompose"}
 
 # Third Party
 glide = { group = "com.github.bumptech.glide", name = "glide", version.ref = "glide" }
