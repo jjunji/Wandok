@@ -97,6 +97,8 @@ dependencies {
     implementation(libs.bundles.network)
     implementation(libs.kotlinx.serialization.json)
     implementation(libs.retrofit.kotlinx.serialization.converter)
+    implementation(libs.retrofit.converter.gson)
+    implementation(libs.gson)
 
     // di
     implementation(libs.hilt.android)

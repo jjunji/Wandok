@@ -1,28 +1,42 @@
 package com.example.wandok.data.datasource.remote
 
 import api.naver.NaverSearching
+import com.example.wandok.network.ApiService
 import timber.log.Timber
 import javax.inject.Inject
 
 class RemoteDatasourceImpl @Inject constructor(
-    private val bookParser: NaverSearching
+    private val bookParser: NaverSearching,
+    private val apiService: ApiService
 ) : RemoteDatasource {
 
     override fun getSearchList(keyword: String) {
-        bookParser.searchBook(keyword) { call, response, throwable ->
-            if (response != null) {
-                if (response.isSuccessful) {
-                    val result = response.body()
-                    if (result != null) {
-                        Timber.e("${result.items}")
-                    }
-                } else {
-                    println(response.message())
-                }
-            } else {
-                println(throwable?.message)
-            }
-        }
+//        bookParser.searchBook(keyword) { call, response, throwable ->
+//            if (response != null) {
+//                if (response.isSuccessful) {
+//                    val result = response.body()
+//                    if (result != null) {
+//                        Timber.e("${result.items}")
+//                    }
+//                } else {
+//                    println(response.message())
+//                }
+//            } else {
+//                println(throwable?.message)
+//            }
+//        }
+
+        val params = hashMapOf(
+            "TTBKey" to "ttbdoutor26031738001",
+            "Query" to "코틀린",
+            "output" to "js",
+            "MaxResults" to "30",
+            "Start" to "2"
+        )
+
+
+        apiService.test(params)
+
     }
 
     override fun getBookCatalog() {
