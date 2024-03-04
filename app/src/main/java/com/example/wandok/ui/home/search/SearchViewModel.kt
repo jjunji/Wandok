@@ -19,7 +19,6 @@ class SearchViewModel @Inject constructor(
     var keyword = MutableStateFlow("")
     val pageStatus = PageStatus<Book>()
 
-
     fun onKeywordChanged(value: String) {
         viewModelScope.launch {
             keyword.emit(value)
@@ -27,7 +26,10 @@ class SearchViewModel @Inject constructor(
     }
 
     fun onSearch(keyword: String) {
-        repository.getSearchList(keyword)
+//        repository.getSearchList(keyword)
+        viewModelScope.launch {
+            repository.getSearchList(keyword)
+        }
     }
 }
 

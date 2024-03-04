@@ -44,7 +44,8 @@ class RepositoryImpl @Inject constructor(
         return localDataSource.getLoginHistory()
     }
 
-    override fun getSearchList(keyword: String) {
+    override suspend fun getSearchList(keyword: String) {
         return remoteDatasource.getSearchList(keyword)
     }
+
 }

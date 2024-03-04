@@ -84,13 +84,12 @@ object ApiModule {
 class LoggerInterceptor : Interceptor {
     override fun intercept(chain: Interceptor.Chain): Response {
         val response = chain.proceed(chain.request())
-        Timber.e(
-            "api",
-            "conn-request : ${
-                response.request.url.toString().plus("?").plus(response.printRequestBody())
-            }"
-        )
-        Timber.e("api", "conn-response : ${response.printResponseBody()}")
+        Timber
+            .tag("api")
+            .e("conn-request : ${response.request.url.toString().plus("?").plus(response.printRequestBody())}")
+        Timber
+            .tag("api")
+            .e( "conn-response : ${response.printResponseBody()}")
 
         return response
     }

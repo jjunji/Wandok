@@ -9,34 +9,17 @@ class RemoteDatasourceImpl @Inject constructor(
     private val bookParser: NaverSearching,
     private val apiService: ApiService
 ) : RemoteDatasource {
-
-    override fun getSearchList(keyword: String) {
-//        bookParser.searchBook(keyword) { call, response, throwable ->
-//            if (response != null) {
-//                if (response.isSuccessful) {
-//                    val result = response.body()
-//                    if (result != null) {
-//                        Timber.e("${result.items}")
-//                    }
-//                } else {
-//                    println(response.message())
-//                }
-//            } else {
-//                println(throwable?.message)
-//            }
-//        }
-
+    override suspend fun getSearchList(keyword: String) {
         val params = hashMapOf(
             "TTBKey" to "ttbdoutor26031738001",
             "Query" to "코틀린",
             "output" to "js",
             "MaxResults" to "30",
-            "Start" to "2"
+            "Start" to "1"
         )
 
-
-        apiService.test(params)
-
+        val a = apiService.test(queryMap = params)
+        Timber.e("$a")
     }
 
     override fun getBookCatalog() {
