@@ -6,5 +6,5 @@ import retrofit2.http.*
 
 interface ApiService {
     @GET(ALADIN_URL + "ttb/api/ItemSearch.aspx")
-    suspend fun getBookList(@QueryMap queryMap: HashMap<String, String>): BookResult
+    suspend fun getBookList(@QueryMap queryMap: HashMap<String, String>): ResultState<BookResult>
 }

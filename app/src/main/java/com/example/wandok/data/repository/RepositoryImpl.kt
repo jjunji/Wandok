@@ -2,6 +2,8 @@ package com.example.wandok.data.repository
 
 import com.example.wandok.data.datasource.local.LocalDatasource
 import com.example.wandok.data.datasource.remote.RemoteDatasource
+import com.example.wandok.data.model.BookResult
+import com.example.wandok.network.ResultState
 import javax.inject.Inject
 
 class RepositoryImpl @Inject constructor(
@@ -44,8 +46,7 @@ class RepositoryImpl @Inject constructor(
         return localDataSource.getLoginHistory()
     }
 
-    override suspend fun getBookList(queryMap: HashMap<String, String>) {
+    override suspend fun getBookList(queryMap: HashMap<String, String>): ResultState<BookResult> {
         return remoteDatasource.getBookList(queryMap)
     }
-
 }

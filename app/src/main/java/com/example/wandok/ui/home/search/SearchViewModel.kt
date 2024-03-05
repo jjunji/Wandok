@@ -11,9 +11,11 @@ import com.example.wandok.common.constants.KeyValueConstant.OUTPUT_TYPE_JS
 import com.example.wandok.common.constants.KeyValueConstant.QUERY
 import com.example.wandok.common.constants.KeyValueConstant.START
 import com.example.wandok.data.repository.Repository
+import com.example.wandok.network.ResultState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
+import timber.log.Timber
 import javax.inject.Inject
 
 
@@ -31,7 +33,14 @@ class SearchViewModel @Inject constructor(
 
     fun onSearch(keyword: String) {
         viewModelScope.launch {
-            repository.getBookList(params(keyword))
+            when(val result = repository.getBookList(params(keyword))) {
+                is ResultState.Success -> {
+                    Timber.tag("tt").e("${result.body}")
+                }
+                else -> {
+                    Timber.e("error")
+                }
+            }
         }
     }
 }

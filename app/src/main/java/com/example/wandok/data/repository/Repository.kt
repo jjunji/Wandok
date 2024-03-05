@@ -1,5 +1,8 @@
 package com.example.wandok.data.repository
 
+import com.example.wandok.data.model.BookResult
+import com.example.wandok.network.ResultState
+
 interface Repository {
     /* local */
     fun setSaveIdOpt(option: Boolean)
@@ -13,5 +16,5 @@ interface Repository {
     fun getLoginHistory(): Boolean
 
     /* remote */
-    suspend fun getBookList(queryMap: HashMap<String, String>)
+    suspend fun getBookList(queryMap: HashMap<String, String>): ResultState<BookResult>
 }

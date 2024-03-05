@@ -5,6 +5,7 @@ import com.example.wandok.common.constants.AppConstant.ALADIN_URL
 import com.example.wandok.common.extension.printRequestBody
 import com.example.wandok.common.extension.printResponseBody
 import com.example.wandok.network.ApiService
+import com.example.wandok.network.ResultCallAdapter
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import dagger.Module
@@ -48,7 +49,8 @@ object ApiModule {
             .addConverterFactory(
                 CustomGsonConverterFactory.create()
             )
-            .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+//            .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+            .addCallAdapterFactory(ResultCallAdapter.Factory())
             .build()
     }
 

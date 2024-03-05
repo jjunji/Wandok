@@ -7,26 +7,26 @@ import retrofit2.Callback
 import retrofit2.Response
 import java.io.IOException
 
-class ResultCall<T : Any>(private val call: Call<T>) : Call<Result<T>> {
-    override fun clone(): Call<Result<T>> = ResultCall(call.clone())
+class ResultCall<T : Any>(private val call: Call<T>) : Call<ResultState<T>> {
+    override fun clone(): Call<ResultState<T>> = ResultCall(call.clone())
 
-    override fun execute(): Response<Result<T>> {
+    override fun execute(): Response<ResultState<T>> {
         throw UnsupportedOperationException("ResultCall doesn't support execute")
     }
 
-    override fun enqueue(callback: Callback<Result<T>>) {
+    override fun enqueue(callback: Callback<ResultState<T>>) {
         call.enqueue(object : Callback<T> {
             override fun onResponse(call: Call<T>, response: Response<T>) {
                 if (response.isSuccessful) {
                     callback.onResponse(
                         this@ResultCall,
-                        Response.success(Result.Success(response.body()))
+                        Response.success(ResultState.Success(response.body()))
                     )
                 } else {
                     callback.onResponse(
                         this@ResultCall,
                         Response.success(
-                            Result.Failure(
+                            ResultState.Failure(
                                 response.code(),
                                 response.errorBody()?.toString()
                             )
@@ -37,8 +37,8 @@ class ResultCall<T : Any>(private val call: Call<T>) : Call<Result<T>> {
 
             override fun onFailure(call: Call<T>, t: Throwable) {
                 val networkResponse = when (t) {
-                    is IOException -> Result.NetworkError(t)
-                    else -> Result.Unexpected(t)
+                    is IOException -> ResultState.NetworkError(t)
+                    else -> ResultState.Unexpected(t)
                 }
                 callback.onResponse(this@ResultCall, Response.success(networkResponse))
             }
