@@ -1,4 +1,4 @@
-import org.jetbrains.kotlin.kapt3.base.Kapt.kapt
+import com.android.build.gradle.internal.cxx.configure.gradleLocalProperties
 
 plugins {
     alias(libs.plugins.android.application)
@@ -22,6 +22,8 @@ android {
         vectorDrawables {
             useSupportLibrary = true
         }
+
+        buildConfigField("String", "API_KEY", getApiKey())
     }
 
     buildTypes {
@@ -59,6 +61,10 @@ android {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
     }
+}
+
+fun getApiKey(): String {
+    return gradleLocalProperties(rootDir).getProperty("api.key")
 }
 
 dependencies {

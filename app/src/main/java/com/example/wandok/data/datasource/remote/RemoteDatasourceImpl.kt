@@ -2,6 +2,8 @@ package com.example.wandok.data.datasource.remote
 
 import api.naver.NaverSearching
 import com.example.wandok.network.ApiService
+import com.google.gson.annotations.SerializedName
+import io.reactivex.Single
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -9,17 +11,9 @@ class RemoteDatasourceImpl @Inject constructor(
     private val bookParser: NaverSearching,
     private val apiService: ApiService
 ) : RemoteDatasource {
-    override suspend fun getSearchList(keyword: String) {
-        val params = hashMapOf(
-            "TTBKey" to "ttbdoutor26031738001",
-            "Query" to "코틀린",
-            "output" to "js",
-            "MaxResults" to "30",
-            "Start" to "1"
-        )
-
-        val a = apiService.test(queryMap = params)
-        Timber.e("$a")
+    override suspend fun getBookList(queryMap: HashMap<String, String>) {
+        val a = apiService.getBookList(queryMap = queryMap)
+        Timber.e("a: $a")
     }
 
     override fun getBookCatalog() {

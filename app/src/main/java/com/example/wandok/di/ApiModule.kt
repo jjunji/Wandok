@@ -117,6 +117,7 @@ class CustomGsonConverterFactory(private val gson: Gson) : Converter.Factory() {
 class GsonResponseBodyConverter<T>(private val gsonConverter: Converter<ResponseBody, T>?) :
     Converter<ResponseBody, T> {
 
+    // js response 에서 세미콜론 제거 후 json 형태로 사용
     override fun convert(value: ResponseBody): T? {
         val responseBody = value.string()
         val trimmedResponseBody = responseBody.trimEnd(';')

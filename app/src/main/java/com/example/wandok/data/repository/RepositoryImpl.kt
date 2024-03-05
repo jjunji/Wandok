@@ -44,8 +44,8 @@ class RepositoryImpl @Inject constructor(
         return localDataSource.getLoginHistory()
     }
 
-    override suspend fun getSearchList(keyword: String) {
-        return remoteDatasource.getSearchList(keyword)
+    override suspend fun getBookList(queryMap: HashMap<String, String>) {
+        return remoteDatasource.getBookList(queryMap)
     }
 
 }

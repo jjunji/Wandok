@@ -2,7 +2,7 @@ package com.example.wandok.data
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.example.wandok.common.constants.AppConstant.ITEM_PER_PAGE
+import com.example.wandok.common.constants.KeyValueConstant.ITEM_PER_PAGE
 
 class PageStatus<T> {
     private val arrItem = ArrayList<T>()

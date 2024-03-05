@@ -2,13 +2,18 @@ package com.example.wandok.ui.home.search
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.wandok.data.PageStatus
-import com.example.wandok.data.model.Book
+import com.example.wandok.BuildConfig
+import com.example.wandok.common.constants.KeyValueConstant.API_KEY
+import com.example.wandok.common.constants.KeyValueConstant.ITEM_PER_PAGE
+import com.example.wandok.common.constants.KeyValueConstant.MAX_RESULTS
+import com.example.wandok.common.constants.KeyValueConstant.OUTPUT
+import com.example.wandok.common.constants.KeyValueConstant.OUTPUT_TYPE_JS
+import com.example.wandok.common.constants.KeyValueConstant.QUERY
+import com.example.wandok.common.constants.KeyValueConstant.START
 import com.example.wandok.data.repository.Repository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
-import timber.log.Timber
 import javax.inject.Inject
 
 
@@ -17,7 +22,6 @@ class SearchViewModel @Inject constructor(
     private val repository: Repository
 ) : ViewModel() {
     var keyword = MutableStateFlow("")
-    val pageStatus = PageStatus<Book>()
 
     fun onKeywordChanged(value: String) {
         viewModelScope.launch {
@@ -26,10 +30,16 @@ class SearchViewModel @Inject constructor(
     }
 
     fun onSearch(keyword: String) {
-//        repository.getSearchList(keyword)
         viewModelScope.launch {
-            repository.getSearchList(keyword)
+            repository.getBookList(params(keyword))
         }
     }
 }
 
+fun params(keyword: String) = hashMapOf(
+    API_KEY to BuildConfig.API_KEY,
+    QUERY to keyword,
+    OUTPUT to OUTPUT_TYPE_JS,
+    MAX_RESULTS to ITEM_PER_PAGE,
+    START to "1"
+)

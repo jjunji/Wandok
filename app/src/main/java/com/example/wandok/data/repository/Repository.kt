@@ -13,5 +13,5 @@ interface Repository {
     fun getLoginHistory(): Boolean
 
     /* remote */
-    suspend fun getSearchList(keyword: String)
+    suspend fun getBookList(queryMap: HashMap<String, String>)
 }
