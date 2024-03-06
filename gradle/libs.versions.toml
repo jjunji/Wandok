@@ -31,6 +31,8 @@ paging3 = "3.2.1"
 pagingCompose = "3.3.0-alpha03"
 gsonConverter = "2.9.0"
 gson = "2.10.1"
+glideCompose = "1.0.0-beta01"
+coil = "2.6.0"
 
 [libraries]
 androidx-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "ktx" }
@@ -97,6 +99,8 @@ paging-compose = { group = "androidx.paging", name = "paging-compose", version.r
 # Third Party
 glide = { group = "com.github.bumptech.glide", name = "glide", version.ref = "glide" }
 glide-compiler = { group = "com.github.bumptech.glide", name = "compiler", version.ref = "glide" }
+glide-compose = { group = "com.github.bumptech.glide", name = "compose", version.ref = "glideCompose"}
+coil-compose = { group = "io.coil-kt", name = "coil-compose", version.ref = "coil"}
 spinkit = { group = "com.github.ybq", name = "Android-SpinKit", version.ref = "spinkit" }
 timber = { group = "com.jakewharton.timber", name = "timber", version.ref = "timber" }
 bookContentParser = { group = "com.github.ejjang2030", name = "BookContentParser", version.ref ="bookContentParser"}

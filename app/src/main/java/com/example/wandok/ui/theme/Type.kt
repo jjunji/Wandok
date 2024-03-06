@@ -6,7 +6,6 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.wandok.R
 
@@ -27,6 +26,18 @@ val Typography = Typography(
     subtitle2 = TextStyle(
         fontFamily = notosansFamily,
         fontWeight = FontWeight.Bold,
+        fontSize = 14.sp
+    ),
+
+    body1 = TextStyle(
+        fontFamily = notosansFamily,
+        fontWeight = FontWeight.Medium,
+        fontSize = 16.sp
+    ),
+
+    body2 = TextStyle(
+        fontFamily = notosansFamily,
+        fontWeight = FontWeight.Normal,
         fontSize = 14.sp
     ),
 

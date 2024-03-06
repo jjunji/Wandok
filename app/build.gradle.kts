@@ -118,8 +118,10 @@ dependencies {
     implementation(libs.preference)
 
     // image load
-    implementation(libs.glide)
-    kapt(libs.glide.compiler)
+//    implementation(libs.glide)
+//    implementation(libs.glide.compose)
+    implementation(libs.coil.compose)
+//    kapt(libs.glide.compiler)
 
     // loading indicator
     implementation(libs.spinkit)

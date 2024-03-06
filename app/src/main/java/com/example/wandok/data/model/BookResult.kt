@@ -12,10 +12,12 @@ data class BookResult(
 }
 
 data class Book(
-    @SerializedName("title") val title: String,
-    @SerializedName("link") val link: String,
-    @SerializedName("cover") val image: String,
-    @SerializedName("author") val author: String,
-    @SerializedName("isbn") val isbn: String,
-    @SerializedName("description") val description: String
+    @SerializedName("title") val title: String = "",
+    @SerializedName("link") val link: String = "",
+    @SerializedName("cover") val image: String = "",
+    @SerializedName("author") val author: String = "",
+    @SerializedName("publisher") val publisher: String = "",
+    @SerializedName("isbn") val isbn: String = "",
+    @SerializedName("priceStandard") val price: String = "",
+    @SerializedName("description") val description: String = ""
 )
