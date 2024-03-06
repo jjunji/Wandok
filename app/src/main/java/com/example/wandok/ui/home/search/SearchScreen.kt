@@ -6,6 +6,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -14,6 +15,9 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.material.Divider
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -29,14 +33,19 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.wandok.R
+import com.example.wandok.data.model.Book
 import com.example.wandok.ui.core.EditText
 import com.example.wandok.ui.core.grayRoundCorner
+import com.example.wandok.ui.theme.GrayC1
+import com.example.wandok.ui.theme.LightGray
 import com.example.wandok.ui.theme.Orange300
 import com.example.wandok.ui.theme.Typography
+import timber.log.Timber
 
 @Composable
 fun SearchScreen(viewModel: SearchViewModel = hiltViewModel()) {
     val keyword by viewModel.keyword.collectAsStateWithLifecycle()
+    val bookList by viewModel.bookList.collectAsStateWithLifecycle()
 
     Column(
         modifier = Modifier.fillMaxSize()
@@ -51,6 +60,7 @@ fun SearchScreen(viewModel: SearchViewModel = hiltViewModel()) {
                 viewModel.onSearch(it)
             }
         )
+        BookList(bookList = bookList)
     }
 }
 
@@ -125,10 +135,31 @@ fun SearchField(
                     onSearch(keyword)
                 },
             painter = painterResource(id = R.drawable.ic_search),
-            contentDescription = "",
+            contentDescription = null,
         )
     }
 }
+
+@Composable
+fun BookList(bookList: List<Book>) {
+    LazyColumn(
+        contentPadding = PaddingValues(10.dp)
+    ) {
+        itemsIndexed(
+            items = bookList,
+            key = { _, book ->
+                book.isbn
+            }
+        ) { index, book ->
+            Timber.e("index : $index")
+            BookRow(book = book, Modifier.height(150.dp))
+            if (index != bookList.lastIndex) {
+                Divider(color = GrayC1, thickness = 1.dp)
+            }
+        }
+    }
+}
+
 
 @Preview(showBackground = true)
 @Composable
@@ -140,4 +171,10 @@ fun PreviewSearchTitle() {
 @Composable
 fun PreviewSearchField() {
     SearchField(keyword = "", onKeywordChanged = {}, onSearch = {})
+}
+
+@Preview(showBackground = true)
+@Composable
+fun PreviewBookList() {
+    BookList(bookList = listOf(Book("책 제목")))
 }

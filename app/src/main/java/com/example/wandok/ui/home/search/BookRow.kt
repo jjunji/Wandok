@@ -12,6 +12,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -33,22 +35,17 @@ import com.example.wandok.ui.theme.GrayC1
 import com.example.wandok.ui.theme.Typography
 
 @Composable
-fun BookRow(book: Book) {
+fun BookRow(book: Book, modifier: Modifier) {
     Box(
-        modifier = Modifier
-            .height(130.dp)
-            .fillMaxWidth()
+        modifier = modifier.fillMaxWidth()
     ) {
         Row {
             BookImage(
-                imageUrl = "",
-                modifier = Modifier
+                imageUrl = book.imageUrl,
+                modifier = modifier
             )
-            Spacer(
-                modifier = Modifier
-                    .background(color = GrayC1)
-            )
-            BookInfo(book, modifier = Modifier)
+            VerticalDashLine(modifier = modifier)
+            BookInfo(book, modifier = modifier)
         }
     }
 }
@@ -56,16 +53,21 @@ fun BookRow(book: Book) {
 @Composable
 fun BookImage(imageUrl: String, modifier: Modifier) {
     Box(
-        modifier = modifier.height(IntrinsicSize.Max)
+        modifier = modifier
+            .height(IntrinsicSize.Max)
+            .padding(vertical = 10.dp)
+            .width(110.dp)
     ) {
         AsyncImage(
             model = imageUrl,
             contentDescription = null,
             placeholder = painterResource(id = R.drawable.ic_placeholder_book),
-            contentScale = ContentScale.Crop,
+            contentScale = ContentScale.FillBounds,
             modifier = Modifier
                 .align(Alignment.Center)
-                .size(80.dp)
+                .wrapContentHeight()
+                .fillMaxWidth()
+                .padding(horizontal = 3.dp)
         )
     }
 }
@@ -80,11 +82,11 @@ fun VerticalDashLine(modifier: Modifier) {
     ) {
         drawLine(
             color = GrayC1,
-            strokeWidth = 1f,
+            strokeWidth = 4f,
             start = Offset(0f, 0f),
             end = Offset(0f, size.height),
             cap = StrokeCap.Round,
-            pathEffect = PathEffect.dashPathEffect(floatArrayOf(10f, 10f), 10f)
+            pathEffect = PathEffect.dashPathEffect(floatArrayOf(20f, 20f), 20f)
         )
     }
 }
@@ -152,10 +154,12 @@ fun PreviewVerticalDashLine() {
 @Preview(showBackground = true)
 @Composable
 fun PreviewBookRow() {
-    Row {
-        PreviewBookImage()
-        PreviewVerticalDashLine()
-        PreviewBookInfo()
-    }
+    BookRow(
+        book = Book(
+            title = "책 제목",
+            author = "저자",
+            publisher = "출판사"
+        ),
+        modifier = Modifier.height(150.dp)
+    )
 }
-

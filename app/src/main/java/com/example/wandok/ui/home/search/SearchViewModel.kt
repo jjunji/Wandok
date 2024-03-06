@@ -10,10 +10,12 @@ import com.example.wandok.common.constants.KeyValueConstant.OUTPUT
 import com.example.wandok.common.constants.KeyValueConstant.OUTPUT_TYPE_JS
 import com.example.wandok.common.constants.KeyValueConstant.QUERY
 import com.example.wandok.common.constants.KeyValueConstant.START
+import com.example.wandok.data.model.Book
 import com.example.wandok.data.repository.Repository
 import com.example.wandok.network.ResultState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import javax.inject.Inject
@@ -24,6 +26,8 @@ class SearchViewModel @Inject constructor(
     private val repository: Repository
 ) : ViewModel() {
     var keyword = MutableStateFlow("")
+    private val _bookList: MutableStateFlow<List<Book>> = MutableStateFlow(emptyList())
+    val bookList = _bookList.asStateFlow()
 
     fun onKeywordChanged(value: String) {
         viewModelScope.launch {
@@ -35,7 +39,9 @@ class SearchViewModel @Inject constructor(
         viewModelScope.launch {
             when(val result = repository.getBookList(params(keyword))) {
                 is ResultState.Success -> {
-                    Timber.tag("tt").e("${result.body}")
+                    result.body?.let {
+                        _bookList.emit(it.items)
+                    }
                 }
                 else -> {
                     Timber.e("error")
