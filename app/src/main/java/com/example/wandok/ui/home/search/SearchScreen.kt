@@ -23,7 +23,10 @@ import androidx.compose.material.Divider
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.CenterVertically
@@ -37,6 +40,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.wandok.R
+import com.example.wandok.common.ListState
 import com.example.wandok.data.model.Book
 import com.example.wandok.ui.core.EditText
 import com.example.wandok.ui.core.grayRoundCorner
@@ -51,12 +55,20 @@ fun SearchScreen(viewModel: SearchViewModel = hiltViewModel()) {
     val keyword by viewModel.keyword.collectAsStateWithLifecycle()
     val bookList by viewModel.bookList.collectAsStateWithLifecycle()
 
+//    val coroutineScope = rememberCoroutineScope()
     val listState = rememberLazyListState()
-    LaunchedEffect(listState) {
-        snapshotFlow { listState.isScrollInProgress }
-            .collect {
-                Timber.tag("test").e("${listState.isScrollInProgress}")
-            }
+
+    val shouldStartPaginate = remember {
+        derivedStateOf {
+            Timber.tag("test").e("derivedStateOfs")
+            viewModel.canPaginate && (listState.layoutInfo.visibleItemsInfo.lastOrNull()?.index ?: -9) >= (listState.layoutInfo.totalItemsCount -6)
+        }
+    }
+
+    LaunchedEffect(key1 = shouldStartPaginate) {
+        if (shouldStartPaginate.value && viewModel.listState == ListState.IDLE) {
+            viewModel.requestNextPage()
+        }
     }
 
     Column(
@@ -72,10 +84,13 @@ fun SearchScreen(viewModel: SearchViewModel = hiltViewModel()) {
                 viewModel.onSearch(it)
             }
         )
-        BookList(bookList = bookList, state = listState)
+        BookList(
+            bookList = bookList,
+            state = listState
+        )
     }
 
-    Timber.tag("test").e("state : ${listState}")
+//    Timber.tag("test").e("state : ${listState}")
 }
 
 @Composable
@@ -170,7 +185,9 @@ fun BookList(
             }
         ) { index, book ->
             Timber.e("index : $index")
+
             BookRow(book = book, Modifier.height(150.dp))
+
             if (index != bookList.lastIndex) {
                 Divider(color = GrayC1, thickness = 1.dp)
             }

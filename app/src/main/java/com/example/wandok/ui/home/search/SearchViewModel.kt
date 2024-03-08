@@ -1,8 +1,12 @@
 package com.example.wandok.ui.home.search
 
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.wandok.BuildConfig
+import com.example.wandok.common.ListState
 import com.example.wandok.common.constants.KeyValueConstant.API_KEY
 import com.example.wandok.common.constants.KeyValueConstant.ITEM_PER_PAGE
 import com.example.wandok.common.constants.KeyValueConstant.MAX_RESULTS
@@ -34,6 +38,11 @@ class SearchViewModel @Inject constructor(
 //    private val _bookList: MutableStateFlow<List<Book>> = MutableStateFlow(emptyList())
     val bookList = pageStatus.items
 
+    private var page by mutableStateOf(1)
+    var canPaginate by mutableStateOf(false)
+    var listState by mutableStateOf(ListState.IDLE)
+
+
     fun onKeywordChanged(value: String) {
         viewModelScope.launch {
             keyword.emit(value)
@@ -44,7 +53,12 @@ class SearchViewModel @Inject constructor(
         viewModelScope.launch {
             repository.getBookList(params(keyword))
                 .onSuccess {
+                    canPaginate = true
                     pageStatus.notifyPageStatusChanged(it.items, it.countOfItems)
+
+                    listState = ListState.IDLE
+
+                    if (canPaginate) page++
                 }
                 .onError { _, _ ->  }
                 .onException {  }
@@ -52,7 +66,15 @@ class SearchViewModel @Inject constructor(
     }
 
     fun requestNextPage() {
+        Timber.tag("test").e("requestNextPage ==== ")
+    }
 
+    override fun onCleared() {
+        // TODO:
+        pageStatus.init()
+        listState = ListState.IDLE
+        canPaginate = false
+        super.onCleared()
     }
 }
 
