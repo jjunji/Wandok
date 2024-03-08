@@ -1,13 +1,9 @@
 package com.example.wandok.network
 
-import java.io.IOException
-
 sealed class ResultState<out T : Any> {
-    data class Success<T: Any>(val body: T?): ResultState<T>()
+    data class Success<T : Any>(val body: T) : ResultState<T>()
 
-    data class Failure(val code: Int, val error: String?): ResultState<Nothing>()
+    data class Error(val code: Int, val message: String?) : ResultState<Nothing>()
 
-    data class NetworkError(val exception: IOException): ResultState<Nothing>()
-
-    data class Unexpected(val t: Throwable): ResultState<Nothing>()
+    data class Exception(val e: Throwable) : ResultState<Nothing>()
 }

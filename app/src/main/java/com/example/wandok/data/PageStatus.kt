@@ -3,6 +3,8 @@ package com.example.wandok.data
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.example.wandok.common.constants.KeyValueConstant.ITEM_PER_PAGE
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 
 class PageStatus<T> {
     private val arrItem = ArrayList<T>()
@@ -10,8 +12,8 @@ class PageStatus<T> {
     var position: Int = 0
         private set
 
-    private val _items = MutableLiveData<List<T>>()
-    val items: LiveData<List<T>> = _items
+    private val _items: MutableStateFlow<List<T>> = MutableStateFlow(emptyList())
+    val items = _items.asStateFlow()
 
     private val _countOfAllItems = MutableLiveData<Int>()
     val countOfAllItems: LiveData<Int> = _countOfAllItems
@@ -29,7 +31,7 @@ class PageStatus<T> {
     }
 
     fun init() {
-        _hasMore.value = true // TODO: 2021-04-01
+        _hasMore.value = true
         position = 0
         arrItem.clear()
         _countOfAllItems.value = 0

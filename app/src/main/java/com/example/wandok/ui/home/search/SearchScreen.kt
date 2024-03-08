@@ -16,11 +16,15 @@ import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.Divider
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Modifier
@@ -47,6 +51,14 @@ fun SearchScreen(viewModel: SearchViewModel = hiltViewModel()) {
     val keyword by viewModel.keyword.collectAsStateWithLifecycle()
     val bookList by viewModel.bookList.collectAsStateWithLifecycle()
 
+    val listState = rememberLazyListState()
+    LaunchedEffect(listState) {
+        snapshotFlow { listState.isScrollInProgress }
+            .collect {
+                Timber.tag("test").e("${listState.isScrollInProgress}")
+            }
+    }
+
     Column(
         modifier = Modifier.fillMaxSize()
     ) {
@@ -60,8 +72,10 @@ fun SearchScreen(viewModel: SearchViewModel = hiltViewModel()) {
                 viewModel.onSearch(it)
             }
         )
-        BookList(bookList = bookList)
+        BookList(bookList = bookList, state = listState)
     }
+
+    Timber.tag("test").e("state : ${listState}")
 }
 
 @Composable
@@ -141,9 +155,13 @@ fun SearchField(
 }
 
 @Composable
-fun BookList(bookList: List<Book>) {
+fun BookList(
+    bookList: List<Book>,
+    state: LazyListState
+) {
     LazyColumn(
-        contentPadding = PaddingValues(10.dp)
+        contentPadding = PaddingValues(10.dp),
+        state = state
     ) {
         itemsIndexed(
             items = bookList,
@@ -173,8 +191,8 @@ fun PreviewSearchField() {
     SearchField(keyword = "", onKeywordChanged = {}, onSearch = {})
 }
 
-@Preview(showBackground = true)
-@Composable
-fun PreviewBookList() {
-    BookList(bookList = listOf(Book("책 제목")))
-}
+//@Preview(showBackground = true)
+//@Composable
+//fun PreviewBookList() {
+//    BookList(bookList = listOf(Book("책 제목")))
+//}

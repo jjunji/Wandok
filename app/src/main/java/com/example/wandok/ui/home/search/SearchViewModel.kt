@@ -10,6 +10,10 @@ import com.example.wandok.common.constants.KeyValueConstant.OUTPUT
 import com.example.wandok.common.constants.KeyValueConstant.OUTPUT_TYPE_JS
 import com.example.wandok.common.constants.KeyValueConstant.QUERY
 import com.example.wandok.common.constants.KeyValueConstant.START
+import com.example.wandok.common.extension.onError
+import com.example.wandok.common.extension.onException
+import com.example.wandok.common.extension.onSuccess
+import com.example.wandok.data.PageStatus
 import com.example.wandok.data.model.Book
 import com.example.wandok.data.repository.Repository
 import com.example.wandok.network.ResultState
@@ -26,8 +30,9 @@ class SearchViewModel @Inject constructor(
     private val repository: Repository
 ) : ViewModel() {
     var keyword = MutableStateFlow("")
-    private val _bookList: MutableStateFlow<List<Book>> = MutableStateFlow(emptyList())
-    val bookList = _bookList.asStateFlow()
+    val pageStatus = PageStatus<Book>()
+//    private val _bookList: MutableStateFlow<List<Book>> = MutableStateFlow(emptyList())
+    val bookList = pageStatus.items
 
     fun onKeywordChanged(value: String) {
         viewModelScope.launch {
@@ -37,17 +42,17 @@ class SearchViewModel @Inject constructor(
 
     fun onSearch(keyword: String) {
         viewModelScope.launch {
-            when(val result = repository.getBookList(params(keyword))) {
-                is ResultState.Success -> {
-                    result.body?.let {
-                        _bookList.emit(it.items)
-                    }
+            repository.getBookList(params(keyword))
+                .onSuccess {
+                    pageStatus.notifyPageStatusChanged(it.items, it.countOfItems)
                 }
-                else -> {
-                    Timber.e("error")
-                }
-            }
+                .onError { _, _ ->  }
+                .onException {  }
         }
+    }
+
+    fun requestNextPage() {
+
     }
 }
 

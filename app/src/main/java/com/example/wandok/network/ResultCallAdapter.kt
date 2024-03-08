@@ -8,6 +8,7 @@ import java.lang.reflect.Type
 
 /**
  * https://medium.com/shdev/retrofit%EC%97%90-calladapter%EB%A5%BC-%EC%A0%81%EC%9A%A9%ED%95%98%EB%8A%94-%EB%B2%95-853652179b5b
+ * https://proandroiddev.com/modeling-retrofit-responses-with-sealed-classes-and-coroutines-9d6302077dfe
  * https://mccoy-devloper.tistory.com/58
  */
 class ResultCallAdapter<R: Any>(
@@ -18,7 +19,7 @@ class ResultCallAdapter<R: Any>(
     }
 
     override fun adapt(call: Call<R>): Call<ResultState<R>> {
-        return ResultCall(call)
+        return NetworkResultCall(call)
     }
 
     class Factory: CallAdapter.Factory() {
