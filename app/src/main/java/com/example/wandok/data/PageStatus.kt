@@ -1,44 +1,36 @@
 package com.example.wandok.data
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import com.example.wandok.common.constants.KeyValueConstant.ITEM_PER_PAGE
+import androidx.compose.runtime.mutableStateListOf
+import com.example.wandok.common.LoadState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 
 class PageStatus<T> {
-    private val arrItem = ArrayList<T>()
-    val itemPerPage = ITEM_PER_PAGE
-    var position: Int = 0
+    var currentPage: Int = 0
         private set
 
-    private val _items: MutableStateFlow<List<T>> = MutableStateFlow(emptyList())
-    val items = _items.asStateFlow()
+    var hasMore: Boolean = false
+        private set
 
-    private val _countOfAllItems = MutableLiveData<Int>()
-    val countOfAllItems: LiveData<Int> = _countOfAllItems
+    private val _items = mutableStateListOf<T>()
+    val items: List<T> get() = _items
 
-    private val _hasMore: MutableLiveData<Boolean> = MutableLiveData(false)
-    val hasMore: LiveData<Boolean> = _hasMore
+    private val _loadState = MutableStateFlow(LoadState.IDLE)
+    val loadState = _loadState.asStateFlow()
 
-    fun notifyPageStatusChanged(newItems: List<T>, total: Int) {
-        arrItem.addAll(newItems)
-        position = arrItem.size
+    fun notifyPageStatusChanged(newItems: List<T>, countOfAllItems: Int, page: Int) {
+        _items.addAll(newItems)
+        currentPage = page
+        hasMore = countOfAllItems > items.size
+    }
 
-        _countOfAllItems.value = total
-        _hasMore.value = total > arrItem.size
-        _items.value = arrItem
+    fun setLoadState(loadState: LoadState) {
+        _loadState.value = loadState
     }
 
     fun init() {
-        _hasMore.value = true
-        position = 0
-        arrItem.clear()
-        _countOfAllItems.value = 0
-        _items.value = emptyList()
-    }
-
-    fun firstPage(): Boolean {
-        return (position == 0)
+        _items.clear()
+        currentPage = 0
+        hasMore = false
     }
 }

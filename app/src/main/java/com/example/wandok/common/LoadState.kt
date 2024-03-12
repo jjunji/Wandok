@@ -1,6 +1,6 @@
 package com.example.wandok.common
 
-enum class ListState {
+enum class LoadState {
     IDLE,
     LOADING,
     PAGINATING

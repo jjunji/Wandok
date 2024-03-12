@@ -25,9 +25,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Modifier
@@ -40,12 +39,11 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.wandok.R
-import com.example.wandok.common.ListState
+import com.example.wandok.common.LoadState
 import com.example.wandok.data.model.Book
 import com.example.wandok.ui.core.EditText
 import com.example.wandok.ui.core.grayRoundCorner
 import com.example.wandok.ui.theme.GrayC1
-import com.example.wandok.ui.theme.LightGray
 import com.example.wandok.ui.theme.Orange300
 import com.example.wandok.ui.theme.Typography
 import timber.log.Timber
@@ -53,21 +51,24 @@ import timber.log.Timber
 @Composable
 fun SearchScreen(viewModel: SearchViewModel = hiltViewModel()) {
     val keyword by viewModel.keyword.collectAsStateWithLifecycle()
-    val bookList by viewModel.bookList.collectAsStateWithLifecycle()
+    val loadState by viewModel.pageStatus.loadState.collectAsStateWithLifecycle()
 
-//    val coroutineScope = rememberCoroutineScope()
     val listState = rememberLazyListState()
+    val bookList = viewModel.bookList
 
     val shouldStartPaginate = remember {
         derivedStateOf {
-            Timber.tag("test").e("derivedStateOfs")
-            viewModel.canPaginate && (listState.layoutInfo.visibleItemsInfo.lastOrNull()?.index ?: -9) >= (listState.layoutInfo.totalItemsCount -6)
+            // 마지막 항목이 현재 화면에 표시 되는지 여부를 나타냄
+            val isLastItemDisplayed = (listState.layoutInfo.visibleItemsInfo.lastOrNull()?.index ?: -1) >= listState.layoutInfo.totalItemsCount - 1
+            isLastItemDisplayed && viewModel.pageStatus.hasMore
         }
     }
 
-    LaunchedEffect(key1 = shouldStartPaginate) {
-        if (shouldStartPaginate.value && viewModel.listState == ListState.IDLE) {
-            viewModel.requestNextPage()
+    // paging 조건 만족 시 다음 페이지 호출
+    LaunchedEffect(key1 = shouldStartPaginate.value) {
+        Timber.tag("test").e("launchedEffect : ${shouldStartPaginate.value}")
+        if (shouldStartPaginate.value && (loadState == LoadState.IDLE)) {
+            viewModel.requestBookList()
         }
     }
 
@@ -77,20 +78,14 @@ fun SearchScreen(viewModel: SearchViewModel = hiltViewModel()) {
         SearchTitle()
         SearchField(
             keyword = keyword,
-            onKeywordChanged = {
-                viewModel.onKeywordChanged(it)
-            },
-            onSearch = {
-                viewModel.onSearch(it)
-            }
+            onKeywordChanged = { viewModel.onKeywordChanged(it) },
+            onSearch = { viewModel.onSearch() }
         )
         BookList(
             bookList = bookList,
-            state = listState
+            listState = listState
         )
     }
-
-//    Timber.tag("test").e("state : ${listState}")
 }
 
 @Composable
@@ -130,7 +125,7 @@ fun SearchTitle() {
 fun SearchField(
     keyword: String,
     onKeywordChanged: (String) -> Unit,
-    onSearch: (keyword: String) -> Unit
+    onSearch: () -> Unit
 ) {
     Row(
         modifier = Modifier.padding(horizontal = 20.dp),
@@ -161,7 +156,7 @@ fun SearchField(
                 .height(IntrinsicSize.Max)
                 .padding(start = 10.dp)
                 .clickable {
-                    onSearch(keyword)
+                    onSearch()
                 },
             painter = painterResource(id = R.drawable.ic_search),
             contentDescription = null,
@@ -169,14 +164,16 @@ fun SearchField(
     }
 }
 
+// TODO: 검색어 입력 마다 리컴포지션 되는 문제
 @Composable
 fun BookList(
     bookList: List<Book>,
-    state: LazyListState
+    listState: LazyListState
 ) {
+    Timber.tag("test").e("Recomposition")
     LazyColumn(
         contentPadding = PaddingValues(10.dp),
-        state = state
+        state = listState
     ) {
         itemsIndexed(
             items = bookList,
@@ -184,9 +181,12 @@ fun BookList(
                 book.isbn
             }
         ) { index, book ->
-            Timber.e("index : $index")
-
-            BookRow(book = book, Modifier.height(150.dp))
+            BookRow(
+                Modifier.height(150.dp),
+                book = book,
+                onItemClicked = {
+                }
+            )
 
             if (index != bookList.lastIndex) {
                 Divider(color = GrayC1, thickness = 1.dp)
@@ -208,8 +208,11 @@ fun PreviewSearchField() {
     SearchField(keyword = "", onKeywordChanged = {}, onSearch = {})
 }
 
-//@Preview(showBackground = true)
-//@Composable
-//fun PreviewBookList() {
-//    BookList(bookList = listOf(Book("책 제목")))
-//}
+@Preview(showBackground = true)
+@Composable
+fun PreviewBookList() {
+    BookList(
+        bookList = listOf(Book("책 제목")),
+        listState = LazyListState()
+    )
+}

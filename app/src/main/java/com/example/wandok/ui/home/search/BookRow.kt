@@ -2,6 +2,7 @@ package com.example.wandok.ui.home.search
 
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -35,9 +36,11 @@ import com.example.wandok.ui.theme.GrayC1
 import com.example.wandok.ui.theme.Typography
 
 @Composable
-fun BookRow(book: Book, modifier: Modifier) {
+fun BookRow(modifier: Modifier, book: Book, onItemClicked: () -> Unit) {
     Box(
-        modifier = modifier.fillMaxWidth()
+        modifier = modifier
+            .fillMaxWidth()
+            .clickable { onItemClicked() }
     ) {
         Row {
             BookImage(
@@ -155,11 +158,12 @@ fun PreviewVerticalDashLine() {
 @Composable
 fun PreviewBookRow() {
     BookRow(
+        modifier = Modifier.height(150.dp),
         book = Book(
             title = "책 제목",
             author = "저자",
             publisher = "출판사"
         ),
-        modifier = Modifier.height(150.dp)
+        onItemClicked = {}
     )
 }

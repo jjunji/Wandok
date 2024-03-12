@@ -3,7 +3,7 @@ package com.example.wandok.data.model
 import com.google.gson.annotations.SerializedName
 
 data class BookResult(
-    @SerializedName("totalResults") val countOfItems: Int,
+    @SerializedName("totalResults") val countOfAllItems: Int,
     @SerializedName("startIndex") val page: Int,
     @SerializedName("itemsPerPage") val itemPerPage: Int,
     @SerializedName("item") private val _items: List<Book>?

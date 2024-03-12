@@ -1,12 +1,9 @@
 package com.example.wandok.ui.home.search
 
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.wandok.BuildConfig
-import com.example.wandok.common.ListState
+import com.example.wandok.common.LoadState
 import com.example.wandok.common.constants.KeyValueConstant.API_KEY
 import com.example.wandok.common.constants.KeyValueConstant.ITEM_PER_PAGE
 import com.example.wandok.common.constants.KeyValueConstant.MAX_RESULTS
@@ -20,14 +17,11 @@ import com.example.wandok.common.extension.onSuccess
 import com.example.wandok.data.PageStatus
 import com.example.wandok.data.model.Book
 import com.example.wandok.data.repository.Repository
-import com.example.wandok.network.ResultState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import javax.inject.Inject
-
 
 @HiltViewModel
 class SearchViewModel @Inject constructor(
@@ -35,13 +29,7 @@ class SearchViewModel @Inject constructor(
 ) : ViewModel() {
     var keyword = MutableStateFlow("")
     val pageStatus = PageStatus<Book>()
-//    private val _bookList: MutableStateFlow<List<Book>> = MutableStateFlow(emptyList())
-    val bookList = pageStatus.items
-
-    private var page by mutableStateOf(1)
-    var canPaginate by mutableStateOf(false)
-    var listState by mutableStateOf(ListState.IDLE)
-
+    var bookList = pageStatus.items
 
     fun onKeywordChanged(value: String) {
         viewModelScope.launch {
@@ -49,39 +37,42 @@ class SearchViewModel @Inject constructor(
         }
     }
 
-    fun onSearch(keyword: String) {
+    // TODO: 새로고침 추가
+    fun onSearch() {
+        pageStatus.init()
+        requestBookList(true)
+    }
+
+    fun requestBookList(newRequest: Boolean = false) {
+        if (newRequest) pageStatus.init()
+
+        val params = params(keyword.value, pageStatus.currentPage + 1)
+
         viewModelScope.launch {
-            repository.getBookList(params(keyword))
+            pageStatus.setLoadState(LoadState.LOADING)
+            repository.getBookList(params)
                 .onSuccess {
-                    canPaginate = true
-                    pageStatus.notifyPageStatusChanged(it.items, it.countOfItems)
-
-                    listState = ListState.IDLE
-
-                    if (canPaginate) page++
+                    pageStatus.notifyPageStatusChanged(it.items, it.countOfAllItems, it.page)
+                    pageStatus.setLoadState(LoadState.IDLE)
                 }
-                .onError { _, _ ->  }
-                .onException {  }
+                .onError { _, message ->
+                    // toast message
+                }
+                .onException {}
+            pageStatus.setLoadState(LoadState.IDLE)
         }
     }
 
-    fun requestNextPage() {
-        Timber.tag("test").e("requestNextPage ==== ")
-    }
-
     override fun onCleared() {
-        // TODO:
         pageStatus.init()
-        listState = ListState.IDLE
-        canPaginate = false
         super.onCleared()
     }
 }
 
-fun params(keyword: String) = hashMapOf(
+fun params(keyword: String, page: Int) = hashMapOf(
     API_KEY to BuildConfig.API_KEY,
     QUERY to keyword,
     OUTPUT to OUTPUT_TYPE_JS,
     MAX_RESULTS to ITEM_PER_PAGE,
-    START to "1"
+    START to page.toString()
 )
