@@ -20,7 +20,6 @@ import com.example.wandok.data.repository.Repository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
-import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
@@ -53,7 +52,6 @@ class SearchViewModel @Inject constructor(
             repository.getBookList(params)
                 .onSuccess {
                     pageStatus.notifyPageStatusChanged(it.items, it.countOfAllItems, it.page)
-                    pageStatus.setLoadState(LoadState.IDLE)
                 }
                 .onError { _, message ->
                     // toast message

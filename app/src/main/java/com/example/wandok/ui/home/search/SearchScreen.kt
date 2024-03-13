@@ -41,6 +41,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.wandok.R
 import com.example.wandok.common.LoadState
 import com.example.wandok.data.model.Book
+import com.example.wandok.ui.core.DotsPulsing
 import com.example.wandok.ui.core.EditText
 import com.example.wandok.ui.core.grayRoundCorner
 import com.example.wandok.ui.theme.GrayC1
@@ -66,7 +67,6 @@ fun SearchScreen(viewModel: SearchViewModel = hiltViewModel()) {
 
     // paging 조건 만족 시 다음 페이지 호출
     LaunchedEffect(key1 = shouldStartPaginate.value) {
-        Timber.tag("test").e("launchedEffect : ${shouldStartPaginate.value}")
         if (shouldStartPaginate.value && (loadState == LoadState.IDLE)) {
             viewModel.requestBookList()
         }
@@ -79,11 +79,14 @@ fun SearchScreen(viewModel: SearchViewModel = hiltViewModel()) {
         SearchField(
             keyword = keyword,
             onKeywordChanged = { viewModel.onKeywordChanged(it) },
-            onSearch = { viewModel.onSearch() }
+            onSearch = {
+                viewModel.onSearch()
+            }
         )
         BookList(
             bookList = bookList,
-            listState = listState
+            listState = listState,
+            loadState = loadState
         )
     }
 }
@@ -168,7 +171,8 @@ fun SearchField(
 @Composable
 fun BookList(
     bookList: List<Book>,
-    listState: LazyListState
+    listState: LazyListState,
+    loadState: LoadState
 ) {
     Timber.tag("test").e("Recomposition")
     LazyColumn(
@@ -188,8 +192,14 @@ fun BookList(
                 }
             )
 
+            // 아이템 구분선
             if (index != bookList.lastIndex) {
                 Divider(color = GrayC1, thickness = 1.dp)
+            }
+
+            // paging 시 하단 로딩 바
+            if (index == bookList.lastIndex && loadState == LoadState.LOADING) {
+                DotsPulsing()
             }
         }
     }
@@ -213,6 +223,7 @@ fun PreviewSearchField() {
 fun PreviewBookList() {
     BookList(
         bookList = listOf(Book("책 제목")),
-        listState = LazyListState()
+        listState = LazyListState(),
+        loadState = LoadState.IDLE
     )
 }
