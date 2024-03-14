@@ -20,12 +20,13 @@ import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.Divider
+import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Text
+import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.CenterVertically
@@ -43,16 +44,19 @@ import com.example.wandok.common.LoadState
 import com.example.wandok.data.model.Book
 import com.example.wandok.ui.core.DotsPulsing
 import com.example.wandok.ui.core.EditText
+import com.example.wandok.ui.core.SwipeRefreshBox
 import com.example.wandok.ui.core.grayRoundCorner
 import com.example.wandok.ui.theme.GrayC1
 import com.example.wandok.ui.theme.Orange300
 import com.example.wandok.ui.theme.Typography
 import timber.log.Timber
 
+@ExperimentalMaterialApi
 @Composable
 fun SearchScreen(viewModel: SearchViewModel = hiltViewModel()) {
     val keyword by viewModel.keyword.collectAsStateWithLifecycle()
-    val loadState by viewModel.pageStatus.loadState.collectAsStateWithLifecycle()
+    val loadState by viewModel.pageStatus.loadState.collectAsStateWithLifecycle(initialValue = LoadState.IDLE)
+    val refreshing by viewModel.refreshing.collectAsStateWithLifecycle(initialValue = false)
 
     val listState = rememberLazyListState()
     val bookList = viewModel.bookList
@@ -64,6 +68,13 @@ fun SearchScreen(viewModel: SearchViewModel = hiltViewModel()) {
             isLastItemDisplayed && viewModel.pageStatus.hasMore
         }
     }
+
+    val pullRefreshState = rememberPullRefreshState(
+        refreshing = refreshing,
+        onRefresh = {
+            viewModel.refresh()
+        }
+    )
 
     // paging 조건 만족 시 다음 페이지 호출
     LaunchedEffect(key1 = shouldStartPaginate.value) {
@@ -80,13 +91,19 @@ fun SearchScreen(viewModel: SearchViewModel = hiltViewModel()) {
             keyword = keyword,
             onKeywordChanged = { viewModel.onKeywordChanged(it) },
             onSearch = {
-                viewModel.onSearch()
+                viewModel.onSearch(keyword)
             }
         )
-        BookList(
-            bookList = bookList,
-            listState = listState,
-            loadState = loadState
+        SwipeRefreshBox(
+            refreshing = refreshing,
+            pullRefreshState = pullRefreshState,
+            content = {
+                BookList(
+                    bookList = bookList,
+                    listState = listState,
+                    loadState = loadState
+                )
+            }
         )
     }
 }
@@ -177,7 +194,8 @@ fun BookList(
     Timber.tag("test").e("Recomposition")
     LazyColumn(
         contentPadding = PaddingValues(10.dp),
-        state = listState
+        state = listState,
+        modifier = Modifier.fillMaxWidth()
     ) {
         itemsIndexed(
             items = bookList,

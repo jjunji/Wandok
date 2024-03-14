@@ -18,17 +18,21 @@ import com.example.wandok.data.PageStatus
 import com.example.wandok.data.model.Book
 import com.example.wandok.data.repository.Repository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
+import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
 class SearchViewModel @Inject constructor(
     private val repository: Repository
 ) : ViewModel() {
-    var keyword = MutableStateFlow("")
+    var keyword = MutableStateFlow("")                  // 실시간 타이핑 키워드
+    private val searchedKeyword = MutableStateFlow("")  // 실제 검색한 키워드
     val pageStatus = PageStatus<Book>()
     var bookList = pageStatus.items
+    val refreshing: MutableSharedFlow<Boolean> = MutableSharedFlow(replay = 0)
 
     fun onKeywordChanged(value: String) {
         viewModelScope.launch {
@@ -36,8 +40,10 @@ class SearchViewModel @Inject constructor(
         }
     }
 
-    // TODO: 새로고침 추가
-    fun onSearch() {
+    fun onSearch(keyword: String) {
+        viewModelScope.launch {
+            searchedKeyword.emit(keyword)
+        }
         pageStatus.init()
         requestBookList(true)
     }
@@ -45,7 +51,7 @@ class SearchViewModel @Inject constructor(
     fun requestBookList(newRequest: Boolean = false) {
         if (newRequest) pageStatus.init()
 
-        val params = params(keyword.value, pageStatus.currentPage + 1)
+        val params = params(searchedKeyword.value, pageStatus.currentPage + 1)
 
         viewModelScope.launch {
             pageStatus.setLoadState(LoadState.LOADING)
@@ -58,7 +64,15 @@ class SearchViewModel @Inject constructor(
                 }
                 .onException {}
             pageStatus.setLoadState(LoadState.IDLE)
+            refreshing.emit(false)
         }
+    }
+
+    fun refresh() {
+        viewModelScope.launch {
+            refreshing.emit(true)
+        }
+        requestBookList(true)
     }
 
     override fun onCleared() {
