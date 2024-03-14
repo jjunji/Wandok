@@ -7,9 +7,12 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.navArgument
 import androidx.navigation.navigation
+import com.example.wandok.common.constants.KeyValueConstant.NAV_ARGS_ISBN
 import com.example.wandok.ui.EmptyScreen
 import com.example.wandok.ui.home.HomeScreen
 import com.example.wandok.ui.home.ReadingProgressScreen
@@ -77,19 +80,20 @@ private fun NavGraphBuilder.showSearch(navController: NavController) {
     composable(route = LeafScreen.Search.route) {
         SearchScreen(
             navigateSearchDetailScreen = {
-                navController.navigate(LeafScreen.SearchDetail.route)
+                navController.navigate(LeafScreen.SearchDetail.route+"/${it}")
             }
         )
     }
 }
 
 private fun NavGraphBuilder.showSearchDetail(navController: NavController) {
-    composable(route = LeafScreen.SearchDetail.route) { navBackStackEntry ->
-        val backStackEntry = remember(navBackStackEntry) {
-            navController.getBackStackEntry(LeafScreen.Search.route)
+    composable(
+        route = "${LeafScreen.SearchDetail.route}/{${NAV_ARGS_ISBN}}",
+        arguments = listOf(navArgument(NAV_ARGS_ISBN) { type = NavType.StringType })
+    ) { backStackEntry ->
+        backStackEntry.arguments?.getString(NAV_ARGS_ISBN)?.let {
+            SearchDetailScreen(isbn = it)
         }
-        val viewModel: SearchViewModel = hiltViewModel(backStackEntry)
-        SearchDetailScreen(viewModel = viewModel)
     }
 }
 

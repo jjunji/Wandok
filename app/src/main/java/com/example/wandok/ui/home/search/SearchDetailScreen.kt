@@ -9,13 +9,12 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import timber.log.Timber
 
 @Composable
-fun SearchDetailScreen(viewModel: SearchViewModel) {
+fun SearchDetailScreen(isbn: String, viewModel: SearchDetailViewModel = hiltViewModel()) {
     Surface {
         Text(
             modifier = Modifier.clickable {
-                Timber.tag("test").e("${viewModel.bookList.size}")
             },
-            text = "상세 페이지"
+            text = "상세 페이지 / $isbn"
         )
     }
 }
