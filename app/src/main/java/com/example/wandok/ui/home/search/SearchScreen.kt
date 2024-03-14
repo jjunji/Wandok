@@ -53,7 +53,10 @@ import timber.log.Timber
 
 @ExperimentalMaterialApi
 @Composable
-fun SearchScreen(viewModel: SearchViewModel = hiltViewModel()) {
+fun SearchScreen(
+    viewModel: SearchViewModel = hiltViewModel(),
+    navigateSearchDetailScreen: () -> Unit
+) {
     val keyword by viewModel.keyword.collectAsStateWithLifecycle()
     val loadState by viewModel.pageStatus.loadState.collectAsStateWithLifecycle(initialValue = LoadState.IDLE)
     val refreshing by viewModel.refreshing.collectAsStateWithLifecycle(initialValue = false)
@@ -101,7 +104,8 @@ fun SearchScreen(viewModel: SearchViewModel = hiltViewModel()) {
                 BookList(
                     bookList = bookList,
                     listState = listState,
-                    loadState = loadState
+                    loadState = loadState,
+                    onItemClicked = { navigateSearchDetailScreen() }
                 )
             }
         )
@@ -189,7 +193,8 @@ fun SearchField(
 fun BookList(
     bookList: List<Book>,
     listState: LazyListState,
-    loadState: LoadState
+    loadState: LoadState,
+    onItemClicked: () -> Unit
 ) {
     Timber.tag("test").e("Recomposition")
     LazyColumn(
@@ -206,8 +211,7 @@ fun BookList(
             BookRow(
                 Modifier.height(150.dp),
                 book = book,
-                onItemClicked = {
-                }
+                onItemClicked = { onItemClicked() }
             )
 
             // 아이템 구분선
@@ -242,6 +246,7 @@ fun PreviewBookList() {
     BookList(
         bookList = listOf(Book("책 제목")),
         listState = LazyListState(),
-        loadState = LoadState.IDLE
+        loadState = LoadState.IDLE,
+        onItemClicked = {}
     )
 }

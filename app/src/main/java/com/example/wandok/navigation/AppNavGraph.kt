@@ -1,6 +1,9 @@
 package com.example.wandok.navigation
 
+import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
@@ -10,7 +13,9 @@ import androidx.navigation.navigation
 import com.example.wandok.ui.EmptyScreen
 import com.example.wandok.ui.home.HomeScreen
 import com.example.wandok.ui.home.ReadingProgressScreen
+import com.example.wandok.ui.home.search.SearchDetailScreen
 import com.example.wandok.ui.home.search.SearchScreen
+import com.example.wandok.ui.home.search.SearchViewModel
 
 @Composable
 fun AppNavGraph(
@@ -63,15 +68,30 @@ private fun NavGraphBuilder.addSearchRoute(navController: NavController) {
         startDestination = LeafScreen.Search.route
     ) {
         showSearch(navController)
+        showSearchDetail(navController)
     }
 }
 
+@OptIn(ExperimentalMaterialApi::class)
 private fun NavGraphBuilder.showSearch(navController: NavController) {
     composable(route = LeafScreen.Search.route) {
-        SearchScreen()
+        SearchScreen(
+            navigateSearchDetailScreen = {
+                navController.navigate(LeafScreen.SearchDetail.route)
+            }
+        )
     }
 }
 
+private fun NavGraphBuilder.showSearchDetail(navController: NavController) {
+    composable(route = LeafScreen.SearchDetail.route) { navBackStackEntry ->
+        val backStackEntry = remember(navBackStackEntry) {
+            navController.getBackStackEntry(LeafScreen.Search.route)
+        }
+        val viewModel: SearchViewModel = hiltViewModel(backStackEntry)
+        SearchDetailScreen(viewModel = viewModel)
+    }
+}
 
 private fun NavGraphBuilder.addWandokList(navController: NavController) {
     navigation(
