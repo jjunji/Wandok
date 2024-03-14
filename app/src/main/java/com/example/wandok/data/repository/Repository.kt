@@ -1,5 +1,6 @@
 package com.example.wandok.data.repository
 
+import com.example.wandok.data.model.BookDetailResult
 import com.example.wandok.data.model.BookResult
 import com.example.wandok.network.ResultState
 
@@ -17,4 +18,5 @@ interface Repository {
 
     /* remote */
     suspend fun getBookList(queryMap: HashMap<String, String>): ResultState<BookResult>
+    suspend fun getBookDetail(queryMap: HashMap<String, String>): ResultState<BookDetailResult>
 }

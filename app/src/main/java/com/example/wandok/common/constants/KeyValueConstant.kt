@@ -7,6 +7,7 @@ object KeyValueConstant {
     const val MAX_RESULTS = "MaxResults"
     const val START = "Start"
     const val OUTPUT = "Output"
+    const val ITEM_ID = "ItemId"
 
     const val OUTPUT_TYPE_JS = "js"
 
