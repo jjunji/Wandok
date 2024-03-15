@@ -23,4 +23,5 @@ sealed class LeafScreen(
     object MyPage : LeafScreen("myPage")
 
     object ReadingProgress : LeafScreen("readingProgress")
+    object SearchDetail: LeafScreen("searchDetail")
 }

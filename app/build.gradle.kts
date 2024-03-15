@@ -1,4 +1,4 @@
-import org.jetbrains.kotlin.kapt3.base.Kapt.kapt
+import com.android.build.gradle.internal.cxx.configure.gradleLocalProperties
 
 plugins {
     alias(libs.plugins.android.application)
@@ -22,6 +22,8 @@ android {
         vectorDrawables {
             useSupportLibrary = true
         }
+
+        buildConfigField("String", "API_KEY", getApiKey())
     }
 
     buildTypes {
@@ -61,6 +63,10 @@ android {
     }
 }
 
+fun getApiKey(): String {
+    return gradleLocalProperties(rootDir).getProperty("api.key")
+}
+
 dependencies {
 //    implementation(libs.material3)
     androidTestImplementation(platform(libs.androidx.compose.bom))
@@ -97,21 +103,33 @@ dependencies {
     implementation(libs.bundles.network)
     implementation(libs.kotlinx.serialization.json)
     implementation(libs.retrofit.kotlinx.serialization.converter)
+    implementation(libs.retrofit.converter.gson)
+    implementation(libs.gson)
 
     // di
     implementation(libs.hilt.android)
+    implementation(libs.hilt.navigation.compose)
     kapt(libs.hilt.android.compiler)
 
     // room
     implementation(libs.bundles.room)
     kapt(libs.room.compiler)
 
+    implementation(libs.preference)
+
     // image load
-    implementation(libs.glide)
-    kapt(libs.glide.compiler)
+//    implementation(libs.glide)
+//    implementation(libs.glide.compose)
+    implementation(libs.coil.compose)
+//    kapt(libs.glide.compiler)
 
     // loading indicator
     implementation(libs.spinkit)
 
     implementation(libs.timber)
+
+    implementation(libs.bookContentParser)
+
+    implementation(libs.paging3)
+    implementation(libs.paging.compose)
 }
