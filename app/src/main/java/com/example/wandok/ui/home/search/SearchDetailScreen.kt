@@ -16,12 +16,12 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 
 @Composable
-fun SearchDetailScreen(isbn: String, viewModel: SearchDetailViewModel = hiltViewModel()) {
+fun SearchDetailScreen(viewModel: SearchDetailViewModel = hiltViewModel()) {
     Surface(modifier = Modifier.fillMaxSize()) {
         Text(
             modifier = Modifier.clickable {
             },
-            text = "상세 페이지 / $isbn"
+            text = "상세 페이지 /"
         )
     }
 }

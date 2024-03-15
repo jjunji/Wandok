@@ -1,7 +1,7 @@
 package com.example.wandok.data.repository
 
-import com.example.wandok.data.model.BookDetailResult
-import com.example.wandok.data.model.BookResult
+import com.example.wandok.data.model.dao.BookDetailResult
+import com.example.wandok.data.model.dao.BookResult
 import com.example.wandok.network.ResultState
 
 interface Repository {

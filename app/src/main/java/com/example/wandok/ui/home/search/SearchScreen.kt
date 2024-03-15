@@ -41,7 +41,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.wandok.R
 import com.example.wandok.common.LoadState
-import com.example.wandok.data.model.Book
+import com.example.wandok.data.model.dao.Book
 import com.example.wandok.ui.core.DotsPulsing
 import com.example.wandok.ui.core.EditText
 import com.example.wandok.ui.core.SwipeRefreshBox

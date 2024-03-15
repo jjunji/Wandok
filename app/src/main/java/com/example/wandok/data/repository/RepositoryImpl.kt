@@ -2,8 +2,9 @@ package com.example.wandok.data.repository
 
 import com.example.wandok.data.datasource.local.LocalDatasource
 import com.example.wandok.data.datasource.remote.RemoteDatasource
-import com.example.wandok.data.model.BookDetailResult
-import com.example.wandok.data.model.BookResult
+import com.example.wandok.data.model.dao.BookDetailResult
+import com.example.wandok.data.model.dao.BookResult
+import com.example.wandok.data.model.mapper.BookDetailMapper
 import com.example.wandok.network.ResultState
 import javax.inject.Inject
 
@@ -52,6 +53,19 @@ class RepositoryImpl @Inject constructor(
     }
 
     override suspend fun getBookDetail(queryMap: HashMap<String, String>): ResultState<BookDetailResult> {
-        TODO("Not yet implemented")
+        return when (val result = remoteDatasource.getBookDetail(queryMap)) {
+            is ResultState.Success -> {
+                val transformedData = BookDetailMapper(result.body).map()
+                return ResultState.Success(transformedData)
+            }
+
+            is ResultState.Error -> {
+                ResultState.Error(result.code, result.message)
+            }
+
+            is ResultState.Exception -> {
+                ResultState.Exception(result.e)
+            }
+        }
     }
 }

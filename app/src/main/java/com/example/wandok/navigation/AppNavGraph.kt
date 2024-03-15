@@ -92,7 +92,7 @@ private fun NavGraphBuilder.showSearchDetail(navController: NavController) {
         arguments = listOf(navArgument(NAV_ARGS_ISBN) { type = NavType.StringType })
     ) { backStackEntry ->
         backStackEntry.arguments?.getString(NAV_ARGS_ISBN)?.let {
-            SearchDetailScreen(isbn = it)
+            SearchDetailScreen()
         }
     }
 }
