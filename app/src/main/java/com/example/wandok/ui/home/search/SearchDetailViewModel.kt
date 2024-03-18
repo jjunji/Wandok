@@ -10,8 +10,13 @@ import com.example.wandok.common.extension.onError
 import com.example.wandok.common.extension.onException
 import com.example.wandok.common.extension.onSuccess
 import com.example.wandok.common.extension.removeTag
+import com.example.wandok.data.model.BookDetail
 import com.example.wandok.data.repository.Repository
+import com.example.wandok.network.ResultState
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import javax.inject.Inject
@@ -21,6 +26,8 @@ class SearchDetailViewModel @Inject constructor(
     private val savedStateHandle: SavedStateHandle,
     private val repository: Repository
 ) : ViewModel() {
+    private val _resultState = MutableStateFlow<ResultState<BookDetail>>(ResultState.Loading)
+    val resultState: StateFlow<ResultState<BookDetail>> = _resultState
 
     init {
         requestBookDetail()
@@ -34,12 +41,7 @@ class SearchDetailViewModel @Inject constructor(
         }
 
         viewModelScope.launch {
-            repository.getBookDetail(params(isbn))
-                .onSuccess {
-                    Timber.tag("test").e("${it.tableOfContents}")
-                }
-                .onError { _, _ -> }
-                .onException { }
+    _resultState.repository.getBookDetail(params(isbn))
         }
     }
 }
