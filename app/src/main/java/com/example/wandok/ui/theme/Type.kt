@@ -45,7 +45,7 @@ val Typography = Typography(
         fontFamily = notosansFamily,
         fontWeight = FontWeight.Medium,
         fontSize = 20.sp,
-        color = Color.Red
+        color = Color.Black
     )
 
 )
