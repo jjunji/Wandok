@@ -6,19 +6,13 @@ import androidx.lifecycle.viewModelScope
 import com.example.wandok.BuildConfig
 import com.example.wandok.common.constants.KeyValueConstant
 import com.example.wandok.common.constants.KeyValueConstant.NAV_ARGS_ISBN
-import com.example.wandok.common.extension.onError
-import com.example.wandok.common.extension.onException
-import com.example.wandok.common.extension.onSuccess
-import com.example.wandok.common.extension.removeTag
-import com.example.wandok.data.model.BookDetail
+import com.example.wandok.data.model.dao.BookDetail
 import com.example.wandok.data.repository.Repository
-import com.example.wandok.network.ResultState
+import com.example.wandok.network.ResponseState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.launch
-import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
@@ -26,8 +20,8 @@ class SearchDetailViewModel @Inject constructor(
     private val savedStateHandle: SavedStateHandle,
     private val repository: Repository
 ) : ViewModel() {
-    private val _resultState = MutableStateFlow<ResultState<BookDetail>>(ResultState.Loading)
-    val resultState: StateFlow<ResultState<BookDetail>> = _resultState
+    private val _bookDetail = MutableStateFlow<ResponseState<BookDetail>>(ResponseState.Initial)
+    val bookDetail: StateFlow<ResponseState<BookDetail>> = _bookDetail
 
     init {
         requestBookDetail()
@@ -41,9 +35,12 @@ class SearchDetailViewModel @Inject constructor(
         }
 
         viewModelScope.launch {
-    _resultState.repository.getBookDetail(params(isbn))
+            _bookDetail.emit(
+                repository.getBookDetail(queryMap = params(isbn))
+            )
         }
     }
+
 }
 
 fun params(isbn: String) = hashMapOf(

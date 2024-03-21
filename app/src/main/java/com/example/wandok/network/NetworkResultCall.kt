@@ -9,9 +9,9 @@ import retrofit2.Response
 
 class NetworkResultCall<T : Any>(
     private val call: Call<T>
-) : Call<ResultState<T>> {
+) : Call<ResponseState<T>> {
 
-    override fun enqueue(callback: Callback<ResultState<T>>) {
+    override fun enqueue(callback: Callback<ResponseState<T>>) {
         call.enqueue(object : Callback<T> {
             override fun onResponse(call: Call<T>, response: Response<T>) {
                 val networkResult = handleApi { response }
@@ -19,31 +19,31 @@ class NetworkResultCall<T : Any>(
             }
 
             override fun onFailure(call: Call<T>, t: Throwable) {
-                callback.onResponse(this@NetworkResultCall, Response.success(ResultState.Exception(t)))
+                callback.onResponse(this@NetworkResultCall, Response.success(ResponseState.Exception(t)))
             }
         })
     }
 
     fun <T : Any> handleApi(
         execute: () -> Response<T>
-    ): ResultState<T> {
+    ): ResponseState<T> {
         return try {
             val response = execute()
             val body = response.body()
             if (response.isSuccessful && body != null) {
-                ResultState.Success(body)
+                ResponseState.Success(body)
             } else {
-                ResultState.Error(code = response.code(), message = response.message())
+                ResponseState.Error(code = response.code(), message = response.message())
             }
         } catch (e: HttpException) {
-            ResultState.Error(code = e.code(), message = e.message())
+            ResponseState.Error(code = e.code(), message = e.message())
         } catch (e: Throwable) {
-            ResultState.Exception(e)
+            ResponseState.Exception(e)
         }
     }
 
-    override fun execute(): Response<ResultState<T>> = throw NotImplementedError()
-    override fun clone(): Call<ResultState<T>> = NetworkResultCall(call.clone())
+    override fun execute(): Response<ResponseState<T>> = throw NotImplementedError()
+    override fun clone(): Call<ResponseState<T>> = NetworkResultCall(call.clone())
     override fun isExecuted(): Boolean = call.isExecuted
     override fun isCanceled(): Boolean = call.isCanceled
     override fun cancel() = call.cancel()

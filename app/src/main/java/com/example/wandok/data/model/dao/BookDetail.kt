@@ -8,7 +8,7 @@ package com.example.wandok.data.model.dao
  * @property publisher 출판사
  * @property tableOfContents 목차 리스트
  */
-data class BookDetailResult(
+data class BookDetail(
     val title: String = "",
     val author: String = "",
     val description: String = "",

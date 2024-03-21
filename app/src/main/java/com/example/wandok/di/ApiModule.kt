@@ -5,7 +5,7 @@ import com.example.wandok.common.constants.AppConstant.ALADIN_URL
 import com.example.wandok.common.extension.printRequestBody
 import com.example.wandok.common.extension.printResponseBody
 import com.example.wandok.network.ApiService
-import com.example.wandok.network.ResultCallAdapter
+import com.example.wandok.network.ResponseCallAdapter
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import dagger.Module
@@ -13,7 +13,6 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import okhttp3.Interceptor
-import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
 import okhttp3.Response
 import okhttp3.ResponseBody
@@ -21,7 +20,6 @@ import okhttp3.ResponseBody.Companion.toResponseBody
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Converter
 import retrofit2.Retrofit
-import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
 import timber.log.Timber
 import java.lang.reflect.Type
@@ -50,7 +48,7 @@ object ApiModule {
                 CustomGsonConverterFactory.create()
             )
 //            .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-            .addCallAdapterFactory(ResultCallAdapter.Factory())
+            .addCallAdapterFactory(ResponseCallAdapter.Factory())
             .build()
     }
 

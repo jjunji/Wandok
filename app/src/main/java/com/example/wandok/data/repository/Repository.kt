@@ -1,8 +1,8 @@
 package com.example.wandok.data.repository
 
-import com.example.wandok.data.model.dao.BookDetailResult
+import com.example.wandok.data.model.dao.BookDetail
 import com.example.wandok.data.model.dao.BookResult
-import com.example.wandok.network.ResultState
+import com.example.wandok.network.ResponseState
 
 interface Repository {
     /* local */
@@ -17,6 +17,6 @@ interface Repository {
     fun getLoginHistory(): Boolean
 
     /* remote */
-    suspend fun getBookList(queryMap: HashMap<String, String>): ResultState<BookResult>
-    suspend fun getBookDetail(queryMap: HashMap<String, String>): ResultState<BookDetailResult>
+    suspend fun getBookList(queryMap: HashMap<String, String>): ResponseState<BookResult>
+    suspend fun getBookDetail(queryMap: HashMap<String, String>): ResponseState<BookDetail>
 }

@@ -2,7 +2,7 @@ package com.example.wandok.data.model.dto
 
 import com.google.gson.annotations.SerializedName
 
-data class BookDetailResultDTO(
+data class BooksDetailDTO(
     @SerializedName("item") val item: List<BookDetailDTO> = emptyList()
 )
 
