@@ -6,6 +6,8 @@ import androidx.lifecycle.viewModelScope
 import com.example.wandok.BuildConfig
 import com.example.wandok.common.constants.KeyValueConstant
 import com.example.wandok.common.constants.KeyValueConstant.NAV_ARGS_ISBN
+import com.example.wandok.common.extension.onError
+import com.example.wandok.common.extension.onSuccess
 import com.example.wandok.data.model.dao.BookDetail
 import com.example.wandok.data.repository.Repository
 import com.example.wandok.network.ResponseState
@@ -13,6 +15,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
@@ -35,12 +38,15 @@ class SearchDetailViewModel @Inject constructor(
         }
 
         viewModelScope.launch {
-            _bookDetail.emit(
-                repository.getBookDetail(queryMap = params(isbn))
-            )
+            _bookDetail.emit(ResponseState.Loading)
+            repository.getBookDetail(queryMap = params(isbn))
+                .onSuccess {
+                    _bookDetail.emit(ResponseState.Success(it))
+                }.onError { code, message ->
+                    _bookDetail.emit(ResponseState.Error(12, ""))
+                }
         }
     }
-
 }
 
 fun params(isbn: String) = hashMapOf(

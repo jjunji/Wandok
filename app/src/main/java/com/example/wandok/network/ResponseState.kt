@@ -7,7 +7,7 @@ sealed class ResponseState<out T : Any> {
 
     data class Exception(val e: Throwable) : ResponseState<Nothing>()
 
-    data class Loading(val loading: Boolean) : ResponseState<Nothing>()
+    object Loading : ResponseState<Nothing>()
 
-    object Initial: ResponseState<Nothing>()
+    object Initial : ResponseState<Nothing>()
 }

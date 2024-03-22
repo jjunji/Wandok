@@ -1,13 +1,13 @@
 package com.example.wandok.data.model.mapper
 
 import com.example.wandok.common.extension.removeTag
-import com.example.wandok.data.model.dao.BookDetailResult
-import com.example.wandok.data.model.dto.BookDetailResultDTO
+import com.example.wandok.data.model.dao.BookDetail
+import com.example.wandok.data.model.dto.BookDetailDTO
 
 class BookDetailMapper(
-    private val dto: BookDetailResultDTO
+    private val dto: BookDetailDTO
 ) {
-    fun map(): BookDetailResult {
+    fun map(): BookDetail {
         val bookDetail = dto.item.first()
         val tableOfContents = bookDetail
             .bookInfo
@@ -17,7 +17,7 @@ class BookDetailMapper(
             .split("\n")
             .filter { it.isNotEmpty() }
 
-        return BookDetailResult(
+        return BookDetail(
             title = bookDetail.title,
             author = bookDetail.author,
             description = bookDetail.description,

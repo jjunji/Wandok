@@ -66,6 +66,10 @@ class RepositoryImpl @Inject constructor(
             is ResponseState.Exception -> {
                 ResponseState.Exception(result.e)
             }
+
+            else -> {
+                ResponseState.Initial
+            }
         }
     }
 }
