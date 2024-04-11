@@ -28,20 +28,7 @@ const val numberOfDots = 3
 const val duration = numberOfDots * delayUnit
 
 @Composable
-fun DotsPulsing() {
-    @Composable
-    fun Dot(
-        scale: Float
-    ) = Spacer(
-        Modifier
-            .size(dotSize)
-            .scale(scale)
-            .background(
-                color = MaterialTheme.colors.primary,
-                shape = CircleShape
-            )
-    )
-
+fun DotsPulsing(modifier: Modifier = Modifier) {
     val infiniteTransition = rememberInfiniteTransition(label = "")
 
     @Composable
@@ -63,7 +50,7 @@ fun DotsPulsing() {
     val scale3 by animateScaleWithDelay(delayUnit * 2)
 
     Row(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = modifier.fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.Center
     ) {
@@ -74,3 +61,16 @@ fun DotsPulsing() {
         Dot(scale3)
     }
 }
+
+@Composable
+fun Dot(
+    scale: Float
+) = Spacer(
+    Modifier
+        .size(dotSize)
+        .scale(scale)
+        .background(
+            color = MaterialTheme.colors.primary,
+            shape = CircleShape
+        )
+)

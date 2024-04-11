@@ -12,6 +12,7 @@ import com.example.wandok.data.model.dao.BookDetail
 import com.example.wandok.data.repository.Repository
 import com.example.wandok.network.ResponseState
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
@@ -39,6 +40,7 @@ class SearchDetailViewModel @Inject constructor(
 
         viewModelScope.launch {
             _bookDetail.emit(ResponseState.Loading)
+            delay(1000)
             repository.getBookDetail(queryMap = params(isbn))
                 .onSuccess {
                     _bookDetail.emit(ResponseState.Success(it))
