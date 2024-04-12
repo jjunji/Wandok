@@ -1,7 +1,6 @@
 package com.example.wandok.ui.home.search
 
-import android.graphics.Paint.Align
-import androidx.compose.foundation.layout.Arrangement
+import android.widget.Toast
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -39,6 +38,7 @@ import com.example.wandok.data.model.dao.BookDetail
 import com.example.wandok.network.ResponseState
 import com.example.wandok.ui.core.Body1Text
 import com.example.wandok.ui.core.Body2Text
+import com.example.wandok.ui.core.ConfirmCancelDialog
 import com.example.wandok.ui.core.CustomAppBar
 import com.example.wandok.ui.core.DotsPulsing
 import com.example.wandok.ui.theme.GrayC1
@@ -49,6 +49,7 @@ fun SearchDetailScreen(
     viewModel: SearchDetailViewModel = hiltViewModel()
 ) {
     val responseState: ResponseState<BookDetail> by viewModel.bookDetail.collectAsStateWithLifecycle()
+    val showDialog by viewModel.showDialog.collectAsStateWithLifecycle(initialValue = false)
 
     Box(modifier = Modifier.fillMaxSize()) {
         Column(modifier = Modifier.fillMaxSize()) {
@@ -69,7 +70,21 @@ fun SearchDetailScreen(
             modifier = Modifier
                 .align(Alignment.BottomEnd)
                 .offset(x = (-20).dp, y = (-20).dp)
-        )
+        ) {
+            viewModel.onAddBookClicked()
+        }
+    }
+
+    if (showDialog) {
+        ConfirmCancelDialog(
+            title = "title",
+            positiveText = "OK",
+            negativeText = "Cancel",
+            onClickOk = {
+            }
+        ) {
+
+        }
     }
 }
 
@@ -165,11 +180,13 @@ fun LoadingProgress(modifier: Modifier, state: ResponseState<BookDetail>) {
 }
 
 @Composable
-fun AddBookButton(modifier: Modifier) {
+fun AddBookButton(modifier: Modifier, showDialog: () -> Unit) {
     FloatingActionButton(
         modifier = modifier.size(36.dp),
         shape = CircleShape,
-        onClick = { /*TODO*/ }
+        onClick = {
+            showDialog()
+        }
     ) {
         Icon(painter = painterResource(id = R.drawable.ic_add), contentDescription = null)
     }
@@ -178,5 +195,5 @@ fun AddBookButton(modifier: Modifier) {
 @Preview(showBackground = true)
 @Composable
 fun PreviewAddBookButton() {
-    AddBookButton(modifier = Modifier)
+    AddBookButton(modifier = Modifier) {}
 }

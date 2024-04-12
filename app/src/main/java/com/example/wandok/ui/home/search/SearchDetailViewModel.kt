@@ -13,7 +13,9 @@ import com.example.wandok.data.repository.Repository
 import com.example.wandok.network.ResponseState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import timber.log.Timber
@@ -26,6 +28,9 @@ class SearchDetailViewModel @Inject constructor(
 ) : ViewModel() {
     private val _bookDetail = MutableStateFlow<ResponseState<BookDetail>>(ResponseState.Initial)
     val bookDetail: StateFlow<ResponseState<BookDetail>> = _bookDetail
+
+    private val _showDialog = MutableSharedFlow<Boolean>(replay = 0)
+    val showDialog: SharedFlow<Boolean> = _showDialog
 
     init {
         requestBookDetail()
@@ -47,6 +52,12 @@ class SearchDetailViewModel @Inject constructor(
                 }.onError { code, message ->
                     _bookDetail.emit(ResponseState.Error(12, ""))
                 }
+        }
+    }
+
+    fun onAddBookClicked() {
+        viewModelScope.launch {
+            _showDialog.emit(true)
         }
     }
 }
