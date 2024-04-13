@@ -43,7 +43,7 @@ val Typography = Typography(
 
     h6 = TextStyle(
         fontFamily = notosansFamily,
-        fontWeight = FontWeight.Medium,
+        fontWeight = FontWeight.Bold,
         fontSize = 20.sp,
         color = Color.Black
     )

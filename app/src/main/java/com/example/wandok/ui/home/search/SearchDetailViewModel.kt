@@ -57,7 +57,13 @@ class SearchDetailViewModel @Inject constructor(
 
     fun onAddBookClicked() {
         viewModelScope.launch {
-            _showDialog.emit(true)
+            showDialog(true)
+        }
+    }
+
+    fun showDialog(show: Boolean) {
+        viewModelScope.launch {
+            _showDialog.emit(show)
         }
     }
 }

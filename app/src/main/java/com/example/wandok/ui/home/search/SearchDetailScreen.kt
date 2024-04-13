@@ -1,6 +1,5 @@
 package com.example.wandok.ui.home.search
 
-import android.widget.Toast
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -28,6 +27,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -77,14 +78,14 @@ fun SearchDetailScreen(
 
     if (showDialog) {
         ConfirmCancelDialog(
-            title = "title",
-            positiveText = "OK",
-            negativeText = "Cancel",
-            onClickOk = {
+            title = stringResource(id = R.string.detail_message_add_book),
+            onConfirmClicked = {
+                viewModel.showDialog(false)
+            },
+            onCancelClicked = {
+                viewModel.showDialog(false)
             }
-        ) {
-
-        }
+        )
     }
 }
 
@@ -101,7 +102,7 @@ fun BookDetailLayout(modifier: Modifier, item: BookDetail) {
                 .width(220.dp)
                 .aspectRatio(1f / 1.4f)
         )
-        Spacer(modifier = modifier.height(5.dp))
+        Spacer(modifier = modifier.height(10.dp))
         BookTitle(modifier = modifier, item.title)
         Spacer(modifier = modifier.height(5.dp))
         Description(
@@ -133,7 +134,12 @@ fun BookTitle(modifier: Modifier, title: String) {
 
 @Composable
 fun Description(modifier: Modifier, description: String) {
-    Body2Text(modifier = modifier, text = description, maxLines = 5)
+    Body2Text(
+        modifier = modifier.padding(horizontal = 10.dp),
+        text = description,
+        textAlign = TextAlign.Start,
+        maxLines = 5
+    )
 }
 
 @Composable
