@@ -15,7 +15,7 @@ import com.example.wandok.common.extension.onError
 import com.example.wandok.common.extension.onException
 import com.example.wandok.common.extension.onSuccess
 import com.example.wandok.data.PageStatus
-import com.example.wandok.data.model.dao.Book
+import com.example.wandok.data.model.response.Book
 import com.example.wandok.data.repository.Repository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -55,7 +55,7 @@ class SearchViewModel @Inject constructor(
 
         viewModelScope.launch {
             pageStatus.setLoadState(LoadState.LOADING)
-            repository.getBookList(params)
+            repository.getMyBookList(params)
                 .onSuccess {
                     pageStatus.notifyPageStatusChanged(it.items, it.countOfAllItems, it.page)
                 }

@@ -1,4 +1,6 @@
-package com.example.wandok.data.model.dao
+package com.example.wandok.data.model
+
+import com.example.wandok.database.TableOfContent
 
 /**
  * @property title 책 제목
@@ -9,10 +11,11 @@ package com.example.wandok.data.model.dao
  * @property tableOfContents 목차 리스트
  */
 data class BookDetail(
+    val isbn: String,
     val title: String = "",
     val author: String = "",
     val description: String = "",
     val image: String = "",
     val publisher: String = "",
-    val tableOfContents: List<String> = emptyList()
+    val tableOfContents: List<TableOfContent> = emptyList()
 )

@@ -29,7 +29,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.example.wandok.R
-import com.example.wandok.data.model.dao.Book
+import com.example.wandok.data.model.response.Book
 import com.example.wandok.ui.theme.DarkGray
 import com.example.wandok.ui.theme.GrayC1
 import com.example.wandok.ui.theme.Typography

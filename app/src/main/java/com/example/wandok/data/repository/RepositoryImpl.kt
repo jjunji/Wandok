@@ -2,9 +2,10 @@ package com.example.wandok.data.repository
 
 import com.example.wandok.data.datasource.local.LocalDatasource
 import com.example.wandok.data.datasource.remote.RemoteDatasource
-import com.example.wandok.data.model.dao.BookDetail
-import com.example.wandok.data.model.dao.BookResult
+import com.example.wandok.data.model.BookDetail
 import com.example.wandok.data.model.mapper.BookDetailMapper
+import com.example.wandok.data.model.response.BookResponse
+import com.example.wandok.database.BookEntity
 import com.example.wandok.network.ResponseState
 import javax.inject.Inject
 
@@ -48,14 +49,22 @@ class RepositoryImpl @Inject constructor(
         return localDataSource.getLoginHistory()
     }
 
-    override suspend fun getBookList(queryMap: HashMap<String, String>): ResponseState<BookResult> {
+    override suspend fun insertBook(bookEntity: BookEntity) {
+        localDataSource.insertBook(bookEntity)
+    }
+
+    override suspend fun getAllMyBook(): List<BookEntity> {
+        return localDataSource.getMyBookList()
+    }
+
+    override suspend fun getMyBookList(queryMap: HashMap<String, String>): ResponseState<BookResponse> {
         return remoteDatasource.getBookList(queryMap)
     }
 
     override suspend fun getBookDetail(queryMap: HashMap<String, String>): ResponseState<BookDetail> {
         return when (val result = remoteDatasource.getBookDetail(queryMap)) {
             is ResponseState.Success -> {
-                val transformedData = BookDetailMapper(result.body).map()
+                val transformedData = BookDetailMapper.mapToBookDetail(result.body)
                 return ResponseState.Success(transformedData)
             }
 

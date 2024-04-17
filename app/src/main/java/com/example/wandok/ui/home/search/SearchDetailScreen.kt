@@ -35,7 +35,8 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
 import com.example.wandok.R
-import com.example.wandok.data.model.dao.BookDetail
+import com.example.wandok.data.model.BookDetail
+import com.example.wandok.database.TableOfContent
 import com.example.wandok.network.ResponseState
 import com.example.wandok.ui.core.Body1Text
 import com.example.wandok.ui.core.Body2Text
@@ -80,10 +81,10 @@ fun SearchDetailScreen(
         ConfirmCancelDialog(
             title = stringResource(id = R.string.detail_message_add_book),
             onConfirmClicked = {
-                viewModel.showDialog(false)
+                viewModel.onAddDialogConfirmed()
             },
             onCancelClicked = {
-                viewModel.showDialog(false)
+                viewModel.onAddDialogCanceled()
             }
         )
     }
@@ -143,7 +144,7 @@ fun Description(modifier: Modifier, description: String) {
 }
 
 @Composable
-fun TableOfContents(modifier: Modifier, itemList: List<String>) {
+fun TableOfContents(modifier: Modifier, itemList: List<TableOfContent>) {
     LazyColumn(
         contentPadding = PaddingValues(10.dp),
         modifier = modifier.fillMaxWidth()
@@ -151,7 +152,7 @@ fun TableOfContents(modifier: Modifier, itemList: List<String>) {
         itemsIndexed(
             items = itemList,
         ) { index, item ->
-            TableOfContentRow(index, title = item)
+            TableOfContentRow(index, item = item)
 
             // 아이템 구분선
             Divider(color = GrayC1, thickness = 1.dp)
@@ -160,7 +161,7 @@ fun TableOfContents(modifier: Modifier, itemList: List<String>) {
 }
 
 @Composable
-fun TableOfContentRow(index: Int, title: String) {
+fun TableOfContentRow(index: Int, item: TableOfContent) {
     Row(
         modifier = Modifier
             .height(50.dp)
@@ -171,7 +172,7 @@ fun TableOfContentRow(index: Int, title: String) {
 
         Text(
             modifier = Modifier.padding(horizontal = 10.dp),
-            text = title
+            text = item.subTitle
         )
     }
 }

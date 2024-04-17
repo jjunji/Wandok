@@ -8,8 +8,9 @@ import com.example.wandok.common.constants.KeyValueConstant
 import com.example.wandok.common.constants.KeyValueConstant.NAV_ARGS_ISBN
 import com.example.wandok.common.extension.onError
 import com.example.wandok.common.extension.onSuccess
-import com.example.wandok.data.model.dao.BookDetail
+import com.example.wandok.data.model.BookDetail
 import com.example.wandok.data.repository.Repository
+import com.example.wandok.database.BookEntity
 import com.example.wandok.network.ResponseState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
@@ -58,6 +59,36 @@ class SearchDetailViewModel @Inject constructor(
     fun onAddBookClicked() {
         viewModelScope.launch {
             showDialog(true)
+        }
+    }
+
+    fun addBook() {
+
+    }
+
+    fun onAddDialogConfirmed() {
+        viewModelScope.launch {
+            _showDialog.emit(false)
+            val bookDetail = bookDetail.value
+            if (bookDetail is ResponseState.Success<BookDetail>) {
+                val bookEntity = with(bookDetail.body) {
+                    BookEntity(
+                        isbn = isbn,
+                        title = title,
+                        author = author,
+                        image = image,
+                        publisher = publisher,
+                        tableOfContents = tableOfContents
+                    )
+                }
+                repository.insertBook(bookEntity)
+            }
+        }
+    }
+
+    fun onAddDialogCanceled() {
+        viewModelScope.launch {
+            _showDialog.emit(false)
         }
     }
 

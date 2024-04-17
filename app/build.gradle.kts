@@ -115,15 +115,13 @@ dependencies {
 
     // room
     implementation(libs.bundles.room)
+    annotationProcessor(libs.room.compiler)
     kapt(libs.room.compiler)
 
     implementation(libs.preference)
 
     // image load
-//    implementation(libs.glide)
-//    implementation(libs.glide.compose)
     implementation(libs.coil.compose)
-//    kapt(libs.glide.compiler)
 
     // loading indicator
     implementation(libs.spinkit)

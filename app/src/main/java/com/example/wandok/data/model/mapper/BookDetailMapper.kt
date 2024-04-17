@@ -1,14 +1,13 @@
 package com.example.wandok.data.model.mapper
 
 import com.example.wandok.common.extension.removeTag
-import com.example.wandok.data.model.dao.BookDetail
-import com.example.wandok.data.model.dto.BookDetailDTO
+import com.example.wandok.data.model.BookDetail
+import com.example.wandok.data.model.response.BookDetailResponse
+import com.example.wandok.database.TableOfContent
 
-class BookDetailMapper(
-    private val dto: BookDetailDTO
-) {
-    fun map(): BookDetail {
-        val bookDetail = dto.item.first()
+object BookDetailMapper {
+    fun mapToBookDetail(bookDetailResponse: BookDetailResponse) : BookDetail {
+        val bookDetail = bookDetailResponse.item.first()
         val tableOfContents = bookDetail
             .bookInfo
             .tableOfContentsJson
@@ -16,8 +15,16 @@ class BookDetailMapper(
             .trim()
             .split("\n")
             .filter { it.isNotEmpty() }
+            .mapIndexed { index, tableOfContent ->
+                TableOfContent(
+                    index = index,
+                    subTitle = tableOfContent,
+                    read = false
+                )
+            }
 
         return BookDetail(
+            isbn = bookDetail.isbn,
             title = bookDetail.title,
             author = bookDetail.author,
             description = bookDetail.description,
