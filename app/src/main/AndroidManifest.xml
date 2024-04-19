@@ -2,6 +2,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.INTERNET" />
+
     <application
         android:name=".WandokApplication"
         android:allowBackup="true"
@@ -24,7 +27,7 @@
             android:label="@string/title_activity_launcher"
             android:theme="@style/Theme.Wandok" />
         <activity
-            android:name=".LauncherActivity"
+            android:name=".ui.intro.LauncherActivity"
             android:exported="true"
             android:theme="@style/Theme.Wandok">
             <intent-filter>
