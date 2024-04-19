@@ -26,6 +26,12 @@ android {
         }
 
         buildConfigField("String", "API_KEY", getApiKey())
+
+        kapt{
+            arguments{
+                arg("room.schemaLocation" , "$projectDir/schemas")
+            }
+        }
     }
 
     buildTypes {

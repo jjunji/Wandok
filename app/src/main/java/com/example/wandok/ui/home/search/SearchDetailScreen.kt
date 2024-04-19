@@ -36,6 +36,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
 import com.example.wandok.R
 import com.example.wandok.data.model.BookDetail
+import com.example.wandok.data.model.response.Book
 import com.example.wandok.database.TableOfContent
 import com.example.wandok.network.ResponseState
 import com.example.wandok.ui.core.Body1Text
@@ -51,7 +52,8 @@ fun SearchDetailScreen(
     viewModel: SearchDetailViewModel = hiltViewModel()
 ) {
     val responseState: ResponseState<BookDetail> by viewModel.bookDetail.collectAsStateWithLifecycle()
-    val showDialog by viewModel.showDialog.collectAsStateWithLifecycle(initialValue = false)
+    val addBookDialogState by viewModel.addBookDialogState
+        .collectAsStateWithLifecycle(initialValue = AddBookDialogState.Dismiss)
 
     Box(modifier = Modifier.fillMaxSize()) {
         Column(modifier = Modifier.fillMaxSize()) {
@@ -77,17 +79,11 @@ fun SearchDetailScreen(
         }
     }
 
-    if (showDialog) {
-        ConfirmCancelDialog(
-            title = stringResource(id = R.string.detail_message_add_book),
-            onConfirmClicked = {
-                viewModel.onAddDialogConfirmed()
-            },
-            onCancelClicked = {
-                viewModel.onAddDialogCanceled()
-            }
-        )
-    }
+    AddBookDialog(
+        addBookDialogState,
+        confirm = { viewModel.onAddDialogConfirmed(it) },
+        cancel = { viewModel.onAddDialogCanceled() }
+    ) { onBackClicked() }
 }
 
 @Composable
@@ -196,6 +192,34 @@ fun AddBookButton(modifier: Modifier, showDialog: () -> Unit) {
         }
     ) {
         Icon(painter = painterResource(id = R.drawable.ic_add), contentDescription = null)
+    }
+}
+
+@Composable
+fun AddBookDialog(
+    state: AddBookDialogState<BookDetail>,
+    confirm: (item: BookDetail) -> Unit,
+    cancel: () -> Unit,
+    complete: () -> Unit
+) {
+    when (state) {
+        is AddBookDialogState.Show -> {
+            ConfirmCancelDialog(
+                title = stringResource(id = R.string.detail_message_add_book),
+                onConfirmClicked = {
+                    confirm(state.detail)
+                },
+                onCancelClicked = {
+                    cancel()
+                }
+            )
+        }
+
+        is AddBookDialogState.AddComplete -> {
+            complete()
+        }
+
+        is AddBookDialogState.Dismiss -> return
     }
 }
 

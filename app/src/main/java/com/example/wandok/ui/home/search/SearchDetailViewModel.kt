@@ -19,7 +19,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
-import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
@@ -30,8 +29,8 @@ class SearchDetailViewModel @Inject constructor(
     private val _bookDetail = MutableStateFlow<ResponseState<BookDetail>>(ResponseState.Initial)
     val bookDetail: StateFlow<ResponseState<BookDetail>> = _bookDetail
 
-    private val _showDialog = MutableSharedFlow<Boolean>(replay = 0)
-    val showDialog: SharedFlow<Boolean> = _showDialog
+    private val _addBookDialogState = MutableSharedFlow<AddBookDialogState<BookDetail>>(replay = 0)
+    val addBookDialogState: SharedFlow<AddBookDialogState<BookDetail>> = _addBookDialogState
 
     init {
         requestBookDetail()
@@ -50,7 +49,7 @@ class SearchDetailViewModel @Inject constructor(
             repository.getBookDetail(queryMap = params(isbn))
                 .onSuccess {
                     _bookDetail.emit(ResponseState.Success(it))
-                }.onError { code, message ->
+                }.onError { _, _ ->
                     _bookDetail.emit(ResponseState.Error(12, ""))
                 }
         }
@@ -58,43 +57,38 @@ class SearchDetailViewModel @Inject constructor(
 
     fun onAddBookClicked() {
         viewModelScope.launch {
-            showDialog(true)
+            when (val data = bookDetail.value) {
+                is ResponseState.Success -> {
+                    _addBookDialogState.emit(AddBookDialogState.Show(data.body))
+                }
+
+                else -> {
+                    _addBookDialogState.emit(AddBookDialogState.Dismiss)
+                }
+            }
         }
     }
 
-    fun addBook() {
-
-    }
-
-    fun onAddDialogConfirmed() {
+    fun onAddDialogConfirmed(bookDetail: BookDetail) {
         viewModelScope.launch {
-            _showDialog.emit(false)
-            val bookDetail = bookDetail.value
-            if (bookDetail is ResponseState.Success<BookDetail>) {
-                val bookEntity = with(bookDetail.body) {
-                    BookEntity(
-                        isbn = isbn,
-                        title = title,
-                        author = author,
-                        image = image,
-                        publisher = publisher,
-                        tableOfContents = tableOfContents
-                    )
-                }
-                repository.insertBook(bookEntity)
+            val bookEntity = with(bookDetail) {
+                BookEntity(
+                    isbn = isbn,
+                    title = title,
+                    author = author,
+                    image = image,
+                    publisher = publisher,
+                    tableOfContents = tableOfContents
+                )
             }
+            repository.insertBook(bookEntity)
+            _addBookDialogState.emit(AddBookDialogState.AddComplete)
         }
     }
 
     fun onAddDialogCanceled() {
         viewModelScope.launch {
-            _showDialog.emit(false)
-        }
-    }
-
-    fun showDialog(show: Boolean) {
-        viewModelScope.launch {
-            _showDialog.emit(show)
+            _addBookDialogState.emit(AddBookDialogState.Dismiss)
         }
     }
 }
@@ -104,3 +98,9 @@ fun params(isbn: String) = hashMapOf(
     KeyValueConstant.ITEM_ID to isbn,
     KeyValueConstant.OUTPUT to KeyValueConstant.OUTPUT_TYPE_JS,
 )
+
+sealed class AddBookDialogState<out T> {
+    object Dismiss : AddBookDialogState<Nothing>()
+    object AddComplete: AddBookDialogState<Nothing>()
+    data class Show(val detail: BookDetail) : AddBookDialogState<BookDetail>()
+}
