@@ -10,8 +10,13 @@
     <string name="common_find_pwd">비밀번호 찾기</string>
     <string name="common_save_id">아이디 저장</string>
     <string name="common_auto_login">자동 로그인</string>
+    <string name="common_confirm">확인</string>
+    <string name="common_cancel">취소</string>
 
     <!-- 검색 -->
     <string name="search_title">독서를 시작해 보세요!</string>
     <string name="search">검색하기</string>
+    
+    <!-- 상세 -->
+    <string name="detail_message_add_book">책을 추가하시겠습니까?</string>
 </resources>

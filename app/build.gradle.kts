@@ -5,6 +5,8 @@ plugins {
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.kapt)
     alias(libs.plugins.hilt)
+
+    id("com.google.devtools.ksp")
 }
 
 android {
@@ -24,6 +26,12 @@ android {
         }
 
         buildConfigField("String", "API_KEY", getApiKey())
+
+        kapt{
+            arguments{
+                arg("room.schemaLocation" , "$projectDir/schemas")
+            }
+        }
     }
 
     buildTypes {
@@ -113,15 +121,13 @@ dependencies {
 
     // room
     implementation(libs.bundles.room)
+    annotationProcessor(libs.room.compiler)
     kapt(libs.room.compiler)
 
     implementation(libs.preference)
 
     // image load
-//    implementation(libs.glide)
-//    implementation(libs.glide.compose)
     implementation(libs.coil.compose)
-//    kapt(libs.glide.compiler)
 
     // loading indicator
     implementation(libs.spinkit)

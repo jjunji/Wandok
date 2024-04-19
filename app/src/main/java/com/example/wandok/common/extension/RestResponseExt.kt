@@ -1,6 +1,6 @@
 package com.example.wandok.common.extension
 
-import com.example.wandok.network.ResultState
+import com.example.wandok.network.ResponseState
 import okhttp3.Response
 import okio.Buffer
 import java.nio.charset.Charset
@@ -22,26 +22,26 @@ fun Response.printRequestBody(): String {
     }
 }
 
-suspend fun <T : Any> ResultState<T>.onSuccess(
+suspend fun <T : Any> ResponseState<T>.onSuccess(
     executable: suspend (body: T) -> Unit
-): ResultState<T> = apply {
-    if (this is ResultState.Success) {
+): ResponseState<T> = apply {
+    if (this is ResponseState.Success) {
         executable(body)
     }
 }
 
-suspend fun <T : Any> ResultState<T>.onError(
+suspend fun <T : Any> ResponseState<T>.onError(
     executable: suspend (code: Int, message: String?) -> Unit
-): ResultState<T> = apply {
-    if (this is ResultState.Error) {
+): ResponseState<T> = apply {
+    if (this is ResponseState.Error) {
         executable(code, message)
     }
 }
 
-suspend fun <T : Any> ResultState<T>.onException(
+suspend fun <T : Any> ResponseState<T>.onException(
     executable: suspend (e: Throwable) -> Unit
-): ResultState<T> = apply {
-    if (this is ResultState.Exception) {
+): ResponseState<T> = apply {
+    if (this is ResponseState.Exception) {
         executable(e)
     }
 }

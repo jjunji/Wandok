@@ -11,14 +11,14 @@ import java.lang.reflect.Type
  * https://proandroiddev.com/modeling-retrofit-responses-with-sealed-classes-and-coroutines-9d6302077dfe
  * https://mccoy-devloper.tistory.com/58
  */
-class ResultCallAdapter<R: Any>(
+class ResponseCallAdapter<R: Any>(
     private val responseType: Type
-): CallAdapter<R, Call<ResultState<R>>> {
+): CallAdapter<R, Call<ResponseState<R>>> {
     override fun responseType(): Type {
         return responseType
     }
 
-    override fun adapt(call: Call<R>): Call<ResultState<R>> {
+    override fun adapt(call: Call<R>): Call<ResponseState<R>> {
         return NetworkResultCall(call)
     }
 
@@ -38,7 +38,7 @@ class ResultCallAdapter<R: Any>(
 
             val responseType = getParameterUpperBound(0, returnType)
 
-            if (getRawType(responseType) != ResultState::class.java) {
+            if (getRawType(responseType) != ResponseState::class.java) {
                 return null
             }
 
@@ -48,7 +48,7 @@ class ResultCallAdapter<R: Any>(
 
             val successBodyType = getParameterUpperBound(0, responseType)
 
-            return ResultCallAdapter<Any>(successBodyType)
+            return ResponseCallAdapter<Any>(successBodyType)
         }
     }
 }

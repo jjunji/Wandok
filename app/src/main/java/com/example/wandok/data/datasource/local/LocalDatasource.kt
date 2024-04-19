@@ -1,5 +1,8 @@
 package com.example.wandok.data.datasource.local
 
+import com.example.wandok.database.BookEntity
+import kotlinx.coroutines.flow.Flow
+
 interface LocalDatasource {
     fun setSaveIdOpt(option: Boolean)
     fun getSaveIdOpt(): Boolean     // 아이디 저장 여부
@@ -10,4 +13,7 @@ interface LocalDatasource {
     fun clearId()
     fun setLoginHistory(login: Boolean)     // 로그인 이력
     fun getLoginHistory(): Boolean
+
+    suspend fun getMyBookList() : List<BookEntity>
+    suspend fun insertBook(bookEntity: BookEntity)
 }

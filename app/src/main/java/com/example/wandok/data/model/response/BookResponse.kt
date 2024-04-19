@@ -1,8 +1,8 @@
-package com.example.wandok.data.model
+package com.example.wandok.data.model.response
 
 import com.google.gson.annotations.SerializedName
 
-data class BookResult(
+data class BookResponse(
     @SerializedName("totalResults") val countOfAllItems: Int,
     @SerializedName("startIndex") val page: Int,
     @SerializedName("itemsPerPage") val itemPerPage: Int,

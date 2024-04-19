@@ -88,11 +88,15 @@ private fun NavGraphBuilder.showSearch(navController: NavController) {
 
 private fun NavGraphBuilder.showSearchDetail(navController: NavController) {
     composable(
-        route = "${LeafScreen.SearchDetail.route}/{${NAV_ARGS_ISBN}}",
+        route = "${LeafScreen.SearchDetail.route}/{${NAV_ARGS_ISBN}}",  // isbn navigation parameter 로 전달
         arguments = listOf(navArgument(NAV_ARGS_ISBN) { type = NavType.StringType })
     ) { backStackEntry ->
         backStackEntry.arguments?.getString(NAV_ARGS_ISBN)?.let {
-            SearchDetailScreen(isbn = it)
+            SearchDetailScreen(
+                onBackClicked = {
+                    navController.navigateUp()
+                }
+            )
         }
     }
 }
