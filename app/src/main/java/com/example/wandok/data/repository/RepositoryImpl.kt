@@ -7,6 +7,7 @@ import com.example.wandok.data.model.mapper.BookDetailMapper
 import com.example.wandok.data.model.response.BookResponse
 import com.example.wandok.database.BookEntity
 import com.example.wandok.network.ResponseState
+import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 class RepositoryImpl @Inject constructor(
@@ -53,7 +54,7 @@ class RepositoryImpl @Inject constructor(
         localDataSource.insertBook(bookEntity)
     }
 
-    override suspend fun getAllMyBook(): List<BookEntity> {
+    override fun getAllMyBook(): Flow<List<BookEntity>> {
         return localDataSource.getMyBookList()
     }
 

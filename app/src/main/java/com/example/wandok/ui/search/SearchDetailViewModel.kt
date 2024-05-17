@@ -1,4 +1,4 @@
-package com.example.wandok.ui.home.search
+package com.example.wandok.ui.search
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel

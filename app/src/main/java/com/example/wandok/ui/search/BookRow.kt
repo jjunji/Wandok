@@ -1,4 +1,4 @@
-package com.example.wandok.ui.home.search
+package com.example.wandok.ui.search
 
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background

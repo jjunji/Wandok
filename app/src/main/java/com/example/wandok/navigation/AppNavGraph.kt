@@ -2,8 +2,6 @@ package com.example.wandok.navigation
 
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
@@ -16,9 +14,9 @@ import com.example.wandok.common.constants.KeyValueConstant.NAV_ARGS_ISBN
 import com.example.wandok.ui.EmptyScreen
 import com.example.wandok.ui.home.HomeScreen
 import com.example.wandok.ui.home.ReadingProgressScreen
-import com.example.wandok.ui.home.search.SearchDetailScreen
-import com.example.wandok.ui.home.search.SearchScreen
-import com.example.wandok.ui.home.search.SearchViewModel
+import com.example.wandok.ui.search.SearchDetailScreen
+import com.example.wandok.ui.search.SearchScreen
+import timber.log.Timber
 
 @Composable
 fun AppNavGraph(
@@ -80,7 +78,7 @@ private fun NavGraphBuilder.showSearch(navController: NavController) {
     composable(route = LeafScreen.Search.route) {
         SearchScreen(
             navigateSearchDetailScreen = {
-                navController.navigate(LeafScreen.SearchDetail.route+"/${it}")
+                navController.navigate(LeafScreen.SearchDetail.route + "/${it}")
             }
         )
     }
@@ -94,6 +92,7 @@ private fun NavGraphBuilder.showSearchDetail(navController: NavController) {
         backStackEntry.arguments?.getString(NAV_ARGS_ISBN)?.let {
             SearchDetailScreen(
                 onBackClicked = {
+                    Timber.e("${backStackEntry.destination}")
                     navController.navigateUp()
                 }
             )

@@ -14,6 +14,6 @@ interface LocalDatasource {
     fun setLoginHistory(login: Boolean)     // 로그인 이력
     fun getLoginHistory(): Boolean
 
-    suspend fun getMyBookList() : List<BookEntity>
+    fun getMyBookList() : Flow<List<BookEntity>>
     suspend fun insertBook(bookEntity: BookEntity)
 }
