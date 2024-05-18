@@ -24,14 +24,15 @@ fun HomeScreen(
     showReadingProgress: () -> Unit,
     viewModel: HomeViewModel = hiltViewModel()
 ) {
-//    val myBookList by viewModel.myBookList.collectAsStateWithLifecycle()
     val myBookList by viewModel.myBookList.collectAsStateWithLifecycle()
 
     Box(
         modifier = Modifier
             .fillMaxSize()
     ) {
-        MyBookList(bookList = myBookList, onItemClicked = { Timber.e("onMyBookClicked") })
+        MyBookList(
+            bookList = myBookList,
+            onItemClicked = { Timber.e("onMyBookClicked") })
     }
 }
 
