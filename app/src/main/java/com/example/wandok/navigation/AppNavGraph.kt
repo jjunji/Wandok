@@ -46,9 +46,9 @@ private fun NavGraphBuilder.addHomeRoute(navController: NavController) {
 private fun NavGraphBuilder.showHome(navController: NavController) {
     composable(route = LeafScreen.Home.route) {
         HomeScreen(
-            showReadingProgress = {
-                navController.navigate(LeafScreen.ReadingProgress.route)
-            }
+//            showReadingProgress = {
+//                navController.navigate(LeafScreen.ReadingProgress.route)
+//            }
         )
     }
 }
@@ -93,7 +93,10 @@ private fun NavGraphBuilder.showSearchDetail(navController: NavController) {
             SearchDetailScreen(
                 onBackClicked = {
                     Timber.e("${backStackEntry.destination}")
-                    navController.navigateUp()
+//                    navController.navigateUp()
+//                    navController.navigate(
+//                        route =
+//                    )
                 }
             )
         }
