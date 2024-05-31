@@ -1,7 +1,10 @@
 package com.example.wandok.navigation
 
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
@@ -19,12 +22,14 @@ import com.example.wandok.ui.search.SearchScreen
 import timber.log.Timber
 
 @Composable
-fun AppNavGraph(
-    navController: NavHostController
+fun MyNavHost(
+    navController: NavHostController,
+    innerPadding: PaddingValues
 ) {
     NavHost(
         navController = navController,
-        startDestination = RootScreen.Home.route
+        startDestination = RootScreen.Home.route,
+        Modifier.padding(innerPadding)
     ) {
         addHomeRoute(navController = navController)
         addSearchRoute(navController = navController)
@@ -87,16 +92,17 @@ private fun NavGraphBuilder.showSearch(navController: NavController) {
 private fun NavGraphBuilder.showSearchDetail(navController: NavController) {
     composable(
         route = "${LeafScreen.SearchDetail.route}/{${NAV_ARGS_ISBN}}",  // isbn navigation parameter 로 전달
-        arguments = listOf(navArgument(NAV_ARGS_ISBN) { type = NavType.StringType })
+        arguments = listOf(navArgument(NAV_ARGS_ISBN) { type = NavType.StringType }),
     ) { backStackEntry ->
         backStackEntry.arguments?.getString(NAV_ARGS_ISBN)?.let {
             SearchDetailScreen(
                 onBackClicked = {
-                    Timber.e("${backStackEntry.destination}")
-//                    navController.navigateUp()
-//                    navController.navigate(
-//                        route =
-//                    )
+                    navController.navigateUp()
+                },
+                onAddCompleted = {
+//                    navController.navigate(LeafScreen.Home.route)
+                    val count = navController.graph.nodes.size()
+                    Timber.tag("nav").e("count : $count")
                 }
             )
         }

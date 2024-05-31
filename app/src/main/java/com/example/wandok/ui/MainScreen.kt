@@ -1,8 +1,6 @@
 package com.example.wandok.ui
 
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
 import androidx.compose.material.BottomNavigation
 import androidx.compose.material.BottomNavigationItem
 import androidx.compose.material.Icon
@@ -11,17 +9,22 @@ import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.MutableLiveData
 import androidx.navigation.NavController
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.example.wandok.navigation.AppNavGraph
+import com.example.wandok.navigation.LeafScreen
+import com.example.wandok.navigation.MyNavHost
 import com.example.wandok.navigation.RootScreen
+import timber.log.Timber
 
 @Composable
 fun MainScreen() {
@@ -36,25 +39,19 @@ fun MainScreen() {
 
     Scaffold(
         bottomBar = {
-            BottomNavBar(
+            MyBottomNavigation(
                 navController = navController,
                 items = bottomNavRoutes
             )
         },
         modifier = Modifier.fillMaxSize()
-    ) {
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(it),
-        ) {
-            AppNavGraph(navController = navController)
-        }
+    ) { innerPadding ->
+        MyNavHost(navController = navController, innerPadding)
     }
 }
 
 @Composable
-fun BottomNavBar(
+fun MyBottomNavigation(
     navController: NavHostController,
     items: List<RootScreen>
 ) {
@@ -77,6 +74,9 @@ fun BottomNavBar(
                 selected = currentRoute == item.route,
                 onClick = {
                     navController.navigateToRootScreen(item)
+//                    navController.currentBackStackEntry?
+                    val a = navController.graph.nodes.size()
+                    Timber.tag("nav").e("count : $a")
                 }
             )
         }
@@ -91,4 +91,10 @@ private fun NavController.navigateToRootScreen(rootScreen: RootScreen) {
             saveState = true
         }
     }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun PreviewMainScreen() {
+    MainScreen()
 }

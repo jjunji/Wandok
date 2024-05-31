@@ -21,6 +21,7 @@ import androidx.compose.material.FloatingActionButton
 import androidx.compose.material.Icon
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -44,15 +45,24 @@ import com.example.wandok.ui.core.ConfirmCancelDialog
 import com.example.wandok.ui.core.CustomAppBar
 import com.example.wandok.ui.core.DotsPulsing
 import com.example.wandok.ui.theme.GrayC1
+import kotlinx.coroutines.flow.collectLatest
+import timber.log.Timber
 
 @Composable
 fun SearchDetailScreen(
     onBackClicked: () -> Unit,
+    onAddCompleted: () -> Unit,
     viewModel: SearchDetailViewModel = hiltViewModel()
 ) {
     val responseState: ResponseState<BookDetail> by viewModel.bookDetail.collectAsStateWithLifecycle()
     val addBookDialogState by viewModel.addBookDialogState
         .collectAsStateWithLifecycle(initialValue = AddBookDialogState.Dismiss)
+
+    LaunchedEffect(key1 = viewModel.addComplete) {
+        viewModel.addComplete.collectLatest {
+            onAddCompleted()
+        }
+    }
 
     Box(modifier = Modifier.fillMaxSize()) {
         Column(modifier = Modifier.fillMaxSize()) {
@@ -82,7 +92,7 @@ fun SearchDetailScreen(
         addBookDialogState,
         confirm = { viewModel.onAddDialogConfirmed(it) },
         cancel = { viewModel.onAddDialogCanceled() }
-    ) { onBackClicked() }
+    )
 }
 
 @Composable
@@ -198,8 +208,7 @@ fun AddBookButton(modifier: Modifier, showDialog: () -> Unit) {
 fun AddBookDialog(
     state: AddBookDialogState<BookDetail>,
     confirm: (item: BookDetail) -> Unit,
-    cancel: () -> Unit,
-    complete: () -> Unit
+    cancel: () -> Unit
 ) {
     when (state) {
         is AddBookDialogState.Show -> {
@@ -212,10 +221,6 @@ fun AddBookDialog(
                     cancel()
                 }
             )
-        }
-
-        is AddBookDialogState.AddComplete -> {
-            complete()
         }
 
         is AddBookDialogState.Dismiss -> return

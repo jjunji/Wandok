@@ -19,6 +19,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
@@ -31,6 +32,9 @@ class SearchDetailViewModel @Inject constructor(
 
     private val _addBookDialogState = MutableSharedFlow<AddBookDialogState<BookDetail>>(replay = 0)
     val addBookDialogState: SharedFlow<AddBookDialogState<BookDetail>> = _addBookDialogState
+
+    private val _addComplete = MutableSharedFlow<Boolean>(replay = 0)
+    val addComplete: SharedFlow<Boolean> = _addComplete
 
     init {
         requestBookDetail()
@@ -82,7 +86,8 @@ class SearchDetailViewModel @Inject constructor(
                 )
             }
             repository.insertBook(bookEntity)
-            _addBookDialogState.emit(AddBookDialogState.AddComplete)
+            _addBookDialogState.emit(AddBookDialogState.Dismiss)
+            _addComplete.emit(true)
         }
     }
 
@@ -101,6 +106,5 @@ fun params(isbn: String) = hashMapOf(
 
 sealed class AddBookDialogState<out T> {
     object Dismiss : AddBookDialogState<Nothing>()
-    object AddComplete: AddBookDialogState<Nothing>()
     data class Show(val detail: BookDetail) : AddBookDialogState<BookDetail>()
 }
