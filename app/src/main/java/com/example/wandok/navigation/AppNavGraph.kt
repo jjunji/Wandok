@@ -100,9 +100,12 @@ private fun NavGraphBuilder.showSearchDetail(navController: NavController) {
                     navController.navigateUp()
                 },
                 onAddCompleted = {
-//                    navController.navigate(LeafScreen.Home.route)
-                    val count = navController.graph.nodes.size()
-                    Timber.tag("nav").e("count : $count")
+                    navController.navigate(LeafScreen.Home.route) {
+                        popUpTo(navController.graph.startDestinationId){
+                            inclusive = true
+                        }
+                        launchSingleTop = true
+                    }
                 }
             )
         }
