@@ -76,7 +76,6 @@ fun getApiKey(): String {
 }
 
 dependencies {
-//    implementation(libs.material3)
     androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.androidx.espresso)
     androidTestImplementation(libs.junit)
@@ -94,6 +93,7 @@ dependencies {
     implementation(libs.compose.ui.preview)
     debugImplementation(libs.compose.ui.tooling)
     implementation(libs.compose.material)
+    implementation(libs.compose.material3)
 
     // compose - optional
     implementation(libs.compose.activity)

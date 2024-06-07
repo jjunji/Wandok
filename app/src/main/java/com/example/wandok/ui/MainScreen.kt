@@ -25,6 +25,7 @@ import androidx.navigation.compose.rememberNavController
 import com.example.wandok.navigation.LeafScreen
 import com.example.wandok.navigation.MyNavHost
 import com.example.wandok.navigation.RootScreen
+import com.example.wandok.navigation.navigateToRootScreen
 import kotlinx.coroutines.flow.StateFlow
 import timber.log.Timber
 
@@ -82,15 +83,6 @@ fun MyBottomNavigation(
     }
 }
 
-private fun NavController.navigateToRootScreen(rootScreen: RootScreen) {
-    navigate(rootScreen.route) {
-        launchSingleTop = true
-        restoreState = true
-        popUpTo(graph.findStartDestination().id) {
-            saveState = true
-        }
-    }
-}
 
 @Preview(showBackground = true)
 @Composable

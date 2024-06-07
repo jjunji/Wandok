@@ -6,6 +6,7 @@ import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavController
+import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
@@ -19,7 +20,6 @@ import com.example.wandok.ui.home.HomeScreen
 import com.example.wandok.ui.home.ReadingProgressScreen
 import com.example.wandok.ui.search.SearchDetailScreen
 import com.example.wandok.ui.search.SearchScreen
-import timber.log.Timber
 
 @Composable
 fun MyNavHost(
@@ -100,12 +100,7 @@ private fun NavGraphBuilder.showSearchDetail(navController: NavController) {
                     navController.navigateUp()
                 },
                 onAddCompleted = {
-                    navController.navigate(LeafScreen.Home.route) {
-                        popUpTo(navController.graph.startDestinationId){
-                            inclusive = true
-                        }
-                        launchSingleTop = true
-                    }
+                    navController.navigateToRootScreen(RootScreen.Home)
                 }
             )
         }
@@ -139,5 +134,15 @@ private fun NavGraphBuilder.addMyPage(navController: NavController) {
 private fun NavGraphBuilder.showMyPage(navController: NavController) {
     composable(route = LeafScreen.MyPage.route) {
         EmptyScreen()
+    }
+}
+
+fun NavController.navigateToRootScreen(rootScreen: RootScreen) {
+    navigate(rootScreen.route) {
+        popUpTo(graph.findStartDestination().id) {
+            saveState = true
+        }
+        launchSingleTop = true
+        restoreState = true
     }
 }
