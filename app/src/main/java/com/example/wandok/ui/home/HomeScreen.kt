@@ -17,7 +17,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.SheetState
@@ -39,6 +38,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.wandok.R
 import com.example.wandok.database.BookEntity
+import com.example.wandok.ui.core.FilterItem
 import com.example.wandok.ui.theme.DarkGray
 import com.example.wandok.ui.theme.Typography
 import kotlinx.coroutines.CoroutineScope
@@ -140,8 +140,14 @@ fun HomeFilter(onFilterClicked: () -> Unit) {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun FilterBottomSheet(showBottomSheet: Boolean, sheetState: SheetState, scope: CoroutineScope, onDismiss: () -> Unit) {
+fun FilterBottomSheet(
+    showBottomSheet: Boolean,
+    sheetState: SheetState,
+    scope: CoroutineScope,
+    onDismiss: () -> Unit
+) {
     val bottomPadding = WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding()
+    var isSelected by remember { mutableStateOf(false) }
 
     if (showBottomSheet) {
         ModalBottomSheet(
@@ -150,9 +156,10 @@ fun FilterBottomSheet(showBottomSheet: Boolean, sheetState: SheetState, scope: C
             Column(
                 modifier = Modifier.padding(bottom = bottomPadding)
             ) {
-                Text(text = "1")
-                Text(text = "2")
-                Text(text = "3")
+                FilterItem(text = "모든 책", isSelected = isSelected) { isSelected = !isSelected }
+                FilterItem(text = "읽는 중", isSelected = isSelected) { isSelected = !isSelected }
+                FilterItem(text = "독서 예정", isSelected = isSelected) { isSelected = !isSelected }
+                FilterItem(text = "다 읽은 책", isSelected = isSelected) { isSelected = !isSelected }
             }
         }
     }

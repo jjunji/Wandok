@@ -19,4 +19,15 @@
     
     <!-- 상세 -->
     <string name="detail_message_add_book">책을 추가하시겠습니까?</string>
+
+    <!-- 홈 필터 -->
+    <string name="filter_all_book">모든 책</string>
+    <string name="filter_reading">읽는 중</string>
+    <string name="filter_to_read">독서 예정</string>
+    <string name="filter_finished">다 읽은 책</string>
+    <string name="filter_newest">최신 등록 순</string>
+    <string name="filter_oldest">오래된 등록 순</string>
+    <string name="filter_highest_progress">진행율 높은 순</string>
+    <string name="filter_lowest_progress">진행률 낮은 순</string>
+
 </resources>

@@ -29,7 +29,6 @@ fun MyNavHost(
     NavHost(
         navController = navController,
         startDestination = RootScreen.Home.route,
-        Modifier.padding(innerPadding)
     ) {
         addHomeRoute(navController = navController)
         addSearchRoute(navController = navController)
