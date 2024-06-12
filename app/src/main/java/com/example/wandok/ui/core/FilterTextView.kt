@@ -24,16 +24,21 @@ import com.example.wandok.ui.theme.DarkGray
 import com.example.wandok.ui.theme.Orange300
 
 @Composable
-fun FilterItem(text: String, isSelected: Boolean, onClick: () -> Unit) {
-    val primaryColor = Orange300
+fun FilterItem(
+    modifier: Modifier = Modifier,
+    text: String,
+    isSelected: Boolean,
+    onClick: () -> Unit
+) {
+    val orangeColor = Orange300
     val grayColor = DarkGray
     val shape = RoundedCornerShape(24.dp)
 
-    val borderColor = if (isSelected) primaryColor else grayColor
+    val borderColor = if (isSelected) orangeColor else grayColor
     val borderWidth = if (isSelected) 2.dp else 1.dp
 
     Box(
-        modifier = Modifier
+        modifier = modifier
             .clip(shape)
             .background(color = White)
             .border(
@@ -49,7 +54,7 @@ fun FilterItem(text: String, isSelected: Boolean, onClick: () -> Unit) {
         Text(
             text = text,
             fontSize = 14.sp,
-            color = if (isSelected) primaryColor else grayColor
+            color = if (isSelected) orangeColor else grayColor
         )
     }
 }

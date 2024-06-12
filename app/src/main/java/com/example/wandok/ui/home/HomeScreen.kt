@@ -39,6 +39,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.wandok.R
 import com.example.wandok.database.BookEntity
 import com.example.wandok.ui.core.FilterItem
+import com.example.wandok.ui.home.filter.FilterBottomSheet
 import com.example.wandok.ui.theme.DarkGray
 import com.example.wandok.ui.theme.Typography
 import kotlinx.coroutines.CoroutineScope
@@ -133,33 +134,6 @@ fun HomeFilter(onFilterClicked: () -> Unit) {
                     contentDescription = null,
                     modifier = Modifier.size(16.dp)
                 )
-            }
-        }
-    }
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun FilterBottomSheet(
-    showBottomSheet: Boolean,
-    sheetState: SheetState,
-    scope: CoroutineScope,
-    onDismiss: () -> Unit
-) {
-    val bottomPadding = WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding()
-    var isSelected by remember { mutableStateOf(false) }
-
-    if (showBottomSheet) {
-        ModalBottomSheet(
-            onDismissRequest = { onDismiss() }
-        ) {
-            Column(
-                modifier = Modifier.padding(bottom = bottomPadding)
-            ) {
-                FilterItem(text = "모든 책", isSelected = isSelected) { isSelected = !isSelected }
-                FilterItem(text = "읽는 중", isSelected = isSelected) { isSelected = !isSelected }
-                FilterItem(text = "독서 예정", isSelected = isSelected) { isSelected = !isSelected }
-                FilterItem(text = "다 읽은 책", isSelected = isSelected) { isSelected = !isSelected }
             }
         }
     }
