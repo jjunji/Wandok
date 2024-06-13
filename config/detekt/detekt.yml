@@ -1,0 +1,26 @@
+build:
+  # 0 이 아닌 경우 n 개 이상의 에러가 발생하면 분석 중단, 빌드 실패
+  maxIssues: 0
+
+config:
+  validation: false
+  warningsAsErrors: false # 경고 또한 에러로 간주하여 빌드 실패
+#
+#complexity:
+#  active: false
+#  TooManyFunctions:
+#    active: false
+#    thresholdInFiles: 30
+#    thresholdInClasses: 20
+#    thresholdInInterfaces: 10
+#    thresholdInObjects: 20
+#    thresholdInEnums: 5
+#    ignoreDeprecated: true
+#    ignorePrivate: true
+#    ignoreOverridden: false
+
+formatting:
+  active: true
+  Indentation:
+    active: true
+    indentSize: 4
