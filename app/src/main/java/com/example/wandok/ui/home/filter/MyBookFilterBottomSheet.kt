@@ -42,7 +42,7 @@ import kotlinx.coroutines.CoroutineScope
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun FilterBottomSheet(
+fun BookStatusFilterBottomSheet(
     showBottomSheet: Boolean,
     sheetState: SheetState,
     scope: CoroutineScope,
@@ -160,7 +160,7 @@ fun ApplyButton() {
 fun PreviewFilterBottomSheet() {
     val sheetState = rememberStandardBottomSheetState(SheetValue.Expanded)
     val scope = rememberCoroutineScope()
-    FilterBottomSheet(
+    BookStatusFilterBottomSheet(
         showBottomSheet = true,
         sheetState = sheetState,
         scope = scope

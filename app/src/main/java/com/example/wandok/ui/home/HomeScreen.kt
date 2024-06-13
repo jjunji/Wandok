@@ -7,19 +7,14 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.ModalBottomSheet
-import androidx.compose.material3.SheetState
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
@@ -38,11 +33,10 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.wandok.R
 import com.example.wandok.database.BookEntity
-import com.example.wandok.ui.core.FilterItem
-import com.example.wandok.ui.home.filter.FilterBottomSheet
+import com.example.wandok.ui.home.filter.BookSortFilterBottomSheet
+import com.example.wandok.ui.home.filter.BookStatusFilterBottomSheet
 import com.example.wandok.ui.theme.DarkGray
 import com.example.wandok.ui.theme.Typography
-import kotlinx.coroutines.CoroutineScope
 import timber.log.Timber
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -50,30 +44,51 @@ import timber.log.Timber
 fun HomeScreen(
     viewModel: HomeViewModel = hiltViewModel()
 ) {
-    val sheetState = rememberModalBottomSheetState()
+    var showStatusFilterSheet by remember { mutableStateOf(false) }
+    val statusFilterSheetState = rememberModalBottomSheetState()
+
+    var showSortFilterSheet by remember { mutableStateOf(false) }
+    val sortFilterSheetState = rememberModalBottomSheetState()
+
     val scope = rememberCoroutineScope()
-    var showBottomSheet by remember { mutableStateOf(false) }
+
     val myBookList by viewModel.myBookList.collectAsStateWithLifecycle()
 
     Home(
         myBookList = myBookList,
         onFilterClicked = {
-            showBottomSheet = true
+            showStatusFilterSheet = true
+        },
+        onSortFilterClicked = {
+            showSortFilterSheet = true
         }
     )
 
-    FilterBottomSheet(
-        showBottomSheet = showBottomSheet,
-        sheetState = sheetState,
+    BookStatusFilterBottomSheet(
+        showBottomSheet = showStatusFilterSheet,
+        sheetState = statusFilterSheetState,
         scope = scope,
         onDismiss = {
-            showBottomSheet = false
+            showStatusFilterSheet = false
+        }
+    )
+
+    BookSortFilterBottomSheet(
+        showBottomSheet = showSortFilterSheet,
+        sheetState = sortFilterSheetState,
+        scope = scope,
+        onDismiss = {
+            showSortFilterSheet = false
         }
     )
 }
 
 @Composable
-fun Home(myBookList: List<BookEntity>, onFilterClicked: () -> Unit) {
+fun Home(
+    myBookList: List<BookEntity>,
+    onFilterClicked: () -> Unit,
+    onSortFilterClicked: () -> Unit
+) {
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -87,7 +102,10 @@ fun Home(myBookList: List<BookEntity>, onFilterClicked: () -> Unit) {
                 style = Typography.h6
             )
 
-            HomeFilter(onFilterClicked = { onFilterClicked() })
+            HomeFilter(
+                onStatusFilterClicked = { onFilterClicked() },
+                onSortFilterClicked = { onSortFilterClicked() }
+            )
 
             MyBookList(
                 bookList = myBookList,
@@ -98,7 +116,10 @@ fun Home(myBookList: List<BookEntity>, onFilterClicked: () -> Unit) {
 }
 
 @Composable
-fun HomeFilter(onFilterClicked: () -> Unit) {
+fun HomeFilter(
+    onStatusFilterClicked: () -> Unit,
+    onSortFilterClicked: () -> Unit
+) {
     Box(
         modifier = Modifier
             .wrapContentSize()
@@ -111,15 +132,15 @@ fun HomeFilter(onFilterClicked: () -> Unit) {
                 painter = painterResource(id = R.drawable.ic_filter),
                 contentDescription = null,
                 modifier = Modifier
-                    .clickable {
-                        onFilterClicked()
-                    }
+                    .clickable { onStatusFilterClicked() }
             )
 
             Spacer(modifier = Modifier.weight(1f))
 
             Row(
-                verticalAlignment = Alignment.CenterVertically
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier
+                    .clickable { onSortFilterClicked() }
             ) {
                 Text(
                     text = "등록순",
@@ -167,5 +188,5 @@ fun MyBookList(
 @Composable
 fun PreviewHome() {
     val bookEntity = BookEntity("", "Title", "", "", "")
-    Home(myBookList = listOf(bookEntity)) {}
+    Home(myBookList = listOf(bookEntity), {}, {})
 }
