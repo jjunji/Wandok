@@ -13,13 +13,11 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.lifecycleScope
 import com.example.wandok.R
-import com.example.wandok.common.constants.AppConstant.SPLASH_TIME
 import com.example.wandok.common.extension.IntentExt.navigateActivity
 import com.example.wandok.ui.MainActivity
 import com.example.wandok.ui.login.LoginActivity
 import com.example.wandok.ui.theme.Red100
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
@@ -52,13 +50,13 @@ class LauncherActivity : ComponentActivity() {
 @Preview
 @Composable
 fun LauncherScreen() {
-        Surface(
-            modifier = Modifier.fillMaxSize(),
-            color = Red100
-        ) {
-            Image(
-                painter = painterResource(id = R.drawable.img_logo),
-                contentDescription = "logo"
-            )
-        }
+    Surface(
+        modifier = Modifier.fillMaxSize(),
+        color = Red100
+    ) {
+        Image(
+            painter = painterResource(id = R.drawable.img_logo),
+            contentDescription = "logo"
+        )
+    }
 }

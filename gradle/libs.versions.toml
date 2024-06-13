@@ -33,6 +33,7 @@ gsonConverter = "2.9.0"
 gson = "2.10.1"
 glideCompose = "1.0.0-beta01"
 coil = "2.6.0"
+detekt = "1.23.3"
 
 [libraries]
 androidx-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "ktx" }
@@ -103,6 +104,9 @@ spinkit = { group = "com.github.ybq", name = "Android-SpinKit", version.ref = "s
 timber = { group = "com.jakewharton.timber", name = "timber", version.ref = "timber" }
 bookContentParser = { group = "com.github.ejjang2030", name = "BookContentParser", version.ref ="bookContentParser"}
 
+# verify
+detekt-formatting = { module = "io.gitlab.arturbosch.detekt:detekt-formatting", version.ref = "detekt" }
+
 [plugins]
 android-application = { id = "com.android.application", version.ref = "androidGradlePlugin" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
@@ -110,6 +114,7 @@ kotlin-kapt = { id = "org.jetbrains.kotlin.kapt", version.ref = "kotlin" }
 kotlin-parcelize = { id = "org.jetbrains.kotlin.plugin.parcelize", version.ref = "kotlin" }
 hilt = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
+detekt = { id = "io.gitlab.arturbosch.detekt", version.ref = "detekt" }
 
 [bundles]
 lifecycle = ["lifecycle-runtime-ktx", "lifecycle-viewmodel", "lifecycle-viewmodel-savedstate", "lifecycle-livedata-ktx"]
