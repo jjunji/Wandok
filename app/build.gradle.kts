@@ -5,7 +5,7 @@ plugins {
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.kapt)
     alias(libs.plugins.hilt)
-
+    alias(libs.plugins.detekt)
     id("com.google.devtools.ksp")
 }
 
@@ -69,6 +69,12 @@ android {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
     }
+}
+
+detekt {
+    config.setFrom(file("$rootDir/config/detekt/detekt.yml"))
+    buildUponDefaultConfig = false  // 기본 룰 해제
+    allRules = false                // 현재 사용할 수 있는 모든 룰 활성 여부
 }
 
 fun getApiKey(): String {
@@ -138,4 +144,6 @@ dependencies {
 
     implementation(libs.paging3)
     implementation(libs.paging.compose)
+
+    detektPlugins(libs.detekt.formatting)
 }

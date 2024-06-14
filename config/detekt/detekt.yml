@@ -1,0 +1,70 @@
+build:
+  # 0 이 아닌 경우 n 개 이상의 에러가 발생하면 분석 중단, 빌드 실패
+  maxIssues: 0
+
+config:
+  validation: false
+  warningsAsErrors: false # 경고 또한 에러로 간주하여 빌드 실패
+
+# 복잡성 규칙
+complexity:
+  active: true
+  # 메서드 최대 20줄
+  LongMethod:
+    active: true
+    threshold: 100
+  # 복잡도 (제어 흐름의 복잡도 - 분기문 (if, else, while, for 등) 수에 따라 증가
+  ComplexMethod:
+    active: true
+    threshold: 10
+
+# 포맷팅을 위한 규칙
+formatting:
+  active: true
+  Indentation:
+    active: true
+    indentSize: 4
+    continuationIndentSize: 4
+  UnusedImports:
+    active: true
+
+  # 코드의 끝 부분에 불필요한 공백이 없는지 검사
+  NoTrailingSpaces:
+    active: true
+  #  연산자 주변에 적절한 공백이 있는지 검사
+  SpacingAroundOperators:
+    active: true
+  # (if, for, while 등) 주변에 적절한 공백이 있는지 검사
+  SpacingAroundKeywords:
+    active: true
+  # 패키지 선언과 임포트 선언 사이 공백이 적절한지 검사
+  SpacingBetweenPackageAndImports:
+    active: true
+  # 어노테이션과 선언 사이에 적절한 공백 검사
+  SpacingBetweenDeclarationsWithAnnotations:
+    active: true
+
+# 명명 규칙
+naming:
+  ClassNaming:
+    active: true
+    classPattern: '^[A-Z][a-zA-Z0-9]*$'
+
+  VariableNaming:
+    active: true
+    variablePattern: '^[a-z][A-Za-z0-9]*$'
+
+  FunctionNaming:
+    active: true
+    functionPattern: '^[a-z][A-Za-z0-9]*$'
+    ignoreAnnotated: [ 'Composable' ]
+    excludes: [ '**/test/**', '**/androidTest/**', '**/commonTest/**', '**/jvmTest/**' ]
+
+style:
+  MagicNumber:
+    active: true
+    ignoreAnnotated: [ 'Composable' ]
+    excludes: [ '**/theme/**','**/test/**', '**/androidTest/**', '**/commonTest/**', '**/jvmTest/**' ]
+  #    ignoreNumbers: [-1, 0, 1, 2]  # 무시할 숫자 목록
+  SpacingBetweenPackageAndImports:
+    active: true
