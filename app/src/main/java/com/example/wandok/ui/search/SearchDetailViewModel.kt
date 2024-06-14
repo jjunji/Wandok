@@ -21,6 +21,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import javax.inject.Inject
+import androidx.compose.foundation.layout.height
 
 @HiltViewModel
 class SearchDetailViewModel @Inject constructor(
@@ -51,7 +52,7 @@ class SearchDetailViewModel @Inject constructor(
             _bookDetail.emit(ResponseState.Loading)
             delay(1000)
             repository.getBookDetail(queryMap = params(isbn))
-                .onSuccess {
+                .onSuccess{
                     _bookDetail.emit(ResponseState.Success(it))
                 }.onError { _, _ ->
                     _bookDetail.emit(ResponseState.Error(12, ""))
