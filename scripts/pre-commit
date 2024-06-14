@@ -2,9 +2,18 @@
 
 echo "Running detekt"
 
-FILES=$(git diff --cached --name-only --diff-filter=ACM | grep '*.kt$' | tr '\n' ' ')
+# 변경된 파일 목록 가져오기
+FILES=$(git diff-index --cached --name-only HEAD | grep '\.kt$' | tr '\n' ' ')
+
+echo "Detected files:"
+echo "$FILES"
 
 if [ -n "$FILES" ]; then
+    echo "Detected changes in the following files:"
+    echo "$FILES"
+    echo "Number of detected files: $(echo "$FILES" | wc -w)"
+
+    # 변경된 파일에 대해서만 Detekt 실행
     ./gradlew detekt --files "$FILES"
     DETEKT_STATUS=$?
 
@@ -17,6 +26,7 @@ if [ -n "$FILES" ]; then
 else
     echo "No changes detected"
 fi
+
 exit 0
 
 #if [ "$status" = 0 ] ; then
