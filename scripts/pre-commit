@@ -2,7 +2,7 @@
 
 echo "Running detekt"
 
-FILES=${git diff --cached --name-only --diff-filter=ACM | grep '/.kt$' | tr '/n' ' '}
+FILES=$(git diff --cached --name-only --diff-filter=ACM | grep '*.kt$' | tr '\n' ' ')
 
 if [ -n "$FILES" ]; then
     ./gradlew detekt --files "$FILES"
@@ -15,7 +15,7 @@ if [ -n "$FILES" ]; then
         exit 1
     fi
 else
-    echo "change not found"
+    echo "No changes detected"
 fi
 exit 0
 
