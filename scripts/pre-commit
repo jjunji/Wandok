@@ -2,14 +2,31 @@
 
 echo "Running detekt"
 
-./gradlew detekt
+FILES=${git diff --cached --name-only --diff-filter=ACM | grep '/.kt$' | tr '/n' ' '}
 
-status=$?
+if [ -n "$FILES" ]; then
+    ./gradlew detekt --files "$FILES"
+    DETEKT_STATUS=$?
 
-if [ "$status" = 0 ] ; then
-    echo "이슈 없음"
-    exit 0
+    if [ "$DETEKT_STATUS" -eq 0 ]; then
+        echo "Detekt Passed"
+    else
+        echo "Detekt Failed"
+        exit 1
+    fi
 else
-    echo 1>&2 "이슈 있음"
-    exit 1
+    echo "change not found"
 fi
+exit 0
+
+#if [ "$status" = 0 ] ; then
+#    echo "*************************************************"
+#    echo "            Detekt Failed            "
+#    echo "*************************************************"
+#    exit 0
+#else
+#    echo 1>&2 "*************************************************"
+#    echo "            Detekt Failed            "
+#    echo "*************************************************"
+#    exit 1
+#fi
