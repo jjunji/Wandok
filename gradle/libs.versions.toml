@@ -33,7 +33,7 @@ gsonConverter = "2.9.0"
 gson = "2.10.1"
 glideCompose = "1.0.0-beta01"
 coil = "2.6.0"
-detekt = "1.23.3"
+detekt = "1.23.6"
 
 [libraries]
 androidx-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "ktx" }
