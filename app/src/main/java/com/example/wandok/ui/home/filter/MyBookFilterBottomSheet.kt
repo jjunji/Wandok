@@ -48,7 +48,6 @@ fun BookStatusFilterBottomSheet(
     scope: CoroutineScope,
     onDismiss: () -> Unit
 ) {
-//    val bottomPadding = WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding()
     var isSelected by remember { mutableStateOf(false) }
 
     if (showBottomSheet) {

@@ -70,3 +70,5 @@ style:
   #    ignoreNumbers: [-1, 0, 1, 2]  # 무시할 숫자 목록
   SpacingBetweenPackageAndImports:
     active: true
+  UnusedImports:
+    active: true

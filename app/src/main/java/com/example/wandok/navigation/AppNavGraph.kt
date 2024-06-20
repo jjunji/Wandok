@@ -24,11 +24,12 @@ import com.example.wandok.ui.search.SearchScreen
 @Composable
 fun MyNavHost(
     navController: NavHostController,
-    innerPadding: PaddingValues
+    paddingValues: PaddingValues
 ) {
     NavHost(
+        modifier = Modifier.padding(paddingValues),
         navController = navController,
-        startDestination = RootScreen.Home.route,
+        startDestination = RootScreen.Home.route
     ) {
         addHomeRoute(navController = navController)
         addSearchRoute(navController = navController)

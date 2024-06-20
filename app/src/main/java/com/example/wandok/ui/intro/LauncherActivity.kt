@@ -15,7 +15,6 @@ import androidx.lifecycle.lifecycleScope
 import com.example.wandok.R
 import com.example.wandok.common.extension.IntentExt.navigateActivity
 import com.example.wandok.ui.MainActivity
-import com.example.wandok.ui.login.LoginActivity
 import com.example.wandok.ui.theme.Red100
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -33,7 +32,7 @@ class LauncherActivity : ComponentActivity() {
             launch {
                 viewModel.navigateToLogin.collect {
                     finishAffinity()
-                    navigateActivity(LoginActivity::class.java)
+                    navigateActivity(MainActivity::class.java)
                 }
             }
 
