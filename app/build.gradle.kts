@@ -1,4 +1,5 @@
 import com.android.build.gradle.internal.cxx.configure.gradleLocalProperties
+import java.io.ByteArrayOutputStream
 
 plugins {
     alias(libs.plugins.android.application)
@@ -27,9 +28,9 @@ android {
 
         buildConfigField("String", "API_KEY", getApiKey())
 
-        kapt{
-            arguments{
-                arg("room.schemaLocation" , "$projectDir/schemas")
+        kapt {
+            arguments {
+                arg("room.schemaLocation", "$projectDir/schemas")
             }
         }
     }
@@ -71,14 +72,45 @@ android {
     }
 }
 
+fun getApiKey(): String {
+    return gradleLocalProperties(rootDir).getProperty("api.key")
+}
+
+val detektConfigPath = "$rootDir/config/detekt/detekt.yml"
 detekt {
-    config.setFrom(file("$rootDir/config/detekt/detekt.yml"))
+    config.setFrom(file(detektConfigPath))
     buildUponDefaultConfig = false  // 기본 룰 해제
     allRules = false                // 현재 사용할 수 있는 모든 룰 활성 여부
 }
 
-fun getApiKey(): String {
-    return gradleLocalProperties(rootDir).getProperty("api.key")
+tasks.register<io.gitlab.arturbosch.detekt.Detekt>("detektPreview") {
+    group = "verification"
+    config.setFrom(file(detektConfigPath))
+
+    val stagedFiles = mutableListOf<File>()
+
+    // Git 명령어를 통해 스테이징된 파일 목록을 가져옵니다.
+    val output = ByteArrayOutputStream()
+    exec {
+        commandLine("git", "diff", "--name-only", "--cached")
+        standardOutput = output
+    }
+    stagedFiles.addAll(
+        output.toString()
+            .trim()
+            .split("\n")
+            .filter { it.endsWith(".kt") }
+            .map { rootDir.resolve(it) }
+    ).also {
+        println(stagedFiles)
+    }
+
+    if (stagedFiles.isEmpty()) {
+        println("No staged files")
+        return@register
+    }
+
+    setSource(files(stagedFiles))
 }
 
 dependencies {

@@ -27,7 +27,9 @@ formatting:
     continuationIndentSize: 4
   UnusedImports:
     active: true
-
+  # Consistent spacing around curly braces
+  SpacingAroundCurly:
+    active: true
   # 코드의 끝 부분에 불필요한 공백이 없는지 검사
   NoTrailingSpaces:
     active: true
