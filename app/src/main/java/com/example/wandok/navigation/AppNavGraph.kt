@@ -20,6 +20,7 @@ import com.example.wandok.ui.home.HomeScreen
 import com.example.wandok.ui.home.ReadingProgressScreen
 import com.example.wandok.ui.search.SearchDetailScreen
 import com.example.wandok.ui.search.SearchScreen
+import com.example.wandok.ui.wandok.WandokScreen
 
 @Composable
 fun MyNavHost(
@@ -118,7 +119,7 @@ private fun NavGraphBuilder.addWandokList(navController: NavController) {
 
 private fun NavGraphBuilder.showWandokList(navController: NavController) {
     composable(route = LeafScreen.WandokList.route) {
-        EmptyScreen()
+        WandokScreen()
     }
 }
 

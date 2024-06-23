@@ -20,6 +20,11 @@ val Orange50 = Color(0xFFfff2df)
 val BackGround = Color(0xFFFFFFFF)
 
 val GrayC1 = Color(0xFFC1C1C1)
+val WhiteGray = Color(0xFFECECEC)
 val LightGray = Color(0xFFb8b8b8)
 val DarkGray = Color(0xFF8B8B8B)
+val Gray3D = Color(0xFF3D3D3D)
+val Gray8B = Color(0xFF8b8b8b)
 
+val DeepShadow = Color(0x4D000000)
+val LightShadow = Color(0x4D242424)

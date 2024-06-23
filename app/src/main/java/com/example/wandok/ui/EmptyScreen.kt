@@ -10,15 +10,19 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 
+
 @Composable
-fun EmptyScreen() {
+fun EmptyScreen(
+    modifier: Modifier = Modifier,
+    text: String = "Empty"
+) {
     Box(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxSize()
             .background(Color.White)
     ) {
         Text(
-            text = "empty",
+            text = text,
             textAlign = TextAlign.Center,
             color = Color.Red,
             modifier = Modifier.align(Alignment.Center)
