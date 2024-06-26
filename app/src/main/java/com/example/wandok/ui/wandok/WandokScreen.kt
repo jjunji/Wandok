@@ -16,8 +16,6 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.layout.wrapContentWidth
-import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -63,7 +61,13 @@ fun WandokScreen() {
             }
         }
 
-        HorizontalWandokList()
+        HorizontalWandokList(
+//            items = listOf("1","2"),
+            items = listOf("1", "2", "3", "4", "5", "6", "7"),
+            modifier = Modifier
+                .align(Alignment.BottomCenter)
+                .fillMaxWidth(),
+        )
     }
 }
 
@@ -227,30 +231,6 @@ fun WandokFooter() {
         }
     }
 
-}
-
-@Composable
-fun HorizontalWandokList() {
-    val itemsList = (1..20).toList() // 표시할 아이템 리스트
-
-    Box(
-        modifier = Modifier
-            .fillMaxSize(),
-        contentAlignment = Alignment.CenterStart // 박스의 내용을 중앙 정렬
-    ) {
-        LazyRow(
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            itemsIndexed(
-                items = itemsList,
-                key = { index, item ->
-                    item
-                }
-            ) { index, item ->
-                Body1Text(text = item.toString())
-            }
-        }
-    }
 }
 
 @Preview(showBackground = true)
