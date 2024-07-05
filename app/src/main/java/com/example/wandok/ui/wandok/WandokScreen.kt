@@ -77,7 +77,7 @@ fun WandokScreen() {
 fun ShadowContainer(content: @Composable BoxScope.() -> Unit) {
     Box(
         modifier = Modifier
-            .padding(top = 50.dp)
+            .padding(top = 45.dp)
             .wrapContentSize()
             .shadowExcludeLeft(
                 borderRadius = cornerRadius, blurRadius = cornerRadius
