@@ -3,7 +3,6 @@ package com.example.wandok.ui.wandok
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -15,11 +14,9 @@ import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.example.wandok.R
 import com.example.wandok.ui.theme.Orange100
-import timber.log.Timber
 
 @Composable
 fun WandokRow(modifier: Modifier) {
-    Timber.tag("test").e("${modifier.offset()}")
     Box(
         modifier = modifier
 //            .width(100.dp)
