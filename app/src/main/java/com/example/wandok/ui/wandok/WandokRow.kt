@@ -19,7 +19,7 @@ import com.example.wandok.R
 fun WandokRow(yComponent: Float, rotationDegree: Float) {
     Box(
         modifier = Modifier
-            .width(110.dp)
+            .width(wandokItemWidth)
             .height(150.dp)
             .graphicsLayer {
                 translationY = yComponent

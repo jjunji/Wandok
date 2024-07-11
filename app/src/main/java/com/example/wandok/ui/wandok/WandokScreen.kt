@@ -38,6 +38,7 @@ import com.example.wandok.ui.theme.Orange500
 import com.example.wandok.ui.theme.WhiteGray
 
 val cornerRadius = 16.dp
+val wandokItemWidth = 110.dp
 
 @Composable
 fun WandokScreen() {

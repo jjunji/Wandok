@@ -25,7 +25,7 @@ fun HorizontalWandokList(
 ) {
     val listState = rememberLazyListState()
     val screenWidth = LocalContext.current.resources.displayMetrics.widthPixels
-    val itemWidth = 97.dp.toPx()
+    val itemWidth = wandokItemWidth.toPx()
 
     // 첫 번째 아이템의 left, 마지막 아이템의 right 가 스크린 중앙에서 시작, 종료될 수 있도록
     val contentPadding = remember {
