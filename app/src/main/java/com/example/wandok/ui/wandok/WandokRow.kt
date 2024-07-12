@@ -1,5 +1,6 @@
 package com.example.wandok.ui.wandok
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -16,14 +17,22 @@ import coil.compose.AsyncImage
 import com.example.wandok.R
 
 @Composable
-fun WandokRow(yComponent: Float, rotationDegree: Float) {
+fun WandokRow(
+    modifier: Modifier,
+    yComponent: Float,
+    rotationDegree: Float,
+    onItemClicked: () -> Unit
+) {
     Box(
-        modifier = Modifier
+        modifier = modifier
             .width(wandokItemWidth)
             .height(150.dp)
             .graphicsLayer {
                 translationY = yComponent
                 rotationZ = rotationDegree
+            }
+            .clickable {
+                onItemClicked()
             }
     ) {
         AsyncImage(

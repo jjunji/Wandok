@@ -1,12 +1,20 @@
 package com.example.wandok.ui.wandok
 
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.foundation.interaction.collectIsDraggedAsState
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.platform.LocalContext
@@ -14,6 +22,7 @@ import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import com.example.wandok.common.extension.pxToDp
 import com.example.wandok.common.extension.toPx
+import kotlinx.coroutines.launch
 import kotlin.math.PI
 import kotlin.math.acos
 import kotlin.math.sin
@@ -23,9 +32,15 @@ fun HorizontalWandokList(
     items: List<String>,
     modifier: Modifier = Modifier
 ) {
+    val coroutineScope = rememberCoroutineScope()
     val listState = rememberLazyListState()
     val screenWidth = LocalContext.current.resources.displayMetrics.widthPixels
     val itemWidth = wandokItemWidth.toPx()
+    var selectedItemIndex by remember {
+        mutableStateOf<Int?>(null)
+    }
+
+    val isUserScrolling by listState.interactionSource.collectIsDraggedAsState()
 
     // 첫 번째 아이템의 left, 마지막 아이템의 right 가 스크린 중앙에서 시작, 종료될 수 있도록
     val contentPadding = remember {
@@ -44,13 +59,36 @@ fun HorizontalWandokList(
                 ?.offset
                 ?: 0).toFloat()
 
+            val animateYOffset by animateFloatAsState(
+                targetValue = if (selectedItemIndex == index) {
+                    -50f
+                } else {
+                    0f
+                }
+            )
+
             val centerX = (screenWidth / 2) + itemOffset
             val (yComponent, alpha) = computeYComponent(centerX.toDouble(), screenWidth.toDouble())
 
             WandokRow(
+                modifier = Modifier.offset(y = animateYOffset.dp),
                 yComponent = yComponent,
-                rotationDegree = (alpha * (180 / PI)).toFloat() - 90f
+                rotationDegree = (alpha * (180 / PI)).toFloat() - 90f,
+                onItemClicked = {
+                    coroutineScope.launch {
+                        listState.animateScrollToItem(index, 0)
+                    }
+                    coroutineScope.launch {
+                        selectedItemIndex = if (selectedItemIndex == index) null else index
+                    }
+                }
             )
+        }
+    }
+
+    LaunchedEffect(listState.isScrollInProgress) {
+        if (isUserScrolling) {
+            selectedItemIndex = null
         }
     }
 }
