@@ -13,6 +13,12 @@
     <string name="common_confirm">확인</string>
     <string name="common_cancel">취소</string>
     <string name="common_reset">재설정</string>
+    <string name="common_start_date">시작일</string>
+    <string name="common_end_date">종료일</string>
+    <string name="common_wandok_date">완독일</string>
+    <string name="common_year">년</string>
+    <string name="common_month">월</string>
+    <string name="common_day">일</string>
 
     <!-- 검색 -->
     <string name="search_title">독서를 시작해 보세요!</string>

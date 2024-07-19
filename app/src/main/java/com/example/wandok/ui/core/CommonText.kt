@@ -65,7 +65,8 @@ fun H6Text(
     text: String,
     color: Color = Color.Black,
     maxLines: Int = 1,
-    textAlign: TextAlign = TextAlign.Center
+    textAlign: TextAlign = TextAlign.Center,
+    bold: Boolean = false
 ) {
     Text(
         modifier = modifier,
@@ -74,6 +75,11 @@ fun H6Text(
         overflow = TextOverflow.Ellipsis,
         color = color,
         style = Typography.h6,
-        textAlign = textAlign
+        textAlign = textAlign,
+        fontWeight = if (bold) {
+            FontWeight.Bold
+        } else {
+            Typography.body2.fontWeight
+        }
     )
 }
