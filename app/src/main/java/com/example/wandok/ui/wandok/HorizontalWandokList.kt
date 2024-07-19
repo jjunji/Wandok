@@ -5,6 +5,7 @@ import androidx.compose.foundation.interaction.collectIsDraggedAsState
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.offset
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -15,6 +16,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.platform.LocalContext
@@ -27,6 +29,7 @@ import kotlin.math.PI
 import kotlin.math.acos
 import kotlin.math.sin
 
+// TODO: List Blink Issue
 @Composable
 fun HorizontalWandokList(
     items: List<String>,
@@ -51,7 +54,8 @@ fun HorizontalWandokList(
         modifier = modifier,
         state = listState,
         contentPadding = contentPadding,
-        horizontalArrangement = Arrangement.spacedBy(-20.dp)
+        horizontalArrangement = Arrangement.spacedBy(-20.dp),
+        verticalAlignment = Alignment.Bottom
     ) {
         itemsIndexed(items) { index, _ ->
             val itemOffset = (listState.layoutInfo.visibleItemsInfo
@@ -61,7 +65,7 @@ fun HorizontalWandokList(
 
             val animateYOffset by animateFloatAsState(
                 targetValue = if (selectedItemIndex == index) {
-                    -50f
+                    -animYOffset.toPx()
                 } else {
                     0f
                 }
@@ -71,7 +75,9 @@ fun HorizontalWandokList(
             val (yComponent, alpha) = computeYComponent(centerX.toDouble(), screenWidth.toDouble())
 
             WandokRow(
-                modifier = Modifier.offset(y = animateYOffset.dp),
+                modifier = Modifier
+                    .padding(bottom = firstItemBottomPadding)
+                    .offset(y = animateYOffset.pxToDp()),
                 yComponent = yComponent,
                 rotationDegree = (alpha * (180 / PI)).toFloat() - 90f,
                 onItemClicked = {

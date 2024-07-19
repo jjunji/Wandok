@@ -39,6 +39,9 @@ import com.example.wandok.ui.theme.WhiteGray
 
 val cornerRadius = 16.dp
 val wandokItemWidth = 110.dp
+val wandokItemHeight = 150.dp
+val animYOffset = 40.dp
+val firstItemBottomPadding = 20.dp
 
 @Composable
 fun WandokScreen() {
@@ -62,12 +65,13 @@ fun WandokScreen() {
             }
         }
 
+        val rowHeight = wandokItemHeight + animYOffset + firstItemBottomPadding
         HorizontalWandokList(
             items = listOf("1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"),
             modifier = Modifier
                 .align(Alignment.BottomCenter)
                 .fillMaxWidth()
-                .height(175.dp)
+                .height(rowHeight)
         )
     }
 }
