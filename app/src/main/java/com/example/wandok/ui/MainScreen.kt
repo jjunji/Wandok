@@ -18,33 +18,46 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
-import androidx.navigation.compose.rememberNavController
-import com.example.wandok.navigation.MyNavHost
 import com.example.wandok.navigation.RootScreen
-import com.example.wandok.navigation.navigateToRootScreen
+import com.example.wandok.ui.main.MainTab
+import com.example.wandok.ui.main.component.MainBottomBar
+import com.example.wandok.ui.main.component.MainNavHost
+import com.example.wandok.ui.main.component.MainNavigator
+import com.example.wandok.ui.main.component.rememberMainNavigator
 
 @Composable
-fun MainScreen() {
-    val navController = rememberNavController()
-
-    val bottomNavRoutes = listOf(
-        RootScreen.Home,
-        RootScreen.Search,
-        RootScreen.WandokList,
-        RootScreen.MyPage
-    )
+internal fun MainScreen(
+    modifier: Modifier = Modifier,
+    navigator: MainNavigator = rememberMainNavigator()
+) {
+//    val navController = rememberNavController()
+//
+//    val bottomNavRoutes = listOf(
+//        RootScreen.Home,
+//        RootScreen.Search,
+//        RootScreen.WandokList,
+//        RootScreen.MyPage
+//    )
 
     Scaffold(
-        bottomBar = {
-            MyBottomNavigation(
-                navController = navController,
-                items = bottomNavRoutes
+        modifier = modifier.fillMaxSize(),
+        content = { padding ->
+            MainNavHost(
+                navigator = navigator,
+                padding = padding
             )
         },
-        modifier = Modifier.fillMaxSize()
-    ) { innerPadding ->
-        MyNavHost(navController = navController, innerPadding)
-    }
+        bottomBar = {
+            MainBottomBar(
+                modifier = Modifier
+                    .navigationBarsPadding(),
+                visible = true, // TODO:
+                tabs = MainTab.entries,
+                currentTab = navigator.currentTab,
+                onTabSelected = { navigator.navigate(it) }
+            )
+        }
+    )
 }
 
 @Composable
@@ -73,7 +86,7 @@ fun MyBottomNavigation(
                 },
                 selected = currentRoute == item.route,
                 onClick = {
-                    navController.navigateToRootScreen(item)
+//                    navController.navigateToRootScreen(item)
                 }
             )
         }
