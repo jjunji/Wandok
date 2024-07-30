@@ -68,7 +68,7 @@ fun SearchRoot(
 @Composable
 fun SearchScreen(
     onItemClick: (isbn: String) -> Unit,
-    modifier: Modifier,
+    modifier: Modifier = Modifier,
     viewModel: SearchViewModel = hiltViewModel()
 ) {
     val keyword by viewModel.keyword.collectAsStateWithLifecycle()

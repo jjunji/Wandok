@@ -11,6 +11,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navOptions
 import com.example.wandok.ui.home.navigation.navigateHome
 import com.example.wandok.ui.main.MainTab
+import com.example.wandok.ui.search.navigation.navigateSearch
 
 internal class MainNavigator(
     val navController: NavHostController
@@ -41,7 +42,7 @@ internal class MainNavigator(
             }
 
             MainTab.SEARCH -> {
-
+                navController.navigateSearch(navOptions)
             }
 
             MainTab.WANDOK_LIST -> {
@@ -59,5 +60,6 @@ internal class MainNavigator(
 internal fun rememberMainNavigator(
     navController: NavHostController = rememberNavController()
 ): MainNavigator = remember(navController) {
+    // TODO: remember key 로 navController 를 사용하지 않았을 때
     MainNavigator(navController)
 }

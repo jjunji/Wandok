@@ -7,6 +7,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import com.example.wandok.ui.home.navigation.homeNavGraph
+import com.example.wandok.ui.search.navigation.searchNavGraph
 
 @Composable
 internal fun MainNavHost(
@@ -14,6 +15,7 @@ internal fun MainNavHost(
     navigator: MainNavigator,
     padding: PaddingValues,
 ) {
+    // TODO: Box Wrap 제거해보기
     Box(
         modifier = modifier
             .fillMaxSize()
@@ -25,7 +27,9 @@ internal fun MainNavHost(
             homeNavGraph(
                 padding = padding
             )
-
+            searchNavGraph(
+                padding = padding
+            )
         }
     }
 }
