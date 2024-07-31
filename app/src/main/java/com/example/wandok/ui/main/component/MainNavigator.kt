@@ -12,6 +12,7 @@ import androidx.navigation.navOptions
 import com.example.wandok.ui.home.navigation.navigateHome
 import com.example.wandok.ui.main.MainTab
 import com.example.wandok.ui.search.navigation.navigateSearch
+import com.example.wandok.ui.wandok.navigation.navigateWandok
 
 internal class MainNavigator(
     val navController: NavHostController
@@ -46,7 +47,7 @@ internal class MainNavigator(
             }
 
             MainTab.WANDOK_LIST -> {
-
+                navController.navigateWandok(navOptions)
             }
 
             MainTab.MY_PAGE -> {

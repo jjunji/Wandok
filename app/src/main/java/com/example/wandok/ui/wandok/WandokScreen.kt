@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -44,11 +45,15 @@ val animYOffset = 40.dp
 val firstItemBottomPadding = 20.dp
 
 @Composable
-fun WandokScreen() {
+fun WandokScreen(
+    paddingValues: PaddingValues
+) {
     val shape = RoundedCornerShape(topEnd = cornerRadius, bottomEnd = cornerRadius)
 
     Box(
-        modifier = Modifier.fillMaxSize()
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(paddingValues)
     ) {
         ShadowContainer {
             Column(
@@ -241,5 +246,5 @@ fun WandokFooter() {
 @Preview(showBackground = true)
 @Composable
 fun PreviewNicknameLabel() {
-    WandokScreen()
+//    WandokScreen()
 }

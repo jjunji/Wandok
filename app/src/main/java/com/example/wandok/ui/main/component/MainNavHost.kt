@@ -8,6 +8,7 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import com.example.wandok.ui.home.navigation.homeNavGraph
 import com.example.wandok.ui.search.navigation.searchNavGraph
+import com.example.wandok.ui.wandok.navigation.wandokListNavGraph
 
 @Composable
 internal fun MainNavHost(
@@ -28,6 +29,9 @@ internal fun MainNavHost(
                 padding = padding
             )
             searchNavGraph(
+                padding = padding
+            )
+            wandokListNavGraph(
                 padding = padding
             )
         }
