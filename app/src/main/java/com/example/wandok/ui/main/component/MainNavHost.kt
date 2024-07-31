@@ -29,7 +29,8 @@ internal fun MainNavHost(
                 padding = padding
             )
             searchNavGraph(
-                padding = padding
+                padding = padding,
+                onItemClicked = { navigator.navigateToSearchDetail(it) }
             )
             wandokListNavGraph(
                 padding = padding

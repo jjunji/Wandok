@@ -6,15 +6,28 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptions
 import androidx.navigation.compose.composable
 import com.example.wandok.core.MainTabRoute
+import com.example.wandok.core.Route
 
 fun NavController.navigateSearch(navOptions: NavOptions) {
     navigate(MainTabRoute.Search, navOptions)
 }
 
+fun NavController.navigateSearchDetail(isbn: String) {
+    navigate(Route.SearchDetail(isbn))
+}
+
 fun NavGraphBuilder.searchNavGraph(
-    padding: PaddingValues
+    padding: PaddingValues,
+    onItemClicked: (isbn: String) -> Unit
 ) {
     composable<MainTabRoute.Search> {
-        SearchRoute(padding)
+        SearchRoute(padding, onItemClick = { onItemClicked(it) })
+    }
+
+    composable<Route.SearchDetail> {
+        SearchDetailRoute(
+            onBackClicked = { /*TODO*/ },
+            onAddCompleted = { /*TODO*/ }
+        )
     }
 }

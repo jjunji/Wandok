@@ -1,3 +1,4 @@
+import com.android.build.gradle.internal.cxx.configure.gradleLocalProperties
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import java.io.ByteArrayOutputStream
 
@@ -27,7 +28,7 @@ android {
             useSupportLibrary = true
         }
 
-        val apiKey: String = providers.gradleProperty("api.key").orElse("null").get()
+        val apiKey = gradleLocalProperties(rootDir, providers).getProperty("api.key")
         buildConfigField("String", "API_KEY", apiKey)
 
         kapt {

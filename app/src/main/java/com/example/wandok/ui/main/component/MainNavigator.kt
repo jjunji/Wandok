@@ -12,6 +12,7 @@ import androidx.navigation.navOptions
 import com.example.wandok.ui.home.navigation.navigateHome
 import com.example.wandok.ui.main.MainTab
 import com.example.wandok.ui.search.navigation.navigateSearch
+import com.example.wandok.ui.search.navigation.navigateSearchDetail
 import com.example.wandok.ui.wandok.navigation.navigateWandok
 
 internal class MainNavigator(
@@ -54,6 +55,10 @@ internal class MainNavigator(
 
             }
         }
+    }
+
+    fun navigateToSearchDetail(isbn: String) {
+        navController.navigateSearchDetail(isbn)
     }
 }
 

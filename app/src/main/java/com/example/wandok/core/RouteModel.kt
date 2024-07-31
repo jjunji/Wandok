@@ -15,3 +15,8 @@ sealed interface MainTabRoute {
     @Serializable
     data object MyPage : MainTabRoute
 }
+
+sealed interface Route {
+    @Serializable
+    data class SearchDetail(val isbn: String) : Route
+}
