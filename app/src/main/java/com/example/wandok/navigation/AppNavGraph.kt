@@ -15,7 +15,6 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import androidx.navigation.navigation
 import com.example.wandok.common.constants.KeyValueConstant.NAV_ARGS_ISBN
-import com.example.wandok.ui.EmptyScreen
 import com.example.wandok.ui.home.HomeScreen
 import com.example.wandok.ui.home.ReadingProgressScreen
 import com.example.wandok.ui.mypage.MyPageScreen

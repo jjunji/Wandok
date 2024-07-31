@@ -29,9 +29,10 @@ import com.example.wandok.ui.core.Body1Text
 import com.example.wandok.ui.core.Body2Text
 import com.example.wandok.ui.core.LinearProgressBar
 import com.example.wandok.ui.core.shadow
+import com.example.wandok.ui.theme.DeepShadow
 import com.example.wandok.ui.theme.Typography
 
-val shadowColor = Color(0x4D000000)
+val shadowColor = DeepShadow
 val CornerRadius = 10.dp
 
 @Composable
