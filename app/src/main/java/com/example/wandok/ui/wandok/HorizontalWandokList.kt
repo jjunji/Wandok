@@ -68,7 +68,7 @@ fun HorizontalWandokList(
                     -animYOffset.toPx()
                 } else {
                     0f
-                }
+                }, label = ""
             )
 
             val centerX = (screenWidth / 2) + itemOffset
