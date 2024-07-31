@@ -6,6 +6,7 @@
     <string name="common_id">아이디</string>
     <string name="common_pwd">비밀번호</string>
     <string name="common_login">로그인</string>
+    <string name="common_logout">로그아웃</string>
     <string name="common_find_id">아이디 찾기</string>
     <string name="common_find_pwd">비밀번호 찾기</string>
     <string name="common_save_id">아이디 저장</string>
@@ -36,5 +37,8 @@
     <string name="filter_oldest">오래된 등록 순</string>
     <string name="filter_highest_progress">진행율 높은 순</string>
     <string name="filter_lowest_progress">진행률 낮은 순</string>
+
+    <string name="mypage_label_login_info">로그인 정보</string>
+    <string name="mypage_label_read_time">나의 독서시간</string>
 
 </resources>

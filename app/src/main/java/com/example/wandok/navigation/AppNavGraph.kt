@@ -15,9 +15,9 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import androidx.navigation.navigation
 import com.example.wandok.common.constants.KeyValueConstant.NAV_ARGS_ISBN
-import com.example.wandok.ui.EmptyScreen
 import com.example.wandok.ui.home.HomeScreen
 import com.example.wandok.ui.home.ReadingProgressScreen
+import com.example.wandok.ui.mypage.MyPageScreen
 import com.example.wandok.ui.search.SearchDetailScreen
 import com.example.wandok.ui.search.SearchScreen
 import com.example.wandok.ui.wandok.WandokScreen
@@ -134,7 +134,7 @@ private fun NavGraphBuilder.addMyPage(navController: NavController) {
 
 private fun NavGraphBuilder.showMyPage(navController: NavController) {
     composable(route = LeafScreen.MyPage.route) {
-        EmptyScreen()
+        MyPageScreen()
     }
 }
 

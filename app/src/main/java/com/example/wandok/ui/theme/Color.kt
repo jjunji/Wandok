@@ -26,5 +26,7 @@ val DarkGray = Color(0xFF8B8B8B)
 val Gray3D = Color(0xFF3D3D3D)
 val Gray8B = Color(0xFF8b8b8b)
 
+val DivideLine = Color(0xFFF5F4F3)
+
 val DeepShadow = Color(0x4D000000)
 val LightShadow = Color(0x4D242424)
