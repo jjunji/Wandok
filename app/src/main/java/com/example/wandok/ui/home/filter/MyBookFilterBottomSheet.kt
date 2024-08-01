@@ -17,10 +17,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -39,13 +35,10 @@ import com.example.wandok.ui.theme.Orange500
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun BookStatusFilterBottomSheet(
+    selectedFilter: BookStatus,
     onFilterSelected: (BookStatus) -> Unit,
-    onDismiss: () -> Unit,
-    selectedFilter: BookStatus
+    onDismiss: () -> Unit
 ) {
-    var isSelected by remember { mutableStateOf(false) }
-
-
     ModalBottomSheet(
         onDismissRequest = { onDismiss() }
     ) {
@@ -61,10 +54,10 @@ fun BookStatusFilterBottomSheet(
                 bold = true
             )
 
-            MyBookFilterItem(
+            MyBookFilters(
                 modifier = Modifier.padding(start = 16.dp, bottom = 45.dp),
-                isSelected,
-                onSelect = { isSelected = !isSelected }
+                bookStatus = selectedFilter,
+                onFilterSelected
             )
 
             Row(
@@ -81,31 +74,36 @@ fun BookStatusFilterBottomSheet(
 }
 
 @Composable
-fun MyBookFilterItem(
+fun MyBookFilters(
     modifier: Modifier,
-    isSelected: Boolean,
-    onSelect: () -> Unit
+    bookStatus: BookStatus,
+    onSelect: (bookStatus: BookStatus) -> Unit
 ) {
     Column(
         modifier = modifier
     ) {
         Row {
-            FilterItem(text = "모든 책", isSelected = isSelected) { onSelect() }
+            FilterItem(
+                text = "모든 책",
+                isSelected = BookStatus.All == bookStatus
+            ) {
+                onSelect(BookStatus.All)
+            }
             FilterItem(
                 modifier = Modifier.padding(start = 10.dp),
                 text = "읽는 중",
-                isSelected = isSelected
-            ) { onSelect() }
+                isSelected = BookStatus.Reading == bookStatus
+            ) { onSelect(BookStatus.Reading) }
             FilterItem(
                 modifier = Modifier.padding(start = 10.dp),
                 text = "독서 예정",
-                isSelected = isSelected
-            ) { onSelect() }
+                isSelected = BookStatus.ToRead == bookStatus
+            ) { onSelect(BookStatus.ToRead) }
         }
         FilterItem(
             modifier = Modifier.padding(top = 10.dp),
-            text = "다 읽은 책", isSelected = isSelected
-        ) { onSelect() }
+            text = "다 읽은 책", isSelected = BookStatus.Done == bookStatus
+        ) { onSelect(BookStatus.Done) }
     }
 }
 

@@ -42,7 +42,14 @@ class HomeViewModel @Inject constructor(
 
     fun onStatusFilterSelected(filter: BookStatus) {
         _statusFilterUiState.value = _statusFilterUiState.value.copy(
+            show = false,
             selectedFilter = filter
+        )
+    }
+
+    fun onStatusFilterDismiss() {
+        _statusFilterUiState.value = _statusFilterUiState.value.copy(
+            show = false
         )
     }
 

@@ -17,7 +17,6 @@ import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
@@ -41,13 +40,6 @@ internal fun HomeRoute(
     viewModel: HomeViewModel = hiltViewModel()
 ) {
     val statusFilterUiState by viewModel.statusFilterUiState.collectAsStateWithLifecycle()
-
-//    var showStatusFilterSheet by remember { mutableStateOf(false) }
-//    val statusFilterSheetState = rememberModalBottomSheetState()
-//
-//    var showSortFilterSheet by remember { mutableStateOf(false) }
-//    val sortFilterSheetState = rememberModalBottomSheetState()
-
     val myBookList by viewModel.myBookList.collectAsStateWithLifecycle()
 
     HomeScreen(
@@ -56,6 +48,7 @@ internal fun HomeRoute(
         onStatusFilterSelected = {
             viewModel.onStatusFilterSelected(it)
         },
+        onStatusFilterDismiss = viewModel::onStatusFilterDismiss,
         onSortFilterClicked = {},
         myBookList
     )
@@ -66,11 +59,10 @@ fun HomeScreen(
     statusFilterUiState: StatusFilterUiState,
     onStatusFilterClicked: () -> Unit,
     onStatusFilterSelected: (BookStatus) -> Unit,
+    onStatusFilterDismiss: () -> Unit,
     onSortFilterClicked: () -> Unit,
     myBookList: List<BookEntity> = emptyList()
 ) {
-    val scope = rememberCoroutineScope()
-
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -98,13 +90,16 @@ fun HomeScreen(
 
     if (statusFilterUiState.show) {
         BookStatusFilterBottomSheet(
+            selectedFilter = statusFilterUiState.selectedFilter,
             onFilterSelected = { onStatusFilterSelected(it) },
-            onDismiss = {},
-            selectedFilter = statusFilterUiState.selectedFilter
+            onDismiss = { onStatusFilterDismiss() }
         )
     }
 }
 
+/**
+ * 홈 필터 (읽음 상태 필터, 정렬 필터)
+ */
 @Composable
 fun HomeFilter(
     onStatusFilterClicked: () -> Unit,
