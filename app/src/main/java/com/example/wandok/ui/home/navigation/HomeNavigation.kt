@@ -6,6 +6,7 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptions
 import androidx.navigation.compose.composable
 import com.example.wandok.core.MainTabRoute
+import com.example.wandok.ui.home.HomeRoute
 
 fun NavController.navigateHome(navOptions: NavOptions) {
     navigate(MainTabRoute.Home, navOptions)

@@ -16,14 +16,10 @@ import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ModalBottomSheet
-import androidx.compose.material3.SheetState
-import androidx.compose.material3.SheetValue
-import androidx.compose.material3.rememberStandardBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -37,51 +33,48 @@ import com.example.wandok.R
 import com.example.wandok.ui.core.Body1Text
 import com.example.wandok.ui.core.Body2Text
 import com.example.wandok.ui.core.FilterItem
+import com.example.wandok.ui.home.model.BookStatus
 import com.example.wandok.ui.theme.Orange500
-import kotlinx.coroutines.CoroutineScope
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun BookStatusFilterBottomSheet(
-    showBottomSheet: Boolean,
-    sheetState: SheetState,
-    scope: CoroutineScope,
-    onDismiss: () -> Unit
+    onFilterSelected: (BookStatus) -> Unit,
+    onDismiss: () -> Unit,
+    selectedFilter: BookStatus
 ) {
     var isSelected by remember { mutableStateOf(false) }
 
-    if (showBottomSheet) {
-        ModalBottomSheet(
-            sheetState = sheetState,
-            onDismissRequest = { onDismiss() }
+
+    ModalBottomSheet(
+        onDismissRequest = { onDismiss() }
+    ) {
+        Column(
+            modifier = Modifier
+                .padding(bottom = 10.dp)
+                .fillMaxWidth()
+                .wrapContentHeight()
         ) {
-            Column(
+            Body1Text(
+                modifier = Modifier.padding(start = 16.dp, bottom = 20.dp),
+                text = "독서 상태",
+                bold = true
+            )
+
+            MyBookFilterItem(
+                modifier = Modifier.padding(start = 16.dp, bottom = 45.dp),
+                isSelected,
+                onSelect = { isSelected = !isSelected }
+            )
+
+            Row(
                 modifier = Modifier
-                    .padding(bottom = 10.dp)
-                    .fillMaxWidth()
-                    .wrapContentHeight()
+                    .align(Alignment.CenterHorizontally),
+                horizontalArrangement = Arrangement.Center,
+                verticalAlignment = Alignment.CenterVertically
             ) {
-                Body1Text(
-                    modifier = Modifier.padding(start = 16.dp, bottom = 20.dp),
-                    text = "독서 상태",
-                    bold = true
-                )
-
-                MyBookFilterItem(
-                    modifier = Modifier.padding(start = 16.dp, bottom = 45.dp),
-                    isSelected,
-                    onSelect = { isSelected = !isSelected }
-                )
-
-                Row(
-                    modifier = Modifier
-                        .align(Alignment.CenterHorizontally),
-                    horizontalArrangement = Arrangement.Center,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    ResetButton()
-                    ApplyButton()
-                }
+                ResetButton()
+                ApplyButton()
             }
         }
     }
@@ -153,15 +146,7 @@ fun ApplyButton() {
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Preview(showBackground = true)
 @Composable
 fun PreviewFilterBottomSheet() {
-    val sheetState = rememberStandardBottomSheetState(SheetValue.Expanded)
-    val scope = rememberCoroutineScope()
-    BookStatusFilterBottomSheet(
-        showBottomSheet = true,
-        sheetState = sheetState,
-        scope = scope
-    ) {}
 }
