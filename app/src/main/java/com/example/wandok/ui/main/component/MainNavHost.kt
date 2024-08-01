@@ -7,9 +7,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import com.example.wandok.ui.home.navigation.homeNavGraph
+import com.example.wandok.ui.mypage.navigation.myPageNavGraph
 import com.example.wandok.ui.search.navigation.searchNavGraph
 import com.example.wandok.ui.wandok.navigation.wandokListNavGraph
 
+/**
+ * NavHost 를 통해 탐색 경로 정의
+ */
 @Composable
 internal fun MainNavHost(
     modifier: Modifier = Modifier,
@@ -33,6 +37,9 @@ internal fun MainNavHost(
                 onItemClicked = { navigator.navigateToSearchDetail(it) }
             )
             wandokListNavGraph(
+                padding = padding
+            )
+            myPageNavGraph(
                 padding = padding
             )
         }

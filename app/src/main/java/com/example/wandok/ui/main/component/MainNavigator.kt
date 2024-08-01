@@ -11,10 +11,14 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navOptions
 import com.example.wandok.ui.home.navigation.navigateHome
 import com.example.wandok.ui.main.MainTab
+import com.example.wandok.ui.mypage.navigation.navigateMyPage
 import com.example.wandok.ui.search.navigation.navigateSearch
 import com.example.wandok.ui.search.navigation.navigateSearchDetail
 import com.example.wandok.ui.wandok.navigation.navigateWandok
 
+/**
+ * 페이지 전환에 대한 명세와 navController 제어
+ */
 internal class MainNavigator(
     val navController: NavHostController
 ) {
@@ -29,6 +33,7 @@ internal class MainNavigator(
             currentDestination?.hasRoute(tab::class) == true
         }
 
+    // BottomNavigation 클릭 시 호출
     fun navigate(tab: MainTab) {
         val navOptions = navOptions {
             popUpTo(navController.graph.findStartDestination().id) {
@@ -52,11 +57,12 @@ internal class MainNavigator(
             }
 
             MainTab.MY_PAGE -> {
-
+                navController.navigateMyPage(navOptions)
             }
         }
     }
 
+    // 검색 상세 페이지
     fun navigateToSearchDetail(isbn: String) {
         navController.navigateSearchDetail(isbn)
     }
