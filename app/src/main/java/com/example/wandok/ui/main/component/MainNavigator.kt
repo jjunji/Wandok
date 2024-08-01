@@ -66,6 +66,12 @@ internal class MainNavigator(
     fun navigateToSearchDetail(isbn: String) {
         navController.navigateSearchDetail(isbn)
     }
+
+    @Composable
+    fun shouldShowBottomBar() = MainTab.contains {
+        currentDestination?.hasRoute(it::class) == true
+    }
+
 }
 
 @Composable

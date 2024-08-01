@@ -24,7 +24,8 @@ fun NavGraphBuilder.searchNavGraph(
         SearchRoute(padding, onItemClick = { onItemClicked(it) })
     }
 
-    composable<Route.SearchDetail> {
+    composable<Route.SearchDetail> { _ ->
+//        val isbn = navBackStackEntry.toRoute<Route.SearchDetail>().isbn
         SearchDetailRoute(
             onBackClicked = { /*TODO*/ },
             onAddCompleted = { /*TODO*/ }

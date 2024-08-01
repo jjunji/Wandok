@@ -3,7 +3,11 @@ package com.example.wandok.ui.main
 import androidx.compose.runtime.Composable
 import com.example.wandok.R
 import com.example.wandok.core.MainTabRoute
+import com.example.wandok.core.Route
 
+/**
+ * BottomNavigation 노출될 항목 정의
+ */
 internal enum class MainTab(
     val iconResId: Int,
     val contentDescription: String,
@@ -36,9 +40,9 @@ internal enum class MainTab(
             return entries.find { predicate(it.route) }
         }
 
-//        @Composable
-//        fun contains(predicate: @Composable (Route) -> Boolean): Boolean {
-//            return entries.map { it.route }.any { predicate(it) }
-//        }
+        @Composable
+        fun contains(predicate: @Composable (Route) -> Boolean): Boolean {
+            return entries.map { it.route }.any { predicate(it) }
+        }
     }
 }

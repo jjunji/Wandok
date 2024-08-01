@@ -2,7 +2,7 @@ package com.example.wandok.core
 
 import kotlinx.serialization.Serializable
 
-sealed interface MainTabRoute {
+sealed interface MainTabRoute: Route {
     @Serializable
     data object Home : MainTabRoute
 
