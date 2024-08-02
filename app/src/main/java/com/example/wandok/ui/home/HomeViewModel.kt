@@ -34,12 +34,14 @@ class HomeViewModel @Inject constructor(
         }
     }
 
+    // 필터 클릭
     fun onStatusFilterClicked() {
         _statusFilterUiState.value = _statusFilterUiState.value.copy(
             show = true
         )
     }
 
+    // 필터 항목 선택 됨
     fun onStatusFilterSelected(filter: BookStatus) {
         _statusFilterUiState.value = _statusFilterUiState.value.copy(
             show = false,

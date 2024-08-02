@@ -91,7 +91,7 @@ fun HomeScreen(
     if (statusFilterUiState.show) {
         BookStatusFilterBottomSheet(
             selectedFilter = statusFilterUiState.selectedFilter,
-            onFilterSelected = { onStatusFilterSelected(it) },
+            onFilterApply = { onStatusFilterSelected(it) },
             onDismiss = { onStatusFilterDismiss() }
         )
     }
@@ -160,7 +160,7 @@ fun MyBookList(
             key = { _, book ->
                 book.isbn
             }
-        ) { index, book ->
+        ) { _, book ->
             MyBookRow(
                 myBook = book,
                 onItemClicked = { onItemClicked(book.isbn) }

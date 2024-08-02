@@ -17,6 +17,10 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -36,11 +40,13 @@ import com.example.wandok.ui.theme.Orange500
 @Composable
 fun BookStatusFilterBottomSheet(
     selectedFilter: BookStatus,
-    onFilterSelected: (BookStatus) -> Unit,
-    onDismiss: () -> Unit
+    onFilterApply: (BookStatus) -> Unit,
+    onDismiss: () -> Unit,
 ) {
+    var filterNow by remember { mutableStateOf(selectedFilter) }
+
     ModalBottomSheet(
-        onDismissRequest = { onDismiss() }
+        onDismissRequest = { onDismiss() },
     ) {
         Column(
             modifier = Modifier
@@ -48,35 +54,36 @@ fun BookStatusFilterBottomSheet(
                 .fillMaxWidth()
                 .wrapContentHeight()
         ) {
-            Body1Text(
-                modifier = Modifier.padding(start = 16.dp, bottom = 20.dp),
-                text = "독서 상태",
-                bold = true
-            )
+            BookStatusFilterLabel()
 
             MyBookFilters(
                 modifier = Modifier.padding(start = 16.dp, bottom = 45.dp),
-                bookStatus = selectedFilter,
-                onFilterSelected
+                filterNow = filterNow,
+                onSelect = { filterNow = it }
             )
 
-            Row(
-                modifier = Modifier
-                    .align(Alignment.CenterHorizontally),
-                horizontalArrangement = Arrangement.Center,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                ResetButton()
-                ApplyButton()
-            }
+            ApplyButton(
+                modifier = Modifier.align(Alignment.CenterHorizontally),
+                onFilterApply = { onFilterApply(filterNow) },
+                onFilterReset = { filterNow = BookStatus.All }
+            )
         }
     }
 }
 
 @Composable
+fun BookStatusFilterLabel() {
+    Body1Text(
+        modifier = Modifier.padding(start = 16.dp, bottom = 20.dp),
+        text = "독서 상태",
+        bold = true
+    )
+}
+
+@Composable
 fun MyBookFilters(
     modifier: Modifier,
-    bookStatus: BookStatus,
+    filterNow: BookStatus,
     onSelect: (bookStatus: BookStatus) -> Unit
 ) {
     Column(
@@ -85,66 +92,88 @@ fun MyBookFilters(
         Row {
             FilterItem(
                 text = "모든 책",
-                isSelected = BookStatus.All == bookStatus
-            ) {
-                onSelect(BookStatus.All)
-            }
+                isSelected = BookStatus.All == filterNow,
+                onClick = { onSelect(BookStatus.All) }
+            )
             FilterItem(
                 modifier = Modifier.padding(start = 10.dp),
                 text = "읽는 중",
-                isSelected = BookStatus.Reading == bookStatus
-            ) { onSelect(BookStatus.Reading) }
+                isSelected = BookStatus.Reading == filterNow,
+                onClick = { onSelect(BookStatus.Reading) }
+            )
             FilterItem(
                 modifier = Modifier.padding(start = 10.dp),
                 text = "독서 예정",
-                isSelected = BookStatus.ToRead == bookStatus
-            ) { onSelect(BookStatus.ToRead) }
+                isSelected = BookStatus.ToRead == filterNow,
+                onClick = { onSelect(BookStatus.ToRead) }
+            )
         }
         FilterItem(
             modifier = Modifier.padding(top = 10.dp),
-            text = "다 읽은 책", isSelected = BookStatus.Done == bookStatus
-        ) { onSelect(BookStatus.Done) }
-    }
-}
-
-@Composable
-fun ResetButton() {
-    Row(
-        modifier = Modifier
-            .width(80.dp)
-            .height(50.dp)
-            .clickable { },
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.Center
-    ) {
-        Image(
-            modifier = Modifier.padding(end = 5.dp),
-            painter = painterResource(id = R.drawable.ic_refresh),
-            contentDescription = null
+            text = "다 읽은 책",
+            isSelected = BookStatus.Done == filterNow,
+            onClick = { onSelect(BookStatus.Done) }
         )
-        Body2Text(text = stringResource(id = R.string.common_reset))
     }
 }
 
 @Composable
-fun ApplyButton() {
-    val shape = RoundedCornerShape(22.dp)
-    Box(
-        modifier = Modifier
-            .padding(start = 10.dp)
-            .size(width = 238.dp, height = 44.dp)
-            .background(color = Orange500, shape = shape)
-            .clip(shape)
-            .clickable {
-
-            },
-        contentAlignment = Alignment.Center
+fun ApplyButton(
+    modifier: Modifier,
+    onFilterApply: () -> Unit,
+    onFilterReset: () -> Unit
+) {
+    Row(
+        modifier = modifier,
+        horizontalArrangement = Arrangement.Center,
+        verticalAlignment = Alignment.CenterVertically
     ) {
-        Body2Text(text = "적용", color = Color.White, bold = true)
+        val shape = RoundedCornerShape(22.dp)
+        // 선택 초기화(재설정)
+        Row(
+            modifier = Modifier
+                .width(80.dp)
+                .height(50.dp)
+                .clip(shape)
+                .clickable { onFilterReset() },
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.Center
+        ) {
+            Image(
+                modifier = Modifier.padding(end = 5.dp),
+                painter = painterResource(id = R.drawable.ic_refresh),
+                contentDescription = null
+            )
+            Body2Text(text = stringResource(id = R.string.common_reset))
+        }
+
+        Box(
+            modifier = Modifier
+                .padding(start = 10.dp)
+                .size(width = 238.dp, height = 44.dp)
+                .background(color = Orange500, shape = shape)
+                .clip(shape)
+                .clickable {
+                    onFilterApply()
+                },
+            contentAlignment = Alignment.Center
+        ) {
+            Body2Text(
+                text = "적용",
+                color = Color.White,
+                bold = true
+            )
+        }
     }
+
 }
 
 @Preview(showBackground = true)
 @Composable
 fun PreviewFilterBottomSheet() {
+    BookStatusFilterBottomSheet(
+        selectedFilter = BookStatus.All,
+        onFilterApply = {},
+        onDismiss = {}
+    )
 }
