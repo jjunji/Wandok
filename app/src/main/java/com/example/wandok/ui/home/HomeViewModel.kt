@@ -5,6 +5,8 @@ import androidx.lifecycle.viewModelScope
 import com.example.wandok.data.repository.Repository
 import com.example.wandok.database.BookEntity
 import com.example.wandok.ui.home.model.BookStatus
+import com.example.wandok.ui.home.model.SortFilterUiState
+import com.example.wandok.ui.home.model.SortType
 import com.example.wandok.ui.home.model.StatusFilterUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -22,6 +24,9 @@ class HomeViewModel @Inject constructor(
     private val _statusFilterUiState = MutableStateFlow(StatusFilterUiState())
     val statusFilterUiState = _statusFilterUiState
 
+    private val _sortFilterUiState = MutableStateFlow(SortFilterUiState())
+    val sortFilterUiState = _sortFilterUiState
+
     init {
         loadMyBookList()
     }
@@ -34,7 +39,7 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    // 필터 클릭
+    // 읽음 상태 필터 클릭
     fun onStatusFilterClicked() {
         _statusFilterUiState.value = _statusFilterUiState.value.copy(
             show = true
@@ -55,4 +60,24 @@ class HomeViewModel @Inject constructor(
         )
     }
 
+    // 정렬 필터 클릭
+    fun onSortFilterClicked() {
+        _sortFilterUiState.value = _sortFilterUiState.value.copy(
+            show = true
+        )
+    }
+
+    // 정렬 필터 선택됨
+    fun onSortFilterSelected(filter: SortType) {
+        _sortFilterUiState.value = _sortFilterUiState.value.copy(
+            show = false,
+            selectedFilter = filter
+        )
+    }
+
+    fun onSortFilterDismiss() {
+        _sortFilterUiState.value = _sortFilterUiState.value.copy(
+            show = false
+        )
+    }
 }

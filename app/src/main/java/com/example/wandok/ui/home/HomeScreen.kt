@@ -27,8 +27,11 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.wandok.R
 import com.example.wandok.database.BookEntity
+import com.example.wandok.ui.home.filter.BookSortFilterBottomSheet
 import com.example.wandok.ui.home.filter.BookStatusFilterBottomSheet
 import com.example.wandok.ui.home.model.BookStatus
+import com.example.wandok.ui.home.model.SortFilterUiState
+import com.example.wandok.ui.home.model.SortType
 import com.example.wandok.ui.home.model.StatusFilterUiState
 import com.example.wandok.ui.theme.DarkGray
 import com.example.wandok.ui.theme.Typography
@@ -40,16 +43,22 @@ internal fun HomeRoute(
     viewModel: HomeViewModel = hiltViewModel()
 ) {
     val statusFilterUiState by viewModel.statusFilterUiState.collectAsStateWithLifecycle()
+    val sortFilterUiState by viewModel.sortFilterUiState.collectAsStateWithLifecycle()
     val myBookList by viewModel.myBookList.collectAsStateWithLifecycle()
 
     HomeScreen(
         statusFilterUiState,
+        sortFilterUiState,
         onStatusFilterClicked = viewModel::onStatusFilterClicked,
+        onSortFilterClicked = viewModel::onSortFilterClicked,
         onStatusFilterSelected = {
             viewModel.onStatusFilterSelected(it)
         },
         onStatusFilterDismiss = viewModel::onStatusFilterDismiss,
-        onSortFilterClicked = {},
+        onSortFilterSelected = {
+            viewModel.onSortFilterSelected(it)
+        },
+        onSortFilterDismiss = viewModel::onSortFilterDismiss,
         myBookList
     )
 }
@@ -57,10 +66,13 @@ internal fun HomeRoute(
 @Composable
 fun HomeScreen(
     statusFilterUiState: StatusFilterUiState,
+    sortFilterUiState: SortFilterUiState,
     onStatusFilterClicked: () -> Unit,
+    onSortFilterClicked: () -> Unit,
     onStatusFilterSelected: (BookStatus) -> Unit,
     onStatusFilterDismiss: () -> Unit,
-    onSortFilterClicked: () -> Unit,
+    onSortFilterSelected: (SortType) -> Unit,
+    onSortFilterDismiss: () -> Unit,
     myBookList: List<BookEntity> = emptyList()
 ) {
     Box(
@@ -93,6 +105,14 @@ fun HomeScreen(
             selectedFilter = statusFilterUiState.selectedFilter,
             onFilterApply = { onStatusFilterSelected(it) },
             onDismiss = { onStatusFilterDismiss() }
+        )
+    }
+
+    if (sortFilterUiState.show) {
+        BookSortFilterBottomSheet(
+            selectedFilter = sortFilterUiState.selectedFilter,
+            onFilterApply = { onSortFilterSelected(it) },
+            onDismiss = { onSortFilterDismiss() }
         )
     }
 }

@@ -10,11 +10,10 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ModalBottomSheet
-import androidx.compose.material3.SheetState
-import androidx.compose.material3.SheetValue
-import androidx.compose.material3.rememberStandardBottomSheetState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
@@ -23,43 +22,42 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.wandok.R
 import com.example.wandok.ui.core.Body1Text
-import kotlinx.coroutines.CoroutineScope
+import com.example.wandok.ui.home.model.SortType
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun BookSortFilterBottomSheet(
-    showBottomSheet: Boolean,
-    sheetState: SheetState,
-    scope: CoroutineScope,
-    onDismiss: () -> Unit
+    selectedFilter: SortType,
+    onFilterApply: (SortType) -> Unit,
+    onDismiss: () -> Unit,
 ) {
-    if (showBottomSheet) {
-        ModalBottomSheet(
-            sheetState = sheetState,
-            onDismissRequest = { onDismiss() }
+    val filterNow by remember { mutableStateOf(selectedFilter) }
+
+    ModalBottomSheet(
+        onDismissRequest = { onDismiss() }
+    ) {
+        Column(
+            modifier = Modifier
+                .padding(bottom = 10.dp)
+                .fillMaxWidth()
+                .wrapContentHeight()
         ) {
-            Column(
-                modifier = Modifier
-                    .padding(bottom = 10.dp)
-                    .fillMaxWidth()
-                    .wrapContentHeight()
-            ) {
-                SortByNewestRow()
-                SortByOldestRow()
-                SortByHighestProgressRow()
-                SortByLowestProgressRow()
-            }
+            SortByNewestRow(filterNow, onFilterApply = { onFilterApply(SortType.Newest) })
+            SortByOldestRow(filterNow, onFilterApply = { onFilterApply(SortType.Oldest) })
+            SortByHighestProgressRow(filterNow, onFilterApply = { onFilterApply(SortType.HighestProgress) })
+            SortByLowestProgressRow(filterNow, onFilterApply = { onFilterApply(SortType.LowestProgress) })
         }
     }
 }
 
 @Composable
-fun SortByNewestRow() {
+fun SortByNewestRow(
+    filterNow: SortType,
+    onFilterApply: () -> Unit
+) {
     Box(
         modifier = Modifier
-            .clickable {
-
-            }
+            .clickable { onFilterApply() }
             .fillMaxWidth()
             .height(40.dp)
             .padding(horizontal = 20.dp)
@@ -69,21 +67,25 @@ fun SortByNewestRow() {
             bold = true,
             modifier = Modifier.align(Alignment.CenterStart)
         )
-        Image(
-            painterResource(id = R.drawable.ic_check),
-            contentDescription = null,
-            modifier = Modifier.align(Alignment.CenterEnd)
-        )
+
+        if (SortType.Newest == filterNow) {
+            Image(
+                painterResource(id = R.drawable.ic_check),
+                contentDescription = null,
+                modifier = Modifier.align(Alignment.CenterEnd)
+            )
+        }
     }
 }
 
 @Composable
-fun SortByOldestRow() {
+fun SortByOldestRow(
+    filterNow: SortType,
+    onFilterApply: () -> Unit
+) {
     Box(
         modifier = Modifier
-            .clickable {
-
-            }
+            .clickable { onFilterApply() }
             .fillMaxWidth()
             .height(40.dp)
             .padding(horizontal = 20.dp)
@@ -93,21 +95,25 @@ fun SortByOldestRow() {
             bold = true,
             modifier = Modifier.align(Alignment.CenterStart)
         )
-        Image(
-            painterResource(id = R.drawable.ic_check),
-            contentDescription = null,
-            modifier = Modifier.align(Alignment.CenterEnd)
-        )
+
+        if (SortType.Oldest == filterNow) {
+            Image(
+                painterResource(id = R.drawable.ic_check),
+                contentDescription = null,
+                modifier = Modifier.align(Alignment.CenterEnd)
+            )
+        }
     }
 }
 
 @Composable
-fun SortByHighestProgressRow() {
+fun SortByHighestProgressRow(
+    filterNow: SortType,
+    onFilterApply: () -> Unit
+) {
     Box(
         modifier = Modifier
-            .clickable {
-
-            }
+            .clickable { onFilterApply() }
             .fillMaxWidth()
             .height(40.dp)
             .padding(horizontal = 20.dp)
@@ -117,21 +123,25 @@ fun SortByHighestProgressRow() {
             bold = true,
             modifier = Modifier.align(Alignment.CenterStart)
         )
-        Image(
-            painterResource(id = R.drawable.ic_check),
-            contentDescription = null,
-            modifier = Modifier.align(Alignment.CenterEnd)
-        )
+
+        if (SortType.HighestProgress == filterNow) {
+            Image(
+                painterResource(id = R.drawable.ic_check),
+                contentDescription = null,
+                modifier = Modifier.align(Alignment.CenterEnd)
+            )
+        }
     }
 }
 
 @Composable
-fun SortByLowestProgressRow() {
+fun SortByLowestProgressRow(
+    filterNow: SortType,
+    onFilterApply: () -> Unit
+) {
     Box(
         modifier = Modifier
-            .clickable {
-
-            }
+            .clickable { onFilterApply() }
             .fillMaxWidth()
             .height(40.dp)
             .padding(horizontal = 20.dp)
@@ -141,23 +151,25 @@ fun SortByLowestProgressRow() {
             bold = true,
             modifier = Modifier.align(Alignment.CenterStart)
         )
-        Image(
-            painterResource(id = R.drawable.ic_check),
-            contentDescription = null,
-            modifier = Modifier.align(Alignment.CenterEnd)
-        )
+
+        if (SortType.LowestProgress == filterNow) {
+            Image(
+                painterResource(id = R.drawable.ic_check),
+                contentDescription = null,
+                modifier = Modifier.align(Alignment.CenterEnd)
+            )
+        }
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Preview(showBackground = true)
 @Composable
 fun PreviewBookSortFilterBottomSheet() {
-    val sheetState = rememberStandardBottomSheetState(SheetValue.Expanded)
-    val scope = rememberCoroutineScope()
-    BookSortFilterBottomSheet(
-        showBottomSheet = true,
-        sheetState = sheetState,
-        scope = scope
-    ) {}
+//    val sheetState = rememberStandardBottomSheetState(SheetValue.Expanded)
+//    val scope = rememberCoroutineScope()
+//    BookSortFilterBottomSheet(
+//        showBottomSheet = true,
+//        sheetState = sheetState,
+//        scope = scope
+//    ) {}
 }
