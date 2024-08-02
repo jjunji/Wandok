@@ -30,7 +30,9 @@ internal fun MainNavHost(
         )
         searchNavGraph(
             padding = padding,
-            onItemClicked = { navigator.navigateToSearchDetail(it) }
+            onItemClicked = { navigator.navigateToSearchDetail(it) },
+            onBackClicked = { navigator.popBackStackIfNotHome() },
+            onAddCompleted = { navigator.navigateToRootScreen() }
         )
         wandokListNavGraph(
             padding = padding

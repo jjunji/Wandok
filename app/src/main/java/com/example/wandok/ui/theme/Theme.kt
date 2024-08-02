@@ -9,7 +9,6 @@ import androidx.compose.material.darkColors
 import androidx.compose.material.lightColors
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.SideEffect
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.unit.dp
@@ -58,7 +57,7 @@ fun WandokTheme(
     }
 
     MaterialTheme(
-        colors = MaterialTheme.colors.copy(background = Color.White, surface = Color.White, onSurface = Color.White),
+        colors = colorScheme,
         typography = Typography,
         content = content,
         shapes = shapes

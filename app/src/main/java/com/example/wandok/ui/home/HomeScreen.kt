@@ -48,6 +48,7 @@ internal fun HomeRoute(
     val myBookList by viewModel.myBookList.collectAsStateWithLifecycle()
 
     HomeScreen(
+        paddingValues,
         statusFilterUiState,
         sortFilterUiState,
         onStatusFilterClicked = viewModel::onStatusFilterClicked,
@@ -67,6 +68,7 @@ internal fun HomeRoute(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(
+    padding: PaddingValues,
     statusFilterUiState: StatusFilterUiState,
     sortFilterUiState: SortFilterUiState,
     onStatusFilterClicked: () -> Unit,
@@ -79,6 +81,7 @@ fun HomeScreen(
 ) {
     Box(
         modifier = Modifier
+            .padding(padding)
             .fillMaxSize()
     ) {
         Column(

@@ -9,6 +9,8 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navOptions
+import com.example.wandok.core.MainTabRoute
+import com.example.wandok.core.Route
 import com.example.wandok.ui.home.navigation.navigateHome
 import com.example.wandok.ui.main.MainTab
 import com.example.wandok.ui.mypage.navigation.navigateMyPage
@@ -62,6 +64,13 @@ internal class MainNavigator(
         }
     }
 
+    // 홈 화면으로 이동
+    fun navigateToRootScreen() {
+        navController.navigate(MainTabRoute.Home) {
+            popUpTo(MainTabRoute.Home)
+        }
+    }
+
     // 검색 상세 페이지
     fun navigateToSearchDetail(isbn: String) {
         navController.navigateSearchDetail(isbn)
@@ -72,6 +81,15 @@ internal class MainNavigator(
         currentDestination?.hasRoute(it::class) == true
     }
 
+    fun popBackStackIfNotHome() {
+        if (!isSameCurrentDestination<MainTabRoute.Home>()) {
+            navController.popBackStack()
+        }
+    }
+
+    private inline fun <reified T : Route> isSameCurrentDestination(): Boolean {
+        return navController.currentDestination?.hasRoute<T>() == true
+    }
 }
 
 @Composable

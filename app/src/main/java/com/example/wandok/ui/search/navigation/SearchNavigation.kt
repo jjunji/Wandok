@@ -18,7 +18,9 @@ fun NavController.navigateSearchDetail(isbn: String) {
 
 fun NavGraphBuilder.searchNavGraph(
     padding: PaddingValues,
-    onItemClicked: (isbn: String) -> Unit
+    onItemClicked: (isbn: String) -> Unit,
+    onBackClicked: () -> Unit,
+    onAddCompleted: () -> Unit
 ) {
     composable<MainTabRoute.Search> {
         SearchRoute(padding, onItemClick = { onItemClicked(it) })
@@ -27,8 +29,8 @@ fun NavGraphBuilder.searchNavGraph(
     composable<Route.SearchDetail> { _ ->
 //        val isbn = navBackStackEntry.toRoute<Route.SearchDetail>().isbn
         SearchDetailRoute(
-            onBackClicked = { /*TODO*/ },
-            onAddCompleted = { /*TODO*/ }
+            onBackClicked = { onBackClicked() },
+            onAddCompleted = { onAddCompleted() }
         )
     }
 }
