@@ -9,6 +9,7 @@ import androidx.compose.material.darkColors
 import androidx.compose.material.lightColors
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.SideEffect
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.unit.dp
@@ -22,10 +23,9 @@ private val DarkColorPalette = darkColors(
 private val LightColorPalette = lightColors(
     primary = Orange500,
     secondary = Orange300,
-    background = BackGround
+    background = BackGround,
+    surface = BackGround,
     /* Other default colors to override
-    background = Color(0xFFFFFBFE),
-    surface = Color(0xFFFFFBFE),
     onPrimary = Color.White,
     onSecondary = Color.White,
     onTertiary = Color.White,
@@ -47,6 +47,7 @@ fun WandokTheme(
         darkTheme -> DarkColorPalette
         else -> LightColorPalette
     }
+
     val view = LocalView.current
     if (!view.isInEditMode) {
         SideEffect {
@@ -57,7 +58,7 @@ fun WandokTheme(
     }
 
     MaterialTheme(
-        colors = colorScheme,
+        colors = MaterialTheme.colors.copy(background = Color.White, surface = Color.White, onSurface = Color.White),
         typography = Typography,
         content = content,
         shapes = shapes

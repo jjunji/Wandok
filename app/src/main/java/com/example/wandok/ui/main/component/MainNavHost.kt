@@ -1,10 +1,10 @@
 package com.example.wandok.ui.main.component
 
-import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color.Companion.White
 import androidx.navigation.compose.NavHost
 import com.example.wandok.ui.home.navigation.homeNavGraph
 import com.example.wandok.ui.mypage.navigation.myPageNavGraph
@@ -20,28 +20,24 @@ internal fun MainNavHost(
     navigator: MainNavigator,
     padding: PaddingValues,
 ) {
-    // TODO: Box Wrap 제거해보기
-    Box(
-        modifier = modifier
-            .fillMaxSize()
+    NavHost(
+        modifier = modifier.background(White),
+        navController = navigator.navController,
+        startDestination = navigator.startDestination
     ) {
-        NavHost(
-            navController = navigator.navController,
-            startDestination = navigator.startDestination
-        ) {
-            homeNavGraph(
-                padding = padding
-            )
-            searchNavGraph(
-                padding = padding,
-                onItemClicked = { navigator.navigateToSearchDetail(it) }
-            )
-            wandokListNavGraph(
-                padding = padding
-            )
-            myPageNavGraph(
-                padding = padding
-            )
-        }
+        homeNavGraph(
+            padding = padding
+        )
+        searchNavGraph(
+            padding = padding,
+            onItemClicked = { navigator.navigateToSearchDetail(it) }
+        )
+        wandokListNavGraph(
+            padding = padding
+        )
+        myPageNavGraph(
+            padding = padding
+        )
     }
+
 }
