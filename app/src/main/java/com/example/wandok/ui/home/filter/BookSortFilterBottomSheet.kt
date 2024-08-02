@@ -10,6 +10,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.material3.SheetState
+import androidx.compose.material3.rememberStandardBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -27,6 +29,7 @@ import com.example.wandok.ui.home.model.SortType
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun BookSortFilterBottomSheet(
+    sheetState: SheetState = rememberStandardBottomSheetState(skipHiddenState = false),
     selectedFilter: SortType,
     onFilterApply: (SortType) -> Unit,
     onDismiss: () -> Unit,
@@ -34,6 +37,7 @@ fun BookSortFilterBottomSheet(
     val filterNow by remember { mutableStateOf(selectedFilter) }
 
     ModalBottomSheet(
+        sheetState = sheetState,
         onDismissRequest = { onDismiss() }
     ) {
         Column(
@@ -162,14 +166,13 @@ fun SortByLowestProgressRow(
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Preview(showBackground = true)
 @Composable
 fun PreviewBookSortFilterBottomSheet() {
-//    val sheetState = rememberStandardBottomSheetState(SheetValue.Expanded)
-//    val scope = rememberCoroutineScope()
-//    BookSortFilterBottomSheet(
-//        showBottomSheet = true,
-//        sheetState = sheetState,
-//        scope = scope
-//    ) {}
+    BookSortFilterBottomSheet(
+        selectedFilter = SortType.Newest,
+        onFilterApply = {},
+        onDismiss = {}
+    )
 }
