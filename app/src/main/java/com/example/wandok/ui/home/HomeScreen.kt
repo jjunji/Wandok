@@ -90,7 +90,7 @@ fun HomeScreen(
             Text(
                 modifier = Modifier.padding(top = 40.dp, start = 16.dp),
                 text = "지훈님이\n읽고 있는 책",
-                style = Typography.h6
+                style = Typography.titleLarge
             )
 
             HomeFilter(
@@ -156,7 +156,7 @@ fun HomeFilter(
                     text = "등록순",
                     color = DarkGray,
                     fontSize = 14.sp,
-                    style = Typography.body2,
+                    style = Typography.bodyMedium,
                     modifier = Modifier
                         .padding(end = 6.dp)
                 )

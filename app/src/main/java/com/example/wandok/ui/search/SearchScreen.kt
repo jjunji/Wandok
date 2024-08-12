@@ -143,7 +143,7 @@ fun SearchTitle() {
                     .background(color = Orange300)
             )
             Text(
-                style = Typography.subtitle2,
+                style = Typography.bodyMedium,
                 text = stringResource(id = R.string.search_title),
                 color = Color.Black,
                 fontSize = 20.sp
@@ -151,7 +151,7 @@ fun SearchTitle() {
         }
 
         Text(
-            style = Typography.subtitle2,
+            style = Typography.bodyMedium,
             text = stringResource(id = R.string.search),
             color = Color.Black,
             fontSize = 20.sp

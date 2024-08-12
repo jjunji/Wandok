@@ -1,6 +1,6 @@
 package com.example.wandok.ui.theme
 
-import androidx.compose.material.Typography
+import androidx.compose.material3.Typography
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
@@ -23,29 +23,28 @@ private val baseTextStyle = TextStyle(
 
 // Set of Material typography styles to start with
 val Typography = Typography(
-    subtitle2 = TextStyle(
+    titleLarge = TextStyle(
+        fontFamily = notosansFamily,
+        fontWeight = FontWeight.Medium,
+        fontSize = 20.sp,
+        color = Color.Black
+    ),
+
+    titleSmall = TextStyle(
         fontFamily = notosansFamily,
         fontWeight = FontWeight.Bold,
         fontSize = 14.sp
     ),
 
-    body1 = TextStyle(
+    bodyLarge = TextStyle(
         fontFamily = notosansFamily,
         fontWeight = FontWeight.Medium,
         fontSize = 16.sp
     ),
 
-    body2 = TextStyle(
+    bodyMedium = TextStyle(
         fontFamily = notosansFamily,
         fontWeight = FontWeight.Normal,
         fontSize = 14.sp
-    ),
-
-    h6 = TextStyle(
-        fontFamily = notosansFamily,
-        fontWeight = FontWeight.Medium,
-        fontSize = 20.sp,
-        color = Color.Black
     )
-
 )

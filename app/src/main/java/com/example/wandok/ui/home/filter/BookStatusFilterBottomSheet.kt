@@ -16,8 +16,6 @@ import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ModalBottomSheet
-import androidx.compose.material3.SheetState
-import androidx.compose.material3.rememberStandardBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -36,12 +34,12 @@ import com.example.wandok.ui.core.Body1Text
 import com.example.wandok.ui.core.Body2Text
 import com.example.wandok.ui.core.FilterItem
 import com.example.wandok.ui.home.model.BookStatus
+import com.example.wandok.ui.theme.BackGround
 import com.example.wandok.ui.theme.Orange500
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun BookStatusFilterBottomSheet(
-    sheetState: SheetState = rememberStandardBottomSheetState(skipHiddenState = false),
     selectedFilter: BookStatus,
     onFilterApply: (BookStatus) -> Unit,
     onDismiss: () -> Unit,
@@ -49,7 +47,8 @@ fun BookStatusFilterBottomSheet(
     var filterNow by remember { mutableStateOf(selectedFilter) }
 
     ModalBottomSheet(
-        sheetState = sheetState,
+//        sheetState = sheetState,
+        containerColor = BackGround,
         onDismissRequest = { onDismiss() },
     ) {
         Column(

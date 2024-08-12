@@ -98,7 +98,7 @@ fun MyBookRow(myBook: BookEntity, onItemClicked: () -> Unit) {
                         maxLines = 2,
                         overflow = TextOverflow.Ellipsis,
                         color = Color.Black,
-                        style = Typography.body1
+                        style = Typography.bodyMedium
                     )
                 }
             }
