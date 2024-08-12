@@ -17,6 +17,7 @@ import com.example.wandok.ui.mypage.navigation.navigateMyPage
 import com.example.wandok.ui.search.navigation.navigateSearch
 import com.example.wandok.ui.search.navigation.navigateSearchDetail
 import com.example.wandok.ui.wandok.navigation.navigateWandok
+import timber.log.Timber
 
 /**
  * 페이지 전환에 대한 명세와 navController 제어
@@ -37,6 +38,8 @@ internal class MainNavigator(
 
     // BottomNavigation 클릭 시 호출
     fun navigate(tab: MainTab) {
+        Timber.tag("test").e("${tab.route}")
+
         val navOptions = navOptions {
             popUpTo(navController.graph.findStartDestination().id) {
                 saveState = true
@@ -77,8 +80,10 @@ internal class MainNavigator(
     }
 
     @Composable
-    fun shouldShowBottomBar() = MainTab.contains {
-        currentDestination?.hasRoute(it::class) == true
+    fun shouldShowBottomBar(): Boolean {
+        return MainTab.contains {
+            currentDestination?.hasRoute(it::class) == true
+        }
     }
 
     fun popBackStackIfNotHome() {

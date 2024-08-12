@@ -29,10 +29,10 @@ internal fun MainScreen(
             MainBottomBar(
                 modifier = Modifier
                     .navigationBarsPadding(),
-                visible = navigator.shouldShowBottomBar(),
                 tabs = MainTab.entries,
                 currentTab = navigator.currentTab,
-                onTabSelected = { navigator.navigate(it) }
+                onTabSelected = { navigator.navigate(it) },
+                visible = navigator.shouldShowBottomBar(),
             )
         }
     )

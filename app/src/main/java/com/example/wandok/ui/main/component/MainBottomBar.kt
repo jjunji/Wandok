@@ -1,5 +1,6 @@
 package com.example.wandok.ui.main.component
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
@@ -34,7 +35,7 @@ internal fun MainBottomBar(
     currentTab: MainTab?,
     onTabSelected: (MainTab) -> Unit
 ) {
-    if (visible) {
+    AnimatedVisibility(visible = visible) {
         Row(
             modifier = modifier
                 .fillMaxWidth()

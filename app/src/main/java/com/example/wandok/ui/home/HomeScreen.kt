@@ -133,7 +133,7 @@ fun HomeFilter(
     Box(
         modifier = Modifier
             .wrapContentSize()
-            .padding(top = 20.dp, start = 16.dp, end = 16.dp)
+            .padding(top = 20.dp, start = 16.dp, end = 16.dp, bottom = 10.dp)
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically
@@ -175,9 +175,9 @@ fun MyBookList(
     bookList: List<BookEntity>,
     onItemClicked: (isbn: String) -> Unit
 ) {
-    Timber.tag("test").e("Recomposition $bookList")
+    Timber.tag("test").e("Recomposition")
     LazyColumn(
-        contentPadding = PaddingValues(10.dp),
+        contentPadding = PaddingValues(start = 10.dp, end = 10.dp, bottom = 10.dp),
         modifier = Modifier.fillMaxWidth()
     ) {
         itemsIndexed(
