@@ -3,11 +3,12 @@ package com.example.wandok.data.repository
 import com.example.wandok.data.datasource.local.LocalDatasource
 import com.example.wandok.data.datasource.remote.RemoteDatasource
 import com.example.wandok.data.model.BookDetail
+import com.example.wandok.data.model.local.BookDetailEntity
 import com.example.wandok.data.model.mapper.BookDetailMapper
-import com.example.wandok.data.model.response.BookResponse
-import com.example.wandok.database.BookEntity
+import com.example.wandok.data.model.remote.BookResponse
 import com.example.wandok.network.ResponseState
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
 class RepositoryImpl @Inject constructor(
@@ -50,12 +51,17 @@ class RepositoryImpl @Inject constructor(
         return localDataSource.getLoginHistory()
     }
 
-    override suspend fun insertBook(bookEntity: BookEntity) {
+    override suspend fun insertBook(bookEntity: BookDetailEntity) {
         localDataSource.insertBook(bookEntity)
     }
 
-    override fun getAllMyBook(): Flow<List<BookEntity>> {
+    override fun getAllMyBook(): Flow<List<BookDetail>> {
         return localDataSource.getMyBookList()
+            .map { bookEntityList ->
+                bookEntityList.map { entity ->
+                    BookDetailMapper.mapToBookDetail(entity)
+                }
+            }
     }
 
     override suspend fun getMyBookList(queryMap: HashMap<String, String>): ResponseState<BookResponse> {

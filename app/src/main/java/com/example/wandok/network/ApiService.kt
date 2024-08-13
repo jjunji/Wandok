@@ -1,9 +1,10 @@
 package com.example.wandok.network
 
 import com.example.wandok.common.constants.AppConstant.ALADIN_URL
-import com.example.wandok.data.model.response.BookResponse
-import com.example.wandok.data.model.response.BookDetailResponse
-import retrofit2.http.*
+import com.example.wandok.data.model.remote.BookDetailResponse
+import com.example.wandok.data.model.remote.BookResponse
+import retrofit2.http.GET
+import retrofit2.http.QueryMap
 
 interface ApiService {
     @GET(ALADIN_URL + "ttb/api/ItemSearch.aspx")

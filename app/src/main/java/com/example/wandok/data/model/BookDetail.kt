@@ -1,6 +1,6 @@
 package com.example.wandok.data.model
 
-import com.example.wandok.database.TableOfContent
+import com.example.wandok.data.model.local.TableOfContent
 
 /**
  * @property title 책 제목
@@ -17,5 +17,7 @@ data class BookDetail(
     val description: String = "",
     val image: String = "",
     val publisher: String = "",
-    val tableOfContents: List<TableOfContent> = emptyList()
+    val tableOfContents: List<TableOfContent> = emptyList(),
+    val registrationTimeMillis: Long,
+    val progress: Int
 )

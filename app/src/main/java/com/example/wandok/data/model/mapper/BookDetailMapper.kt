@@ -2,11 +2,13 @@ package com.example.wandok.data.model.mapper
 
 import com.example.wandok.common.extension.removeTag
 import com.example.wandok.data.model.BookDetail
-import com.example.wandok.data.model.response.BookDetailResponse
-import com.example.wandok.database.TableOfContent
+import com.example.wandok.data.model.local.BookDetailEntity
+import com.example.wandok.data.model.local.TableOfContent
+import com.example.wandok.data.model.remote.BookDetailResponse
 
 object BookDetailMapper {
-    fun mapToBookDetail(bookDetailResponse: BookDetailResponse) : BookDetail {
+    // response to model
+    fun mapToBookDetail(bookDetailResponse: BookDetailResponse): BookDetail {
         val bookDetail = bookDetailResponse.item.first()
         val tableOfContents = bookDetail
             .bookInfo
@@ -30,7 +32,23 @@ object BookDetailMapper {
             description = bookDetail.description,
             image = bookDetail.image,
             publisher = bookDetail.publisher,
-            tableOfContents = tableOfContents
+            tableOfContents = tableOfContents,
+            registrationTimeMillis = System.currentTimeMillis(),
+            progress = 0
+        )
+    }
+
+    // entity to model
+    fun mapToBookDetail(entity: BookDetailEntity) : BookDetail {
+        return BookDetail(
+            isbn = entity.isbn,
+            title = entity.title,
+            author = entity.author,
+            image = entity.image,
+            publisher = entity.publisher,
+            tableOfContents = entity.tableOfContents ?: emptyList(),
+            registrationTimeMillis = entity.registrationDate.time,
+            progress = entity.progress
         )
     }
 }

@@ -27,7 +27,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.wandok.R
-import com.example.wandok.database.BookEntity
+import com.example.wandok.data.model.BookDetail
 import com.example.wandok.ui.home.filter.BookSortFilterBottomSheet
 import com.example.wandok.ui.home.filter.BookStatusFilterBottomSheet
 import com.example.wandok.ui.home.model.BookStatus
@@ -47,6 +47,7 @@ internal fun HomeRoute(
     val sortFilterUiState by viewModel.sortFilterUiState.collectAsStateWithLifecycle()
     val myBookList by viewModel.myBookList.collectAsStateWithLifecycle()
 
+    // TODO: 책 추가 후 로드 되는 과정 로그 확인
     HomeScreen(
         paddingValues,
         statusFilterUiState,
@@ -77,7 +78,7 @@ fun HomeScreen(
     onStatusFilterDismiss: () -> Unit,
     onSortFilterSelected: (SortType) -> Unit,
     onSortFilterDismiss: () -> Unit,
-    myBookList: List<BookEntity> = emptyList()
+    myBookList: List<BookDetail> = emptyList()
 ) {
     Box(
         modifier = Modifier
@@ -100,7 +101,9 @@ fun HomeScreen(
 
             MyBookList(
                 bookList = myBookList,
-                onItemClicked = { Timber.e("onMyBookClicked") }
+                onItemClicked = { Timber.e("onMyBookClicked") },
+                statusFilterUiState,
+                sortFilterUiState
             )
         }
     }
@@ -172,10 +175,12 @@ fun HomeFilter(
 
 @Composable
 fun MyBookList(
-    bookList: List<BookEntity>,
-    onItemClicked: (isbn: String) -> Unit
+    bookList: List<BookDetail>,
+    onItemClicked: (isbn: String) -> Unit,
+    statusFilterUiState: StatusFilterUiState,
+    sortFilterUiState: SortFilterUiState
 ) {
-    Timber.tag("test").e("Recomposition")
+    Timber.tag("MyBookList").e("Recomposition") // TODO: 로딩(검색) 동안 recomposition
     LazyColumn(
         contentPadding = PaddingValues(start = 10.dp, end = 10.dp, bottom = 10.dp),
         modifier = Modifier.fillMaxWidth()
@@ -188,7 +193,10 @@ fun MyBookList(
         ) { _, book ->
             MyBookRow(
                 myBook = book,
-                onItemClicked = { onItemClicked(book.isbn) }
+                onItemClicked = {
+                    onItemClicked(book.isbn)
+                    Timber.tag("test").e("${book}")
+                }
             )
         }
     }
@@ -197,6 +205,6 @@ fun MyBookList(
 @Preview(showBackground = true)
 @Composable
 fun PreviewHome() {
-    val bookEntity = BookEntity("", "Title", "", "", "")
+//    val bookEntity = BookEntity("", "Title", "", "", "")
 //    Home(myBookList = listOf(bookEntity), {}, {})
 }

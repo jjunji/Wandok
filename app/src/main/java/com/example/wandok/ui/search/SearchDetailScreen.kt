@@ -37,7 +37,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
 import com.example.wandok.R
 import com.example.wandok.data.model.BookDetail
-import com.example.wandok.database.TableOfContent
+import com.example.wandok.data.model.local.TableOfContent
 import com.example.wandok.network.ResponseState
 import com.example.wandok.ui.core.Body1Text
 import com.example.wandok.ui.core.Body2Text
@@ -46,7 +46,6 @@ import com.example.wandok.ui.core.CustomAppBar
 import com.example.wandok.ui.core.DotsPulsing
 import com.example.wandok.ui.theme.GrayC1
 import kotlinx.coroutines.flow.collectLatest
-import timber.log.Timber
 
 @Composable
 fun SearchDetailScreen(

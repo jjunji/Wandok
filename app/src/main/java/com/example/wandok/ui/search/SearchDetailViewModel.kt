@@ -4,13 +4,15 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.wandok.BuildConfig
+import com.example.wandok.common.constants.AppConstant.ERR_CD_400
+import com.example.wandok.common.constants.AppConstant.REQUEST_DELAY
 import com.example.wandok.common.constants.KeyValueConstant
 import com.example.wandok.common.constants.KeyValueConstant.NAV_ARGS_ISBN
 import com.example.wandok.common.extension.onError
 import com.example.wandok.common.extension.onSuccess
 import com.example.wandok.data.model.BookDetail
+import com.example.wandok.data.model.local.BookDetailEntity
 import com.example.wandok.data.repository.Repository
-import com.example.wandok.database.BookEntity
 import com.example.wandok.network.ResponseState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
@@ -19,9 +21,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
-import timber.log.Timber
 import javax.inject.Inject
-import androidx.compose.foundation.layout.height
 
 @HiltViewModel
 class SearchDetailViewModel @Inject constructor(
@@ -50,12 +50,12 @@ class SearchDetailViewModel @Inject constructor(
 
         viewModelScope.launch {
             _bookDetail.emit(ResponseState.Loading)
-            delay(1000)
+            delay(REQUEST_DELAY)
             repository.getBookDetail(queryMap = params(isbn))
-                .onSuccess{
+                .onSuccess {
                     _bookDetail.emit(ResponseState.Success(it))
                 }.onError { _, _ ->
-                    _bookDetail.emit(ResponseState.Error(12, ""))
+                    _bookDetail.emit(ResponseState.Error(ERR_CD_400, ""))
                 }
         }
     }
@@ -77,7 +77,7 @@ class SearchDetailViewModel @Inject constructor(
     fun onAddDialogConfirmed(bookDetail: BookDetail) {
         viewModelScope.launch {
             val bookEntity = with(bookDetail) {
-                BookEntity(
+                BookDetailEntity(
                     isbn = isbn,
                     title = title,
                     author = author,
@@ -106,6 +106,6 @@ fun params(isbn: String) = hashMapOf(
 )
 
 sealed class AddBookDialogState<out T> {
-    object Dismiss : AddBookDialogState<Nothing>()
+    data object Dismiss : AddBookDialogState<Nothing>()
     data class Show(val detail: BookDetail) : AddBookDialogState<BookDetail>()
 }

@@ -2,8 +2,8 @@ package com.example.wandok.ui.home
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.wandok.data.model.BookDetail
 import com.example.wandok.data.repository.Repository
-import com.example.wandok.database.BookEntity
 import com.example.wandok.ui.home.model.BookStatus
 import com.example.wandok.ui.home.model.SortFilterUiState
 import com.example.wandok.ui.home.model.SortType
@@ -18,7 +18,7 @@ import javax.inject.Inject
 class HomeViewModel @Inject constructor(
     private val repository: Repository
 ) : ViewModel() {
-    private val _myBookList = MutableStateFlow(emptyList<BookEntity>())
+    private val _myBookList = MutableStateFlow(emptyList<BookDetail>())
     val myBookList = _myBookList
 
     private val _statusFilterUiState = MutableStateFlow(StatusFilterUiState())
@@ -31,6 +31,7 @@ class HomeViewModel @Inject constructor(
         loadMyBookList()
     }
 
+    // TODO: 책 추가 후 로드 되는 과정 로그 확인
     private fun loadMyBookList() {
         viewModelScope.launch {
             repository.getAllMyBook().collectLatest {

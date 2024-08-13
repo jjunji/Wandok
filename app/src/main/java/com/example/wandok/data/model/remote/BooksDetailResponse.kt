@@ -1,4 +1,4 @@
-package com.example.wandok.data.model.response
+package com.example.wandok.data.model.remote
 
 import com.google.gson.annotations.SerializedName
 

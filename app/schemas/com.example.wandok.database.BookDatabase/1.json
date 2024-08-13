@@ -2,11 +2,11 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "6344e109a1ad3e73039f9285b09e56d4",
+    "identityHash": "300e55fe3e8f6a599bcf1bc4f2840dd7",
     "entities": [
       {
         "tableName": "my_book",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`isbn` TEXT NOT NULL, `title` TEXT NOT NULL, `author` TEXT NOT NULL, `image` TEXT NOT NULL, `publisher` TEXT NOT NULL, `tableOfContents` TEXT, PRIMARY KEY(`isbn`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`isbn` TEXT NOT NULL, `title` TEXT NOT NULL, `author` TEXT NOT NULL, `image` TEXT NOT NULL, `publisher` TEXT NOT NULL, `tableOfContents` TEXT, `registrationDate` INTEGER NOT NULL, `progress` INTEGER NOT NULL, PRIMARY KEY(`isbn`))",
         "fields": [
           {
             "fieldPath": "isbn",
@@ -43,6 +43,18 @@
             "columnName": "tableOfContents",
             "affinity": "TEXT",
             "notNull": false
+          },
+          {
+            "fieldPath": "registrationDate",
+            "columnName": "registrationDate",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "progress",
+            "columnName": "progress",
+            "affinity": "INTEGER",
+            "notNull": true
           }
         ],
         "primaryKey": {
@@ -58,7 +70,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '6344e109a1ad3e73039f9285b09e56d4')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '300e55fe3e8f6a599bcf1bc4f2840dd7')"
     ]
   }
 }

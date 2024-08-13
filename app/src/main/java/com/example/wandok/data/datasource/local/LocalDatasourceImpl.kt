@@ -1,8 +1,8 @@
 package com.example.wandok.data.datasource.local
 
+import com.example.wandok.data.model.local.BookDetailEntity
 import com.example.wandok.database.AppPreferences
 import com.example.wandok.database.BookDatabase
-import com.example.wandok.database.BookEntity
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
@@ -46,12 +46,12 @@ class LocalDatasourceImpl @Inject constructor(
         return preferences.loginHistory
     }
 
-    override fun getMyBookList(): Flow<List<BookEntity>> {
+    override fun getMyBookList(): Flow<List<BookDetailEntity>> {
         return database.bookDao().getAllMyBook()
     }
 
-    override suspend fun insertBook(bookEntity: BookEntity) {
-        database.bookDao().insertBook(bookEntity)
+    override suspend fun insertBook(bookDetailEntity: BookDetailEntity) {
+        database.bookDao().insertBook(bookDetailEntity)
     }
 
 }

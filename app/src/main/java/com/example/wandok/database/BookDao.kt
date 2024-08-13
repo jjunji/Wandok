@@ -4,14 +4,15 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import com.example.wandok.data.model.local.BookDetailEntity
 import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface BookDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertBook(bookEntity: BookEntity)
+    suspend fun insertBook(bookEntity: BookDetailEntity)
 
     @Query("SELECT * FROM my_book")
-    fun getAllMyBook(): Flow<List<BookEntity>>
+    fun getAllMyBook(): Flow<List<BookDetailEntity>>
 }

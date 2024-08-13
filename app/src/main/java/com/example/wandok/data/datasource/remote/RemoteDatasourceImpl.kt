@@ -1,8 +1,8 @@
 package com.example.wandok.data.datasource.remote
 
 import api.naver.NaverSearching
-import com.example.wandok.data.model.response.BookResponse
-import com.example.wandok.data.model.response.BookDetailResponse
+import com.example.wandok.data.model.remote.BookResponse
+import com.example.wandok.data.model.remote.BookDetailResponse
 import com.example.wandok.network.ApiService
 import com.example.wandok.network.ResponseState
 import javax.inject.Inject

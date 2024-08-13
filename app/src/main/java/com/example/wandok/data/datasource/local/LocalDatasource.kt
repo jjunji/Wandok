@@ -1,6 +1,6 @@
 package com.example.wandok.data.datasource.local
 
-import com.example.wandok.database.BookEntity
+import com.example.wandok.data.model.local.BookDetailEntity
 import kotlinx.coroutines.flow.Flow
 
 interface LocalDatasource {
@@ -14,6 +14,6 @@ interface LocalDatasource {
     fun setLoginHistory(login: Boolean)     // 로그인 이력
     fun getLoginHistory(): Boolean
 
-    fun getMyBookList() : Flow<List<BookEntity>>
-    suspend fun insertBook(bookEntity: BookEntity)
+    fun getMyBookList(): Flow<List<BookDetailEntity>>
+    suspend fun insertBook(bookDetailEntity: BookDetailEntity)
 }

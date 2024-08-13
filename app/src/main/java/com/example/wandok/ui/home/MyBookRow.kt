@@ -11,7 +11,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Text
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -24,7 +24,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.example.wandok.R
-import com.example.wandok.database.BookEntity
+import com.example.wandok.data.model.BookDetail
 import com.example.wandok.ui.core.Body1Text
 import com.example.wandok.ui.core.Body2Text
 import com.example.wandok.ui.core.LinearProgressBar
@@ -36,7 +36,7 @@ val shadowColor = DeepShadow
 val CornerRadius = 10.dp
 
 @Composable
-fun MyBookRow(myBook: BookEntity, onItemClicked: () -> Unit) {
+fun MyBookRow(myBook: BookDetail, onItemClicked: () -> Unit) {
     // Shadow Container
     Box(
         modifier = Modifier
@@ -109,13 +109,13 @@ fun MyBookRow(myBook: BookEntity, onItemClicked: () -> Unit) {
 @Preview(showBackground = true)
 @Composable
 fun PreviewMyBookRow() {
-    MyBookRow(
-        myBook = BookEntity(
-            "123",
-            "title",
-            "",
-            "",
-            ""
-        )
-    ) {}
+//    MyBookRow(
+//        myBook = BookEntity(
+//            "123",
+//            "title",
+//            "",
+//            "",
+//            ""
+//        )
+//    ) {}
 }

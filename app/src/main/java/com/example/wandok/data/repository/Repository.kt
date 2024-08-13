@@ -1,8 +1,8 @@
 package com.example.wandok.data.repository
 
 import com.example.wandok.data.model.BookDetail
-import com.example.wandok.data.model.response.BookResponse
-import com.example.wandok.database.BookEntity
+import com.example.wandok.data.model.local.BookDetailEntity
+import com.example.wandok.data.model.remote.BookResponse
 import com.example.wandok.network.ResponseState
 import kotlinx.coroutines.flow.Flow
 
@@ -18,8 +18,8 @@ interface Repository {
     fun setLoginHistory(login: Boolean)     // 로그인 이력
     fun getLoginHistory(): Boolean
 
-    suspend fun insertBook(bookEntity: BookEntity)
-    fun getAllMyBook(): Flow<List<BookEntity>>
+    suspend fun insertBook(bookEntity: BookDetailEntity)
+    fun getAllMyBook(): Flow<List<BookDetail>>
 
     /* remote */
     suspend fun getMyBookList(queryMap: HashMap<String, String>): ResponseState<BookResponse>

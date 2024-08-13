@@ -7,7 +7,7 @@ data class StatusFilterUiState(
 
 sealed interface BookStatus {
     data object All : BookStatus
-    data object Reading : BookStatus
-    data object Done : BookStatus
-    data object ToRead : BookStatus
+    data object Reading : BookStatus    // 0 < progress
+    data object Done : BookStatus       // progress == 100
+    data object ToRead : BookStatus     // progress == 0
 }
