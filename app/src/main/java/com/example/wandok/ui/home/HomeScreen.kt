@@ -16,13 +16,8 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
-import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
@@ -35,62 +30,58 @@ import com.example.wandok.R
 import com.example.wandok.database.BookEntity
 import com.example.wandok.ui.home.filter.BookSortFilterBottomSheet
 import com.example.wandok.ui.home.filter.BookStatusFilterBottomSheet
+import com.example.wandok.ui.home.model.BookStatus
+import com.example.wandok.ui.home.model.SortFilterUiState
+import com.example.wandok.ui.home.model.SortType
+import com.example.wandok.ui.home.model.StatusFilterUiState
 import com.example.wandok.ui.theme.DarkGray
 import com.example.wandok.ui.theme.Typography
 import timber.log.Timber
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeScreen(
+internal fun HomeRoute(
+    paddingValues: PaddingValues,
     viewModel: HomeViewModel = hiltViewModel()
 ) {
-    var showStatusFilterSheet by remember { mutableStateOf(false) }
-    val statusFilterSheetState = rememberModalBottomSheetState()
-
-    var showSortFilterSheet by remember { mutableStateOf(false) }
-    val sortFilterSheetState = rememberModalBottomSheetState()
-
-    val scope = rememberCoroutineScope()
-
+    val statusFilterUiState by viewModel.statusFilterUiState.collectAsStateWithLifecycle()
+    val sortFilterUiState by viewModel.sortFilterUiState.collectAsStateWithLifecycle()
     val myBookList by viewModel.myBookList.collectAsStateWithLifecycle()
 
-    Home(
-        myBookList = myBookList,
-        onFilterClicked = {
-            showStatusFilterSheet = true
+    HomeScreen(
+        paddingValues,
+        statusFilterUiState,
+        sortFilterUiState,
+        onStatusFilterClicked = viewModel::onStatusFilterClicked,
+        onSortFilterClicked = viewModel::onSortFilterClicked,
+        onStatusFilterSelected = {
+            viewModel.onStatusFilterSelected(it)
         },
-        onSortFilterClicked = {
-            showSortFilterSheet = true
-        }
-    )
-
-    BookStatusFilterBottomSheet(
-        showBottomSheet = showStatusFilterSheet,
-        sheetState = statusFilterSheetState,
-        scope = scope,
-        onDismiss = {
-            showStatusFilterSheet = false
-        }
-    )
-
-    BookSortFilterBottomSheet(
-        showBottomSheet = showSortFilterSheet,
-        sheetState = sortFilterSheetState,
-        scope = scope,
-        onDismiss = {
-            showSortFilterSheet = false
-        }
+        onStatusFilterDismiss = viewModel::onStatusFilterDismiss,
+        onSortFilterSelected = {
+            viewModel.onSortFilterSelected(it)
+        },
+        onSortFilterDismiss = viewModel::onSortFilterDismiss,
+        myBookList
     )
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun Home(
-    myBookList: List<BookEntity>,
-    onFilterClicked: () -> Unit,
-    onSortFilterClicked: () -> Unit
+fun HomeScreen(
+    padding: PaddingValues,
+    statusFilterUiState: StatusFilterUiState,
+    sortFilterUiState: SortFilterUiState,
+    onStatusFilterClicked: () -> Unit,
+    onSortFilterClicked: () -> Unit,
+    onStatusFilterSelected: (BookStatus) -> Unit,
+    onStatusFilterDismiss: () -> Unit,
+    onSortFilterSelected: (SortType) -> Unit,
+    onSortFilterDismiss: () -> Unit,
+    myBookList: List<BookEntity> = emptyList()
 ) {
     Box(
         modifier = Modifier
+            .padding(padding)
             .fillMaxSize()
     ) {
         Column(
@@ -99,11 +90,11 @@ fun Home(
             Text(
                 modifier = Modifier.padding(top = 40.dp, start = 16.dp),
                 text = "지훈님이\n읽고 있는 책",
-                style = Typography.h6
+                style = Typography.titleLarge
             )
 
             HomeFilter(
-                onStatusFilterClicked = { onFilterClicked() },
+                onStatusFilterClicked = { onStatusFilterClicked() },
                 onSortFilterClicked = { onSortFilterClicked() }
             )
 
@@ -113,8 +104,27 @@ fun Home(
             )
         }
     }
+
+    if (statusFilterUiState.show) {
+        BookStatusFilterBottomSheet(
+            selectedFilter = statusFilterUiState.selectedFilter,
+            onFilterApply = { onStatusFilterSelected(it) },
+            onDismiss = { onStatusFilterDismiss() }
+        )
+    }
+
+    if (sortFilterUiState.show) {
+        BookSortFilterBottomSheet(
+            selectedFilter = sortFilterUiState.selectedFilter,
+            onFilterApply = { onSortFilterSelected(it) },
+            onDismiss = { onSortFilterDismiss() }
+        )
+    }
 }
 
+/**
+ * 홈 필터 (읽음 상태 필터, 정렬 필터)
+ */
 @Composable
 fun HomeFilter(
     onStatusFilterClicked: () -> Unit,
@@ -123,7 +133,7 @@ fun HomeFilter(
     Box(
         modifier = Modifier
             .wrapContentSize()
-            .padding(top = 20.dp, start = 16.dp, end = 16.dp)
+            .padding(top = 20.dp, start = 16.dp, end = 16.dp, bottom = 10.dp)
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically
@@ -146,7 +156,7 @@ fun HomeFilter(
                     text = "등록순",
                     color = DarkGray,
                     fontSize = 14.sp,
-                    style = Typography.body2,
+                    style = Typography.bodyMedium,
                     modifier = Modifier
                         .padding(end = 6.dp)
                 )
@@ -165,9 +175,9 @@ fun MyBookList(
     bookList: List<BookEntity>,
     onItemClicked: (isbn: String) -> Unit
 ) {
-    Timber.tag("test").e("Recomposition $bookList")
+    Timber.tag("test").e("Recomposition")
     LazyColumn(
-        contentPadding = PaddingValues(10.dp),
+        contentPadding = PaddingValues(start = 10.dp, end = 10.dp, bottom = 10.dp),
         modifier = Modifier.fillMaxWidth()
     ) {
         itemsIndexed(
@@ -175,7 +185,7 @@ fun MyBookList(
             key = { _, book ->
                 book.isbn
             }
-        ) { index, book ->
+        ) { _, book ->
             MyBookRow(
                 myBook = book,
                 onItemClicked = { onItemClicked(book.isbn) }
@@ -188,5 +198,5 @@ fun MyBookList(
 @Composable
 fun PreviewHome() {
     val bookEntity = BookEntity("", "Title", "", "", "")
-    Home(myBookList = listOf(bookEntity), {}, {})
+//    Home(myBookList = listOf(bookEntity), {}, {})
 }

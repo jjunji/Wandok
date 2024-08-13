@@ -51,11 +51,25 @@ import com.example.wandok.ui.theme.Orange300
 import com.example.wandok.ui.theme.Typography
 import timber.log.Timber
 
-@ExperimentalMaterialApi
+@Composable
+fun SearchRoot(
+    onItemClick: (isbn: String) -> Unit,
+    modifier: Modifier,
+    viewModel: SearchViewModel = hiltViewModel()
+) {
+    SearchScreen(
+        onItemClick = onItemClick,
+        modifier = modifier,
+        viewModel = viewModel
+    )
+}
+
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun SearchScreen(
-    viewModel: SearchViewModel = hiltViewModel(),
-    navigateSearchDetailScreen: (isbn: String) -> Unit
+    onItemClick: (isbn: String) -> Unit,
+    modifier: Modifier = Modifier,
+    viewModel: SearchViewModel = hiltViewModel()
 ) {
     val keyword by viewModel.keyword.collectAsStateWithLifecycle()
     val loadState by viewModel.pageStatus.loadState.collectAsStateWithLifecycle(initialValue = LoadState.IDLE)
@@ -105,7 +119,7 @@ fun SearchScreen(
                     bookList = bookList,
                     listState = listState,
                     loadState = loadState,
-                    onItemClicked = { navigateSearchDetailScreen(it) }
+                    onItemClicked = { onItemClick(it) }
                 )
             }
         )
@@ -129,7 +143,7 @@ fun SearchTitle() {
                     .background(color = Orange300)
             )
             Text(
-                style = Typography.subtitle2,
+                style = Typography.bodyMedium,
                 text = stringResource(id = R.string.search_title),
                 color = Color.Black,
                 fontSize = 20.sp
@@ -137,7 +151,7 @@ fun SearchTitle() {
         }
 
         Text(
-            style = Typography.subtitle2,
+            style = Typography.bodyMedium,
             text = stringResource(id = R.string.search),
             color = Color.Black,
             fontSize = 20.sp

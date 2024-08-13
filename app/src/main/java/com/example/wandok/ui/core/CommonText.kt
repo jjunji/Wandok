@@ -1,6 +1,6 @@
 package com.example.wandok.ui.core
 
-import androidx.compose.material.Text
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -24,12 +24,12 @@ fun Body1Text(
         maxLines = maxLines,
         overflow = TextOverflow.Ellipsis,
         color = color,
-        style = Typography.body1,
+        style = Typography.bodyLarge,
         textAlign = textAlign,
         fontWeight = if (bold) {
             FontWeight.Bold
         } else {
-            Typography.body1.fontWeight
+            Typography.bodyLarge.fontWeight
         }
     )
 }
@@ -49,12 +49,12 @@ fun Body2Text(
         maxLines = maxLines,
         overflow = TextOverflow.Ellipsis,
         color = color,
-        style = Typography.body2,
+        style = Typography.bodyLarge,
         textAlign = textAlign,
         fontWeight = if (bold) {
             FontWeight.Bold
         } else {
-            Typography.body2.fontWeight
+            Typography.bodyLarge.fontWeight
         }
     )
 }
@@ -74,12 +74,12 @@ fun H6Text(
         maxLines = maxLines,
         overflow = TextOverflow.Ellipsis,
         color = color,
-        style = Typography.h6,
+        style = Typography.titleLarge,
         textAlign = textAlign,
         fontWeight = if (bold) {
             FontWeight.Bold
         } else {
-            Typography.body2.fontWeight
+            Typography.titleLarge.fontWeight
         }
     )
 }

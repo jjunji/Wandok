@@ -163,10 +163,9 @@ fun LoginForm(
         modifier = Modifier.padding(start = 20.dp, top = 52.dp, bottom = 30.dp, end = 20.dp)
     ) {
         Text(
-            style = Typography.subtitle2,
+            style = Typography.bodyMedium,
             text = stringResource(id = R.string.common_id),
             color = GrayC1,
-            fontSize = 14.sp
         )
 
         Row(
@@ -208,10 +207,9 @@ fun LoginForm(
 
         Text(
             modifier = Modifier.padding(top = 10.dp),
-            style = Typography.subtitle2,
+            style = Typography.bodyMedium,
             text = stringResource(id = R.string.common_pwd),
             color = GrayC1,
-            fontSize = 14.sp
         )
 
         Row(
