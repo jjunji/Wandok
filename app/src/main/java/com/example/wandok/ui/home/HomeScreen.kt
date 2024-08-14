@@ -14,12 +14,14 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -95,15 +97,14 @@ fun HomeScreen(
             )
 
             HomeFilter(
+                sortType = sortFilterUiState.selectedFilter,
                 onStatusFilterClicked = { onStatusFilterClicked() },
                 onSortFilterClicked = { onSortFilterClicked() }
             )
 
             MyBookList(
                 bookList = myBookList,
-                onItemClicked = { Timber.e("onMyBookClicked") },
-                statusFilterUiState,
-                sortFilterUiState
+                onItemClicked = { Timber.e("onMyBookClicked") }
             )
         }
     }
@@ -130,6 +131,7 @@ fun HomeScreen(
  */
 @Composable
 fun HomeFilter(
+    sortType: SortType,
     onStatusFilterClicked: () -> Unit,
     onSortFilterClicked: () -> Unit
 ) {
@@ -145,6 +147,7 @@ fun HomeFilter(
                 painter = painterResource(id = R.drawable.ic_filter),
                 contentDescription = null,
                 modifier = Modifier
+                    .clip(CircleShape)
                     .clickable { onStatusFilterClicked() }
             )
 
@@ -156,7 +159,7 @@ fun HomeFilter(
                     .clickable { onSortFilterClicked() }
             ) {
                 Text(
-                    text = "등록순",
+                    text = sortType.title,
                     color = DarkGray,
                     fontSize = 14.sp,
                     style = Typography.bodyMedium,
@@ -176,26 +179,22 @@ fun HomeFilter(
 @Composable
 fun MyBookList(
     bookList: List<BookDetail>,
-    onItemClicked: (isbn: String) -> Unit,
-    statusFilterUiState: StatusFilterUiState,
-    sortFilterUiState: SortFilterUiState
+    onItemClicked: (isbn: String) -> Unit
 ) {
     Timber.tag("MyBookList").e("Recomposition") // TODO: 로딩(검색) 동안 recomposition
+
     LazyColumn(
         contentPadding = PaddingValues(start = 10.dp, end = 10.dp, bottom = 10.dp),
         modifier = Modifier.fillMaxWidth()
     ) {
         itemsIndexed(
             items = bookList,
-            key = { _, book ->
-                book.isbn
-            }
+//            key = { index, book -> book.isbn }
         ) { _, book ->
             MyBookRow(
                 myBook = book,
                 onItemClicked = {
                     onItemClicked(book.isbn)
-                    Timber.tag("test").e("${book}")
                 }
             )
         }

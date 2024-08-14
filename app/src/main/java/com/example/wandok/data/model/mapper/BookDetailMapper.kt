@@ -39,7 +39,7 @@ object BookDetailMapper {
     }
 
     // entity to model
-    fun mapToBookDetail(entity: BookDetailEntity) : BookDetail {
+    fun mapToBookDetail(entity: BookDetailEntity): BookDetail {
         return BookDetail(
             isbn = entity.isbn,
             title = entity.title,

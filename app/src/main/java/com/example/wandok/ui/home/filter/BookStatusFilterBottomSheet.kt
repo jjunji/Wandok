@@ -171,7 +171,6 @@ fun ApplyButton(
 
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Preview(showBackground = true)
 @Composable
 fun PreviewFilterBottomSheet() {
