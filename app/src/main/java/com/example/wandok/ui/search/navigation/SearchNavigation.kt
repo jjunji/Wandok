@@ -7,6 +7,7 @@ import androidx.navigation.NavOptions
 import androidx.navigation.compose.composable
 import com.example.wandok.core.MainTabRoute
 import com.example.wandok.core.Route
+import com.example.wandok.ui.search.SearchRoute
 
 fun NavController.navigateSearch(navOptions: NavOptions) {
     navigate(MainTabRoute.Search, navOptions)
@@ -28,9 +29,9 @@ fun NavGraphBuilder.searchNavGraph(
 
     composable<Route.SearchDetail> { _ ->
 //        val isbn = navBackStackEntry.toRoute<Route.SearchDetail>().isbn
-        SearchDetailRoute(
-            onBackClicked = { onBackClicked() },
-            onAddCompleted = { onAddCompleted() }
-        )
+//        SearchDetailRoute(
+//            onBackClicked = { onBackClicked() },
+//            onAddCompleted = { onAddCompleted() }
+//        )
     }
 }
