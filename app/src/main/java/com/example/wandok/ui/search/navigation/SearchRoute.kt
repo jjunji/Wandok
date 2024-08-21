@@ -7,6 +7,7 @@ import com.example.wandok.ui.search.SearchDetailScreen
 import com.example.wandok.ui.search.SearchDetailViewModel
 import com.example.wandok.ui.search.SearchScreen
 import com.example.wandok.ui.search.SearchViewModel
+import timber.log.Timber
 
 @Composable
 fun SearchRoute(
@@ -14,6 +15,7 @@ fun SearchRoute(
     onItemClick: (isbn: String) -> Unit,
     viewModel: SearchViewModel = hiltViewModel()
 ) {
+    Timber.tag("test").e("--")
     SearchScreen(
         onItemClick = { isbn: String -> onItemClick(isbn) }
     )
