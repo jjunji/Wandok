@@ -49,12 +49,12 @@ fun Body2Text(
         maxLines = maxLines,
         overflow = TextOverflow.Ellipsis,
         color = color,
-        style = Typography.bodyLarge,
+        style = Typography.bodyMedium,
         textAlign = textAlign,
         fontWeight = if (bold) {
             FontWeight.Bold
         } else {
-            Typography.bodyLarge.fontWeight
+            Typography.bodyMedium.fontWeight
         }
     )
 }
