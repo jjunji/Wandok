@@ -51,6 +51,7 @@ fun MyBookRow(myBook: BookDetail, onItemClicked: () -> Unit) {
                 spread = 7.dp,
                 blurRadius = CornerRadius
             )
+            .clip(RoundedCornerShape(CornerRadius))
             .clickable { onItemClicked() }
     ) {
         Box(

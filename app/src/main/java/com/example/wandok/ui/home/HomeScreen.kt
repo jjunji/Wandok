@@ -43,6 +43,7 @@ import timber.log.Timber
 @Composable
 internal fun HomeRoute(
     paddingValues: PaddingValues,
+    onItemClicked: (isbn: String) -> Unit,
     viewModel: HomeViewModel = hiltViewModel()
 ) {
     val statusFilterUiState by viewModel.statusFilterUiState.collectAsStateWithLifecycle()
@@ -64,7 +65,8 @@ internal fun HomeRoute(
             viewModel.onSortFilterSelected(it)
         },
         onSortFilterDismiss = viewModel::onSortFilterDismiss,
-        myBookList
+        myBookList,
+        onItemClicked = { onItemClicked(it) }
     )
 }
 
@@ -80,7 +82,8 @@ fun HomeScreen(
     onStatusFilterDismiss: () -> Unit,
     onSortFilterSelected: (SortType) -> Unit,
     onSortFilterDismiss: () -> Unit,
-    myBookList: List<BookDetail> = emptyList()
+    myBookList: List<BookDetail> = emptyList(),
+    onItemClicked: (isbn: String) -> Unit
 ) {
     Box(
         modifier = Modifier
@@ -104,7 +107,7 @@ fun HomeScreen(
 
             MyBookList(
                 bookList = myBookList,
-                onItemClicked = { Timber.e("onMyBookClicked") }
+                onItemClicked = { onItemClicked(it) }
             )
         }
     }

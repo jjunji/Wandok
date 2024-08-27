@@ -12,6 +12,7 @@ import androidx.navigation.navOptions
 import com.example.wandok.core.MainTabRoute
 import com.example.wandok.core.Route
 import com.example.wandok.ui.home.navigation.navigateHome
+import com.example.wandok.ui.home.navigation.navigateHomeDetail
 import com.example.wandok.ui.main.MainTab
 import com.example.wandok.ui.mypage.navigation.navigateMyPage
 import com.example.wandok.ui.search.navigation.navigateSearch
@@ -72,6 +73,10 @@ internal class MainNavigator(
         navController.navigate(MainTabRoute.Home) {
             popUpTo(MainTabRoute.Home)
         }
+    }
+
+    fun navigateToHomeDetail(isbn: String) {
+        navController.navigateHomeDetail(isbn)
     }
 
     // 검색 상세 페이지
