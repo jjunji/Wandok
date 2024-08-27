@@ -19,6 +19,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -76,7 +77,14 @@ fun MyBookRow(myBook: BookDetail, onItemClicked: () -> Unit) {
                         .fillMaxWidth()
                         .padding(top = 10.dp, end = 10.dp)
                 ) {
-                    Body1Text(text = "4 / 30")
+                    val countOfAllContents = myBook.tableOfContents.size + 1
+                    val countOfDone = myBook.tableOfContents.count { it.read }
+                    Body1Text(
+                        text = stringResource(
+                            id = R.string.format_progress,
+                            formatArgs = arrayOf(countOfDone, countOfAllContents)
+                        )
+                    )
 
                     Row(
                         modifier = Modifier.padding(top = 5.dp),
@@ -86,10 +94,15 @@ fun MyBookRow(myBook: BookDetail, onItemClicked: () -> Unit) {
                             modifier = Modifier
                                 .weight(1f)
                                 .padding(end = 5.dp),
-                            progress = 0.5f
+                            progress = myBook.progress.toFloat()
                         )
 
-                        Body2Text(text = "40%")
+                        Body2Text(
+                            text = stringResource(
+                                id = R.string.format_percent,
+                                formatArgs = arrayOf(myBook.progress)
+                            )
+                        )
                     }
 
                     Text(
@@ -109,13 +122,11 @@ fun MyBookRow(myBook: BookDetail, onItemClicked: () -> Unit) {
 @Preview(showBackground = true)
 @Composable
 fun PreviewMyBookRow() {
-//    MyBookRow(
-//        myBook = BookEntity(
-//            "123",
-//            "title",
-//            "",
-//            "",
-//            ""
-//        )
-//    ) {}
+    MyBookRow(
+        myBook = BookDetail(
+            isbn = "123",
+            registrationTimeMillis = System.currentTimeMillis(),
+            progress = 9
+        )
+    ) {}
 }

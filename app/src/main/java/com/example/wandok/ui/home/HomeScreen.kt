@@ -189,7 +189,6 @@ fun MyBookList(
     ) {
         itemsIndexed(
             items = bookList,
-//            key = { index, book -> book.isbn }
         ) { _, book ->
             MyBookRow(
                 myBook = book,
