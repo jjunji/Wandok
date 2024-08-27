@@ -12,14 +12,13 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.unit.dp
-import timber.log.Timber
+import com.example.wandok.ui.theme.Orange300
 
 val dotSize = 20.dp
 val spaceSize = 4.dp
@@ -70,7 +69,7 @@ fun Dot(
         .size(dotSize)
         .scale(scale)
         .background(
-            color = MaterialTheme.colors.primary,
+            color = Orange300,
             shape = CircleShape
         )
 )

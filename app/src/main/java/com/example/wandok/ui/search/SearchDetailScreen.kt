@@ -16,10 +16,10 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.Divider
-import androidx.compose.material.FloatingActionButton
-import androidx.compose.material.Icon
-import androidx.compose.material.Text
+import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -48,7 +48,7 @@ import com.example.wandok.ui.theme.GrayC1
 import kotlinx.coroutines.flow.collectLatest
 
 @Composable
-fun SearchDetailScreen(
+fun SearchDetailRoute(
     onBackClicked: () -> Unit,
     onAddCompleted: () -> Unit,
     viewModel: SearchDetailViewModel = hiltViewModel()
@@ -63,12 +63,31 @@ fun SearchDetailScreen(
         }
     }
 
+    SearchDetailScreen(
+        onBackClicked = onBackClicked,
+        onAddBookClicked = { viewModel.onAddBookClicked() },    // 책 추가 fab Clicked
+        responseState = responseState
+    )
+
+    AddBookDialog(
+        addBookDialogState,
+        confirm = { viewModel.onAddDialogConfirmed(it) },
+        cancel = { viewModel.onAddDialogCanceled() }
+    )
+}
+
+@Composable
+fun SearchDetailScreen(
+    onBackClicked: () -> Unit,
+    onAddBookClicked: () -> Unit,
+    responseState: ResponseState<BookDetail>,
+) {
     Box(modifier = Modifier.fillMaxSize()) {
         Column(modifier = Modifier.fillMaxSize()) {
             CustomAppBar(modifier = Modifier) { onBackClicked() }
-            when (val state = responseState) {
+            when (responseState) {
                 is ResponseState.Success -> {
-                    BookDetailLayout(modifier = Modifier, state.body)
+                    BookDetailLayout(modifier = Modifier, responseState.body)
                 }
 
                 is ResponseState.Loading -> {
@@ -83,15 +102,9 @@ fun SearchDetailScreen(
                 .align(Alignment.BottomEnd)
                 .offset(x = (-20).dp, y = (-20).dp)
         ) {
-            viewModel.onAddBookClicked()
+            onAddBookClicked()
         }
     }
-
-    AddBookDialog(
-        addBookDialogState,
-        confirm = { viewModel.onAddDialogConfirmed(it) },
-        cancel = { viewModel.onAddDialogCanceled() }
-    )
 }
 
 @Composable
@@ -104,7 +117,7 @@ fun BookDetailLayout(modifier: Modifier, item: BookDetail) {
             contentScale = ContentScale.FillBounds,
             modifier = modifier
                 .align(Alignment.CenterHorizontally)
-                .width(220.dp)
+                .width(180.dp)
                 .aspectRatio(1f / 1.4f)
         )
         Spacer(modifier = modifier.height(10.dp))
@@ -130,9 +143,12 @@ fun BookDetailLayout(modifier: Modifier, item: BookDetail) {
 fun BookTitle(modifier: Modifier, title: String) {
     Column(modifier = modifier.fillMaxWidth()) {
         Body1Text(
-            modifier = modifier.align(Alignment.CenterHorizontally),
+            modifier = modifier
+                .padding(horizontal = 10.dp),
             text = title,
-            color = Color.Black
+            color = Color.Black,
+            maxLines = 2,
+            textAlign = TextAlign.Start
         )
     }
 }
@@ -159,7 +175,7 @@ fun TableOfContents(modifier: Modifier, itemList: List<TableOfContent>) {
             TableOfContentRow(index, item = item)
 
             // 아이템 구분선
-            Divider(color = GrayC1, thickness = 1.dp)
+            HorizontalDivider(color = GrayC1, thickness = 1.dp)
         }
     }
 }

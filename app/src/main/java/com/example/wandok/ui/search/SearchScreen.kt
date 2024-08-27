@@ -19,10 +19,11 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.material.Divider
 import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.Text
+import androidx.compose.material.pullrefresh.PullRefreshState
 import androidx.compose.material.pullrefresh.rememberPullRefreshState
+import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
@@ -51,24 +52,11 @@ import com.example.wandok.ui.theme.Orange300
 import com.example.wandok.ui.theme.Typography
 import timber.log.Timber
 
-@Composable
-fun SearchRoot(
-    onItemClick: (isbn: String) -> Unit,
-    modifier: Modifier,
-    viewModel: SearchViewModel = hiltViewModel()
-) {
-    SearchScreen(
-        onItemClick = onItemClick,
-        modifier = modifier,
-        viewModel = viewModel
-    )
-}
-
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun SearchScreen(
+fun SearchRoute(
+    paddingValues: PaddingValues,
     onItemClick: (isbn: String) -> Unit,
-    modifier: Modifier = Modifier,
     viewModel: SearchViewModel = hiltViewModel()
 ) {
     val keyword by viewModel.keyword.collectAsStateWithLifecycle()
@@ -76,21 +64,18 @@ fun SearchScreen(
     val refreshing by viewModel.refreshing.collectAsStateWithLifecycle(initialValue = false)
 
     val listState = rememberLazyListState()
-    val bookList = viewModel.bookList
-
     val shouldStartPaginate = remember {
         derivedStateOf {
             // 마지막 항목이 현재 화면에 표시 되는지 여부를 나타냄
-            val isLastItemDisplayed = (listState.layoutInfo.visibleItemsInfo.lastOrNull()?.index ?: -1) >= listState.layoutInfo.totalItemsCount - 1
+            val isLastItemDisplayed = (listState.layoutInfo.visibleItemsInfo.lastOrNull()?.index
+                ?: -1) >= listState.layoutInfo.totalItemsCount - 1
             isLastItemDisplayed && viewModel.pageStatus.hasMore
         }
     }
 
     val pullRefreshState = rememberPullRefreshState(
         refreshing = refreshing,
-        onRefresh = {
-            viewModel.refresh()
-        }
+        onRefresh = { viewModel.refresh() }
     )
 
     // paging 조건 만족 시 다음 페이지 호출
@@ -100,23 +85,51 @@ fun SearchScreen(
         }
     }
 
+    SearchScreen(
+        paddingValues,
+        onItemClick = onItemClick,
+        keyword,
+        viewModel.bookList,
+        listState,
+        loadState,
+        refreshing,
+        pullRefreshState,
+        onKeywordChanged = { viewModel.onKeywordChanged(it) },
+        onSearch = { viewModel.onSearch(keyword) }
+    )
+}
+
+@OptIn(ExperimentalMaterialApi::class)
+@Composable
+fun SearchScreen(
+    paddingValues: PaddingValues,
+    onItemClick: (isbn: String) -> Unit,
+    keyword: String,
+    searchList: List<Book>,
+    listState: LazyListState,
+    loadState: LoadState,
+    refreshing: Boolean,
+    pullRefreshState: PullRefreshState,
+    onKeywordChanged: (String) -> Unit,
+    onSearch: () -> Unit
+) {
     Column(
-        modifier = Modifier.fillMaxSize()
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(paddingValues)
     ) {
         SearchTitle()
         SearchField(
             keyword = keyword,
-            onKeywordChanged = { viewModel.onKeywordChanged(it) },
-            onSearch = {
-                viewModel.onSearch(keyword)
-            }
+            onKeywordChanged = { onKeywordChanged(it) },
+            onSearch = { onSearch() }
         )
         SwipeRefreshBox(
             refreshing = refreshing,
             pullRefreshState = pullRefreshState,
             content = {
                 BookList(
-                    bookList = bookList,
+                    bookList = searchList,
                     listState = listState,
                     loadState = loadState,
                     onItemClicked = { onItemClick(it) }
@@ -230,7 +243,7 @@ fun BookList(
 
             // 아이템 구분선
             if (index != bookList.lastIndex) {
-                Divider(color = GrayC1, thickness = 1.dp)
+                HorizontalDivider(color = GrayC1, thickness = 1.dp)
             }
 
             // paging 시 하단 로딩 바
