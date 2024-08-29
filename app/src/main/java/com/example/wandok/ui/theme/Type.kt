@@ -30,6 +30,13 @@ val Typography = Typography(
         color = Color.Black
     ),
 
+    titleMedium = TextStyle(
+        fontFamily = notosansFamily,
+        fontWeight = FontWeight.Medium,
+        fontSize = 16.sp,
+        color = Color.Black
+    ),
+
     titleSmall = TextStyle(
         fontFamily = notosansFamily,
         fontWeight = FontWeight.Bold,
@@ -46,5 +53,11 @@ val Typography = Typography(
         fontFamily = notosansFamily,
         fontWeight = FontWeight.Normal,
         fontSize = 14.sp
+    ),
+
+    bodySmall = TextStyle(
+        fontFamily = notosansFamily,
+        fontWeight = FontWeight.Light,
+        fontSize = 12.sp
     )
 )

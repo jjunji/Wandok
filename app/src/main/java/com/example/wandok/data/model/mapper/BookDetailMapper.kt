@@ -16,7 +16,9 @@ object BookDetailMapper {
             .removeTag()
             .trim()
             .split("\n")
-            .filter { it.isNotEmpty() }
+            .filter {
+                it.isNotEmpty() && !it.startsWith("===")
+            }
             .mapIndexed { index, tableOfContent ->
                 TableOfContent(
                     index = index,

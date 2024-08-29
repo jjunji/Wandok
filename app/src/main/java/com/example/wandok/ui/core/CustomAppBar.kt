@@ -24,7 +24,8 @@ import com.example.wandok.ui.theme.GrayC1
 @Composable
 fun CustomAppBar(
     modifier: Modifier = Modifier,
-    onBackClicked: () -> Unit
+    onBackClicked: () -> Unit,
+    title: String = ""
 ) {
     val padding = 4.dp
     val density = LocalDensity.current
@@ -50,11 +51,20 @@ fun CustomAppBar(
             painter = painterResource(id = R.drawable.ic_arrow_back),
             contentDescription = null
         )
+
+        if (title.isNotEmpty()) {
+            TitleMediumText(
+                modifier = Modifier
+                    .padding(horizontal = 40.dp)
+                    .align(Alignment.Center),
+                text = title
+            )
+        }
     }
 }
 
 @Preview(showBackground = true)
 @Composable
 fun PreviewCustomAppBar() {
-    CustomAppBar {}
+    CustomAppBar(onBackClicked = {}, title = "가나가나가나가나가나가나가나가나가나가나가나가나가가나")
 }

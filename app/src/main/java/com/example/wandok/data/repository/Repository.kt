@@ -20,6 +20,7 @@ interface Repository {
 
     suspend fun insertBook(bookEntity: BookDetailEntity)
     fun getAllMyBook(): Flow<List<BookDetail>>
+    suspend fun getMyBook(isbn: String): Flow<BookDetail?>
 
     /* remote */
     suspend fun getMyBookList(queryMap: HashMap<String, String>): ResponseState<BookResponse>

@@ -39,8 +39,8 @@ import com.example.wandok.R
 import com.example.wandok.data.model.BookDetail
 import com.example.wandok.data.model.local.TableOfContent
 import com.example.wandok.network.ResponseState
-import com.example.wandok.ui.core.Body1Text
-import com.example.wandok.ui.core.Body2Text
+import com.example.wandok.ui.core.BodyLargeText
+import com.example.wandok.ui.core.BodyMediumText
 import com.example.wandok.ui.core.ConfirmCancelDialog
 import com.example.wandok.ui.core.CustomAppBar
 import com.example.wandok.ui.core.DotsPulsing
@@ -84,7 +84,7 @@ fun SearchDetailScreen(
 ) {
     Box(modifier = Modifier.fillMaxSize()) {
         Column(modifier = Modifier.fillMaxSize()) {
-            CustomAppBar(modifier = Modifier) { onBackClicked() }
+            CustomAppBar(modifier = Modifier, onBackClicked = { onBackClicked() })
             when (responseState) {
                 is ResponseState.Success -> {
                     BookDetailLayout(modifier = Modifier, responseState.body)
@@ -142,7 +142,7 @@ fun BookDetailLayout(modifier: Modifier, item: BookDetail) {
 @Composable
 fun BookTitle(modifier: Modifier, title: String) {
     Column(modifier = modifier.fillMaxWidth()) {
-        Body1Text(
+        BodyLargeText(
             modifier = modifier
                 .padding(horizontal = 10.dp),
             text = title,
@@ -155,7 +155,7 @@ fun BookTitle(modifier: Modifier, title: String) {
 
 @Composable
 fun Description(modifier: Modifier, description: String) {
-    Body2Text(
+    BodyMediumText(
         modifier = modifier.padding(horizontal = 10.dp),
         text = description,
         textAlign = TextAlign.Start,

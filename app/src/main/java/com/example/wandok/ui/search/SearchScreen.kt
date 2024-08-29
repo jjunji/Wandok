@@ -50,7 +50,6 @@ import com.example.wandok.ui.core.grayRoundCorner
 import com.example.wandok.ui.theme.GrayC1
 import com.example.wandok.ui.theme.Orange300
 import com.example.wandok.ui.theme.Typography
-import timber.log.Timber
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
@@ -223,7 +222,7 @@ fun BookList(
     loadState: LoadState,
     onItemClicked: (isbn: String) -> Unit
 ) {
-    Timber.tag("test").e("Recomposition")
+//    Timber.tag("test").e("Recomposition")
     LazyColumn(
         contentPadding = PaddingValues(10.dp),
         state = listState,

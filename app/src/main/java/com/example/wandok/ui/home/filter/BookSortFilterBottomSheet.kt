@@ -23,7 +23,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.wandok.R
-import com.example.wandok.ui.core.Body1Text
+import com.example.wandok.ui.core.BodyLargeText
 import com.example.wandok.ui.home.model.SortType
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -66,7 +66,7 @@ fun SortByNewestRow(
             .height(40.dp)
             .padding(horizontal = 20.dp)
     ) {
-        Body1Text(
+        BodyLargeText(
             text = stringResource(id = R.string.filter_newest),
             bold = true,
             modifier = Modifier.align(Alignment.CenterStart)
@@ -94,7 +94,7 @@ fun SortByOldestRow(
             .height(40.dp)
             .padding(horizontal = 20.dp)
     ) {
-        Body1Text(
+        BodyLargeText(
             text = stringResource(id = R.string.filter_oldest),
             bold = true,
             modifier = Modifier.align(Alignment.CenterStart)
@@ -122,7 +122,7 @@ fun SortByHighestProgressRow(
             .height(40.dp)
             .padding(horizontal = 20.dp)
     ) {
-        Body1Text(
+        BodyLargeText(
             text = stringResource(id = R.string.filter_highest_progress),
             bold = true,
             modifier = Modifier.align(Alignment.CenterStart)
@@ -150,7 +150,7 @@ fun SortByLowestProgressRow(
             .height(40.dp)
             .padding(horizontal = 20.dp)
     ) {
-        Body1Text(
+        BodyLargeText(
             text = stringResource(id = R.string.filter_lowest_progress),
             bold = true,
             modifier = Modifier.align(Alignment.CenterStart)

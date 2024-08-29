@@ -27,8 +27,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.wandok.R
-import com.example.wandok.ui.core.Body1Text
-import com.example.wandok.ui.core.Body2Text
+import com.example.wandok.ui.core.BodyLargeText
+import com.example.wandok.ui.core.BodyMediumText
 import com.example.wandok.ui.core.H6Text
 import com.example.wandok.ui.core.shadow
 import com.example.wandok.ui.theme.DarkGray
@@ -84,7 +84,7 @@ fun Greeting() {
 
 @Composable
 fun LoginInfoLabel() {
-    Body2Text(
+    BodyMediumText(
         text = stringResource(id = R.string.mypage_label_login_info),
         color = DarkGray,
         modifier = Modifier
@@ -109,7 +109,7 @@ fun LoginInfo() {
         Row(
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Body2Text(
+            BodyMediumText(
                 text = stringResource(id = R.string.common_logout),
                 color = DarkGray,
                 modifier = Modifier.padding(end = 6.dp)
@@ -159,7 +159,7 @@ fun MyReadingTime(modifier: Modifier = Modifier) {
                     .wrapContentSize()
             )
 
-            Body1Text(
+            BodyLargeText(
                 text = stringResource(id = R.string.mypage_label_read_time),
                 modifier = Modifier.padding(start = 4.dp),
             )

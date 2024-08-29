@@ -26,8 +26,8 @@ import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.example.wandok.R
 import com.example.wandok.data.model.BookDetail
-import com.example.wandok.ui.core.Body1Text
-import com.example.wandok.ui.core.Body2Text
+import com.example.wandok.ui.core.BodyLargeText
+import com.example.wandok.ui.core.BodyMediumText
 import com.example.wandok.ui.core.LinearProgressBar
 import com.example.wandok.ui.core.shadow
 import com.example.wandok.ui.theme.DeepShadow
@@ -80,7 +80,7 @@ fun MyBookRow(myBook: BookDetail, onItemClicked: () -> Unit) {
                 ) {
                     val countOfAllContents = myBook.tableOfContents.size + 1
                     val countOfDone = myBook.tableOfContents.count { it.read }
-                    Body1Text(
+                    BodyLargeText(
                         text = stringResource(
                             id = R.string.format_progress,
                             formatArgs = arrayOf(countOfDone, countOfAllContents)
@@ -98,7 +98,7 @@ fun MyBookRow(myBook: BookDetail, onItemClicked: () -> Unit) {
                             progress = myBook.progress.toFloat()
                         )
 
-                        Body2Text(
+                        BodyMediumText(
                             text = stringResource(
                                 id = R.string.format_percent,
                                 formatArgs = arrayOf(myBook.progress)

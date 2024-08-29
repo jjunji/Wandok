@@ -38,7 +38,6 @@ import com.example.wandok.ui.home.model.SortType
 import com.example.wandok.ui.home.model.StatusFilterUiState
 import com.example.wandok.ui.theme.DarkGray
 import com.example.wandok.ui.theme.Typography
-import timber.log.Timber
 
 @Composable
 internal fun HomeRoute(
@@ -184,7 +183,7 @@ fun MyBookList(
     bookList: List<BookDetail>,
     onItemClicked: (isbn: String) -> Unit
 ) {
-    Timber.tag("MyBookList").e("Recomposition") // TODO: 로딩(검색) 동안 recomposition
+//    Timber.tag("MyBookList").e("Recomposition") // TODO: 로딩(검색) 동안 recomposition
 
     LazyColumn(
         contentPadding = PaddingValues(start = 10.dp, end = 10.dp, bottom = 10.dp),

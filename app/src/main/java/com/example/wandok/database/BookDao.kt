@@ -15,4 +15,7 @@ interface BookDao {
 
     @Query("SELECT * FROM my_book")
     fun getAllMyBook(): Flow<List<BookDetailEntity>>
+
+    @Query("SELECT * FROM my_book WHERE isbn = :isbn LIMIT 1")
+    fun getMyBook(isbn: String): Flow<BookDetailEntity?>
 }
