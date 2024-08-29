@@ -3,12 +3,17 @@ package com.example.wandok.ui.home
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -63,20 +68,7 @@ fun HomeDetailScreen(
             title = myBook.title
         )
 
-        Box(
-            modifier = Modifier.fillMaxSize()
-        ) {
-            DDAY(
-                modifier = Modifier
-                    .align(Alignment.TopStart)
-                    .padding(top = 16.dp, start = 16.dp)
-            )
-            OvalProgressBar(
-                modifier = Modifier
-                    .align(Alignment.Center)
-                    .offset(x = (100).dp)
-            )
-        }
+        MyBookIndex(subTitleList = myBook.tableOfContents)
     }
 }
 
@@ -99,6 +91,7 @@ fun DDAY(modifier: Modifier) {
         )
         BodyMediumText(text = "설정 목표", color = Orange500)
         BodyMediumText(
+            modifier = Modifier.padding(top = 3.dp),
             text = "2024. 8. 28 ~ 2024. 8. 28",
             color = Orange500
         )
@@ -139,5 +132,37 @@ fun OvalProgressBar(modifier: Modifier) {
 @Composable
 fun MyBookIndex(subTitleList: List<TableOfContent>) {
     if (subTitleList.isEmpty()) return
+    LazyColumn(
+        modifier = Modifier.fillMaxSize(),
+        contentPadding = PaddingValues(20.dp)
+    ) {
+        itemsIndexed(
+            items = subTitleList
+        ) { index, item ->
+            if (index == 0) {
+                Column {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .wrapContentHeight()
+                    ) {
+                        OvalProgressBar(
+                            modifier = Modifier
+                                .padding(top = 5.dp)
+                                .align(Alignment.Center)
+                                .offset(x = (100).dp)
+                        )
 
+                        DDAY(
+                            modifier = Modifier
+                                .align(Alignment.TopStart)
+                                .padding(top = 16.dp, start = 16.dp)
+                        )
+                    }
+                }
+            } else {
+                IndexRow(tableOfContent = item)
+            }
+        }
+    }
 }
