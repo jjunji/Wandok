@@ -66,19 +66,15 @@ fun HomeDetailScreen(
             title = myBook.title
         )
 
-        if (myBook.tableOfContents.isEmpty()) return
+        if (myBook.tableOfContents.isEmpty()) return // TODO: else
 
         LazyColumn(
             modifier = Modifier.fillMaxSize()
         ) {
-            item {
-                ProgressInfo()
-            }
+            item { ProgressInfo() } // d-day, 진행률, 목표 설정
 
-            itemsIndexed(
-                items = myBook.tableOfContents
-            ) { _, item ->
-                IndexRow(tableOfContent = item)
+            itemsIndexed(items = myBook.tableOfContents) { _, item ->
+                IndexRow(tableOfContent = item) // 목차 item
             }
         }
     }
@@ -112,7 +108,10 @@ fun DDAY(modifier: Modifier) {
             modifier = Modifier.padding(top = 10.dp),
             text = "목표 재설정",
             cornerRadius = 16.dp,
-            iconAttr = IconAttr(painter = painterResource(id = R.drawable.ic_edit_goal)),
+            iconAttr = IconAttr(
+                painter = painterResource(id = R.drawable.ic_edit_goal),
+                space = 5.dp
+            ),
             onClick = {
                 // TODO: Dialog
             }
