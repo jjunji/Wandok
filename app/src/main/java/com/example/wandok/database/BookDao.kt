@@ -4,6 +4,7 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import androidx.room.Update
 import com.example.wandok.data.model.local.BookDetailEntity
 import kotlinx.coroutines.flow.Flow
 
@@ -18,4 +19,9 @@ interface BookDao {
 
     @Query("SELECT * FROM my_book WHERE isbn = :isbn LIMIT 1")
     fun getMyBook(isbn: String): Flow<BookDetailEntity?>
+
+    @Update()
+    fun updateReadStatus() {
+
+    }
 }

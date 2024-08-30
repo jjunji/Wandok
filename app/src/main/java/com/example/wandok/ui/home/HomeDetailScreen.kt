@@ -30,6 +30,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.wandok.R
 import com.example.wandok.data.model.BookDetail
+import com.example.wandok.data.model.local.TableOfContent
 import com.example.wandok.ui.core.BodyMediumText
 import com.example.wandok.ui.core.CustomAppBar
 import com.example.wandok.ui.core.IconAttr
@@ -47,15 +48,23 @@ fun HomeDetailRoute(
     myBook?.let {
         HomeDetailScreen(
             myBook = it,
-            onBackClicked = { onBackClicked() }
+            onBackClicked = { onBackClicked() },
+            onItemClicked = { item -> viewModel.updateProgress(it.isbn, item) }
         )
     }
+
+
+    /*
+        Progress 수정
+        tableOfContent -> read -> 수정
+     */
 }
 
 @Composable
 fun HomeDetailScreen(
     myBook: BookDetail,
-    onBackClicked: () -> Unit
+    onBackClicked: () -> Unit,
+    onItemClicked: (item: TableOfContent) -> Unit
 ) {
     Column(
         modifier = Modifier.fillMaxSize()
@@ -72,9 +81,11 @@ fun HomeDetailScreen(
             modifier = Modifier.fillMaxSize()
         ) {
             item { ProgressInfo() } // d-day, 진행률, 목표 설정
-
             itemsIndexed(items = myBook.tableOfContents) { _, item ->
-                IndexRow(tableOfContent = item) // 목차 item
+                IndexRow( // 목차 item
+                    tableOfContent = item,
+                    onItemClicked = { onItemClicked(it) }
+                )
             }
         }
     }

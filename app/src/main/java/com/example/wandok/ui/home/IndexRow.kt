@@ -1,5 +1,6 @@
 package com.example.wandok.ui.home
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -22,7 +23,10 @@ import com.example.wandok.ui.core.TextWithImage
 import com.example.wandok.ui.theme.WhiteGray
 
 @Composable
-fun IndexRow(tableOfContent: TableOfContent) {
+fun IndexRow(
+    tableOfContent: TableOfContent,
+    onItemClicked: (item: TableOfContent) -> Unit
+) {
     Column(
         modifier = Modifier
     ) {
@@ -50,7 +54,9 @@ fun IndexRow(tableOfContent: TableOfContent) {
                 space = 3.dp
             )
             TextWithImage(
-                modifier = Modifier.padding(start = 10.dp, top = 3.dp, bottom = 3.dp),
+                modifier = Modifier
+                    .padding(start = 10.dp, top = 3.dp, bottom = 3.dp)
+                    .clickable { onItemClicked(tableOfContent) },
                 title = "읽음",
                 iconAttr = iconAttr
             )
@@ -67,5 +73,5 @@ fun IndexRow(tableOfContent: TableOfContent) {
 @Composable
 @Preview(showBackground = true)
 fun PreviewIndexRow() {
-    IndexRow(tableOfContent = TableOfContent(1, "타이틀", true))
+    IndexRow(tableOfContent = TableOfContent(1, "타이틀", true)) {}
 }

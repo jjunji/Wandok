@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.wandok.common.constants.KeyValueConstant.NAV_ARGS_ISBN
 import com.example.wandok.data.model.BookDetail
+import com.example.wandok.data.model.local.TableOfContent
 import com.example.wandok.data.repository.Repository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -31,4 +32,19 @@ class HomeDetailViewModel @Inject constructor(
             }
         }
     }
+
+    fun updateProgress(myBook: BookDetail, item: TableOfContent) {
+        val readStatus = !item.read
+        val newContents = myBook.tableOfContents.filter { it.index == item.index }.
+
+
+        val entity = myBook.copy(
+            progress = 30,
+            tableOfContents = myBook.tableOfContents.map {
+                it.read = readStatus
+            }
+        )
+    }
 }
+
+
