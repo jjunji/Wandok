@@ -3,7 +3,6 @@ package com.example.wandok.ui.home
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -31,7 +30,6 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.wandok.R
 import com.example.wandok.data.model.BookDetail
-import com.example.wandok.data.model.local.TableOfContent
 import com.example.wandok.ui.core.BodyMediumText
 import com.example.wandok.ui.core.CustomAppBar
 import com.example.wandok.ui.core.IconAttr
@@ -68,7 +66,21 @@ fun HomeDetailScreen(
             title = myBook.title
         )
 
-        MyBookIndex(subTitleList = myBook.tableOfContents)
+        if (myBook.tableOfContents.isEmpty()) return
+
+        LazyColumn(
+            modifier = Modifier.fillMaxSize()
+        ) {
+            item {
+                ProgressInfo()
+            }
+
+            itemsIndexed(
+                items = myBook.tableOfContents
+            ) { _, item ->
+                IndexRow(tableOfContent = item)
+            }
+        }
     }
 }
 
@@ -130,39 +142,25 @@ fun OvalProgressBar(modifier: Modifier) {
 }
 
 @Composable
-fun MyBookIndex(subTitleList: List<TableOfContent>) {
-    if (subTitleList.isEmpty()) return
-    LazyColumn(
-        modifier = Modifier.fillMaxSize(),
-        contentPadding = PaddingValues(20.dp)
-    ) {
-        itemsIndexed(
-            items = subTitleList
-        ) { index, item ->
-            if (index == 0) {
-                Column {
-                    Box(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .wrapContentHeight()
-                    ) {
-                        OvalProgressBar(
-                            modifier = Modifier
-                                .padding(top = 5.dp)
-                                .align(Alignment.Center)
-                                .offset(x = (100).dp)
-                        )
+fun ProgressInfo() {
+    Column {
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .wrapContentHeight()
+        ) {
+            OvalProgressBar(
+                modifier = Modifier
+                    .padding(top = 5.dp)
+                    .align(Alignment.Center)
+                    .offset(x = (100).dp)
+            )
 
-                        DDAY(
-                            modifier = Modifier
-                                .align(Alignment.TopStart)
-                                .padding(top = 16.dp, start = 16.dp)
-                        )
-                    }
-                }
-            } else {
-                IndexRow(tableOfContent = item)
-            }
+            DDAY(
+                modifier = Modifier
+                    .align(Alignment.TopStart)
+                    .padding(top = 16.dp, start = 16.dp)
+            )
         }
     }
 }

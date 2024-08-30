@@ -14,7 +14,8 @@ import com.example.wandok.data.model.local.TableOfContent
 fun IndexRow(tableOfContent: TableOfContent) {
     Row(
         modifier = Modifier
-            .height(50.dp),
+            .height(50.dp)
+            .padding(horizontal = 20.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
         Text("${tableOfContent.index}.")
