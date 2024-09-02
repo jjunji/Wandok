@@ -49,7 +49,7 @@ fun HomeDetailRoute(
         HomeDetailScreen(
             myBook = it,
             onBackClicked = { onBackClicked() },
-            onItemClicked = { item -> viewModel.updateProgress(it.isbn, item) }
+            onItemClicked = { item -> viewModel.updateBookStatus(it, item) }
         )
     }
 

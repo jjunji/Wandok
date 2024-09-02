@@ -78,6 +78,10 @@ class RepositoryImpl @Inject constructor(
         }
     }
 
+    override suspend fun updateMyBookStatus(bookDetailEntity: BookDetailEntity) {
+        return localDataSource.updateMyBookStatus(bookDetailEntity)
+    }
+
     override suspend fun getMyBookList(queryMap: HashMap<String, String>): ResponseState<BookResponse> {
         return remoteDatasource.getBookList(queryMap)
     }

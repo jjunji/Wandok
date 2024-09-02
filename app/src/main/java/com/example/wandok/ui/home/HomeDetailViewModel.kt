@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.wandok.common.constants.KeyValueConstant.NAV_ARGS_ISBN
 import com.example.wandok.data.model.BookDetail
 import com.example.wandok.data.model.local.TableOfContent
+import com.example.wandok.data.model.mapper.BookDetailMapper.mapToEntity
 import com.example.wandok.data.repository.Repository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -16,7 +17,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class HomeDetailViewModel @Inject constructor(
-    private val savedStateHandle: SavedStateHandle,
+    savedStateHandle: SavedStateHandle,
     private val repository: Repository
 ) : ViewModel() {
     private val _myBook = MutableSharedFlow<BookDetail?>(replay = 0)
@@ -33,18 +34,25 @@ class HomeDetailViewModel @Inject constructor(
         }
     }
 
-    fun updateProgress(myBook: BookDetail, item: TableOfContent) {
-        val readStatus = !item.read
-        val newContents = myBook.tableOfContents.filter { it.index == item.index }.
+    @Suppress("MagicNumber")
+    fun updateBookStatus(myBook: BookDetail, clickedItem: TableOfContent) {
+        val updateContents = myBook.tableOfContents.map {
+            if (it.index == clickedItem.index) {
+                it.copy(read = !clickedItem.read)
+            } else {
+                it
+            }
+        }
 
+        val updateProgress = (updateContents.count { it.read } / updateContents.size) * 100
 
         val entity = myBook.copy(
-            progress = 30,
-            tableOfContents = myBook.tableOfContents.map {
-                it.read = readStatus
-            }
-        )
+            progress = updateProgress,
+            tableOfContents = updateContents
+        ).mapToEntity()
+
+        viewModelScope.launch {
+            repository.updateMyBookStatus(entity)
+        }
     }
 }
-
-

@@ -1,6 +1,5 @@
 package com.example.wandok.data.datasource.local
 
-import com.example.wandok.data.model.BookDetail
 import com.example.wandok.data.model.local.BookDetailEntity
 import com.example.wandok.database.AppPreferences
 import com.example.wandok.database.BookDatabase
@@ -59,8 +58,8 @@ class LocalDatasourceImpl @Inject constructor(
         return database.bookDao().getMyBook(isbn)
     }
 
-    override suspend fun updateReadStatus(isbn: String, bookDetail: BookDetail) {
-        database.bookDao()
+    override suspend fun updateMyBookStatus(bookDetailEntity: BookDetailEntity) {
+        database.bookDao().updateMyBookStatus(bookDetailEntity)
     }
 
 }

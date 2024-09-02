@@ -19,5 +19,5 @@ data class BookDetail(
     val publisher: String = "",
     val tableOfContents: List<TableOfContent> = emptyList(),
     val registrationTimeMillis: Long = 0,
-    val progress: Int
+    val progress: Int = 0
 )

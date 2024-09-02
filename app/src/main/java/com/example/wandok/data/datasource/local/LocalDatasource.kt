@@ -1,6 +1,5 @@
 package com.example.wandok.data.datasource.local
 
-import com.example.wandok.data.model.BookDetail
 import com.example.wandok.data.model.local.BookDetailEntity
 import kotlinx.coroutines.flow.Flow
 
@@ -18,5 +17,5 @@ interface LocalDatasource {
     fun getAllMyBookList(): Flow<List<BookDetailEntity>>
     suspend fun insertBook(bookDetailEntity: BookDetailEntity)
     suspend fun getMyBook(isbn: String): Flow<BookDetailEntity?>
-    suspend fun updateReadStatus(isbn: String, bookDetail: BookDetail)
+    suspend fun updateMyBookStatus(bookDetailEntity: BookDetailEntity)
 }

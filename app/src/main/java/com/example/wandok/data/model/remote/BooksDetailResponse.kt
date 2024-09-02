@@ -3,8 +3,10 @@ package com.example.wandok.data.model.remote
 import com.google.gson.annotations.SerializedName
 
 data class BookDetailResponse(
-    @SerializedName("item") val item: List<BookInfo> = emptyList()
-)
+    @SerializedName("item") private val itemList: List<BookInfo> = emptyList()
+) {
+    val item = itemList.first()
+}
 
 data class BookInfo(
     @SerializedName("isbn") val isbn: String = "",
