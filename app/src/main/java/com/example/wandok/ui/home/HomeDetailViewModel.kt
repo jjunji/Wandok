@@ -12,6 +12,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -21,7 +22,7 @@ class HomeDetailViewModel @Inject constructor(
     private val repository: Repository
 ) : ViewModel() {
     private val _myBook = MutableSharedFlow<BookDetail?>(replay = 0)
-    val myBook = _myBook.asSharedFlow()
+    val myBook = _myBook.asSharedFlow().distinctUntilChanged()
 
     init {
         val isbn: String? = savedStateHandle[NAV_ARGS_ISBN]

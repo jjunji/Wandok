@@ -10,6 +10,7 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -20,13 +21,16 @@ import com.example.wandok.ui.core.BodyMediumText
 import com.example.wandok.ui.core.IconAttr
 import com.example.wandok.ui.core.IconDirection
 import com.example.wandok.ui.core.TextWithImage
+import com.example.wandok.ui.theme.LightGray
 import com.example.wandok.ui.theme.WhiteGray
+import timber.log.Timber
 
 @Composable
 fun IndexRow(
     tableOfContent: TableOfContent,
     onItemClicked: (item: TableOfContent) -> Unit
 ) {
+    Timber.tag("home").e("IndexRow()")
     Column(
         modifier = Modifier
     ) {
@@ -45,19 +49,33 @@ fun IndexRow(
                     .padding(horizontal = 10.dp)
                     .weight(1f),
                 textAlign = TextAlign.Start,
-                text = tableOfContent.subTitle
+                text = tableOfContent.subTitle,
+                color = if (tableOfContent.read) {
+                    LightGray
+                } else {
+                    Color.Black
+                }
             )
 
             val iconAttr = IconAttr(
                 placeDirection = IconDirection.LEFT,
-                painter = painterResource(id = R.drawable.ic_check_done),
-                space = 3.dp
+                space = 3.dp,
+                painter = if (tableOfContent.read) {
+                    painterResource(id = R.drawable.ic_check_done)
+                } else {
+                    painterResource(id = R.drawable.ic_check_dimmed)
+                }
             )
             TextWithImage(
                 modifier = Modifier
                     .padding(start = 10.dp, top = 3.dp, bottom = 3.dp)
                     .clickable { onItemClicked(tableOfContent) },
                 title = "읽음",
+                textColor = if (tableOfContent.read) {
+                    LightGray
+                } else {
+                    Color.Black
+                },
                 iconAttr = iconAttr
             )
         }

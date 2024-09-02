@@ -52,12 +52,6 @@ fun HomeDetailRoute(
             onItemClicked = { item -> viewModel.updateBookStatus(it, item) }
         )
     }
-
-
-    /*
-        Progress 수정
-        tableOfContent -> read -> 수정
-     */
 }
 
 @Composable

@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -18,6 +19,7 @@ import com.example.wandok.R
 fun TextWithImage(
     modifier: Modifier = Modifier,
     title: String,
+    textColor: Color = Color.Black,
     iconAttr: IconAttr
 ) {
     Row(
@@ -29,7 +31,7 @@ fun TextWithImage(
             Spacer(modifier = Modifier.width(iconAttr.space))
         }
 
-        BodyMediumText(text = title)
+        BodyMediumText(text = title, color = textColor)
 
         if (iconAttr.placeDirection == IconDirection.RIGHT) {
             Spacer(modifier = Modifier.width(iconAttr.space))
@@ -56,5 +58,5 @@ fun PreviewTextWithImage() {
         painter = painterResource(id = R.drawable.ic_check_done),
         space = 3.dp
     )
-    TextWithImage(title = "타이틀", iconAttr = iconAttr)
+//    TextWithImage(title = "타이틀", iconAttr = iconAttr)
 }
