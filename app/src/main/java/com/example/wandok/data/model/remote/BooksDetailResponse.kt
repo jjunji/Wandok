@@ -5,7 +5,7 @@ import com.google.gson.annotations.SerializedName
 data class BookDetailResponse(
     @SerializedName("item") private val itemList: List<BookInfo> = emptyList()
 ) {
-    val item = itemList.first()
+    val item get() = itemList.first()
 }
 
 data class BookInfo(

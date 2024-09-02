@@ -184,7 +184,6 @@ fun MyBookList(
     onItemClicked: (isbn: String) -> Unit
 ) {
 //    Timber.tag("MyBookList").e("Recomposition") // TODO: 로딩(검색) 동안 recomposition
-
     LazyColumn(
         contentPadding = PaddingValues(start = 10.dp, end = 10.dp, bottom = 10.dp),
         modifier = Modifier.fillMaxWidth()
@@ -205,6 +204,5 @@ fun MyBookList(
 @Preview(showBackground = true)
 @Composable
 fun PreviewHome() {
-//    val bookEntity = BookEntity("", "Title", "", "", "")
-//    Home(myBookList = listOf(bookEntity), {}, {})
+    MyBookList(bookList = listOf(BookDetail("1234"))) {}
 }

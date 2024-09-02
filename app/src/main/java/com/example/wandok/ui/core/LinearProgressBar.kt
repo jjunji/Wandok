@@ -1,5 +1,6 @@
 package com.example.wandok.ui.core
 
+//noinspection UsingMaterialAndMaterial3Libraries
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.LinearProgressIndicator
@@ -21,11 +22,11 @@ fun LinearProgressBar(
     backGroundColor: Color = Orange100
 ) {
     LinearProgressIndicator(
-        progress = progress,
+        progress = progress / 100,
         modifier = modifier
-            .height(height)
-            .clip(RoundedCornerShape(8.dp)),
+            .clip(RoundedCornerShape(8.dp))
+            .height(height),
         color = color,
-        backgroundColor = backGroundColor
+        backgroundColor = backGroundColor,
     )
 }

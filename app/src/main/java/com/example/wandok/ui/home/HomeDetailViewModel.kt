@@ -45,10 +45,10 @@ class HomeDetailViewModel @Inject constructor(
             }
         }
 
-        val updateProgress = (updateContents.count { it.read } / updateContents.size) * 100
+        val updateProgress = (updateContents.count { it.read }.toFloat() / updateContents.size.toFloat()) * 100f
 
         val entity = myBook.copy(
-            progress = updateProgress,
+            progress = updateProgress.toInt(),
             tableOfContents = updateContents
         ).mapToEntity()
 

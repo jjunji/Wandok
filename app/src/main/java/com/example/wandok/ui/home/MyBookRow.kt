@@ -73,50 +73,57 @@ fun MyBookRow(myBook: BookDetail, onItemClicked: () -> Unit) {
                         .align(Alignment.CenterVertically)
                 )
 
-                Column(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(top = 10.dp, end = 10.dp)
-                ) {
-                    val countOfAllContents = myBook.tableOfContents.size + 1
-                    val countOfDone = myBook.tableOfContents.count { it.read }
-                    BodyLargeText(
-                        text = stringResource(
-                            id = R.string.format_progress,
-                            formatArgs = arrayOf(countOfDone, countOfAllContents)
-                        )
-                    )
-
-                    Row(
-                        modifier = Modifier.padding(top = 5.dp),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        LinearProgressBar(
-                            modifier = Modifier
-                                .weight(1f)
-                                .padding(end = 5.dp),
-                            progress = myBook.progress.toFloat()
-                        )
-
-                        BodyMediumText(
-                            text = stringResource(
-                                id = R.string.format_percent,
-                                formatArgs = arrayOf(myBook.progress)
-                            )
-                        )
-                    }
-
-                    Text(
-                        modifier = Modifier.padding(top = 10.dp, end = 10.dp),
-                        text = myBook.title,
-                        maxLines = 2,
-                        overflow = TextOverflow.Ellipsis,
-                        color = Color.Black,
-                        style = Typography.bodyMedium
-                    )
-                }
+                MyBookInfo(myBook = myBook)
             }
         }
+    }
+}
+
+@Composable
+fun MyBookInfo(
+    myBook: BookDetail
+) {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(top = 10.dp, end = 10.dp)
+    ) {
+        val countOfAllContents = myBook.tableOfContents.size + 1
+        val countOfDone = myBook.tableOfContents.count { it.read }
+        BodyLargeText(
+            text = stringResource(
+                id = R.string.format_progress,
+                formatArgs = arrayOf(countOfDone, countOfAllContents)
+            )
+        )
+
+        Row(
+            modifier = Modifier.padding(top = 5.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            LinearProgressBar(
+                modifier = Modifier
+                    .weight(1f)
+                    .padding(end = 5.dp),
+                progress = myBook.progress.toFloat()
+            )
+
+            BodyMediumText(
+                text = stringResource(
+                    id = R.string.format_percent,
+                    formatArgs = arrayOf(myBook.progress)
+                )
+            )
+        }
+
+        Text(
+            modifier = Modifier.padding(top = 10.dp, end = 10.dp),
+            text = myBook.title,
+            maxLines = 2,
+            overflow = TextOverflow.Ellipsis,
+            color = Color.Black,
+            style = Typography.bodyMedium
+        )
     }
 }
 
