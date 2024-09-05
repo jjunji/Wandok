@@ -18,6 +18,6 @@ data class BookDetail(
     val image: String = "",
     val publisher: String = "",
     val tableOfContents: List<TableOfContent> = emptyList(),
-    val registrationTimeMillis: Long,
-    val progress: Int
+    val registrationTimeMillis: Long = 0,
+    val progress: Int = 0
 )

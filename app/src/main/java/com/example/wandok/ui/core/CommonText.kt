@@ -10,7 +10,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import com.example.wandok.ui.theme.Typography
 
 @Composable
-fun Body1Text(
+fun BodyLargeText(
     modifier: Modifier = Modifier,
     text: String,
     color: Color = Color.Black,
@@ -35,7 +35,7 @@ fun Body1Text(
 }
 
 @Composable
-fun Body2Text(
+fun BodyMediumText(
     modifier: Modifier = Modifier,
     text: String,
     color: Color = Color.Black,
@@ -55,6 +55,31 @@ fun Body2Text(
             FontWeight.Bold
         } else {
             Typography.bodyMedium.fontWeight
+        }
+    )
+}
+
+@Composable
+fun BodySmallText(
+    modifier: Modifier = Modifier,
+    text: String,
+    color: Color = Color.Black,
+    maxLines: Int = 1,
+    textAlign: TextAlign = TextAlign.Center,
+    bold: Boolean = false
+) {
+    Text(
+        modifier = modifier,
+        text = text,
+        maxLines = maxLines,
+        overflow = TextOverflow.Ellipsis,
+        color = color,
+        style = Typography.bodySmall,
+        textAlign = textAlign,
+        fontWeight = if (bold) {
+            FontWeight.Bold
+        } else {
+            Typography.bodySmall.fontWeight
         }
     )
 }
@@ -80,6 +105,31 @@ fun H6Text(
             FontWeight.Bold
         } else {
             Typography.titleLarge.fontWeight
+        }
+    )
+}
+
+@Composable
+fun TitleMediumText(
+    modifier: Modifier = Modifier,
+    text: String,
+    color: Color = Color.Black,
+    maxLines: Int = 1,
+    textAlign: TextAlign = TextAlign.Center,
+    bold: Boolean = false
+) {
+    Text(
+        modifier = modifier,
+        text = text,
+        maxLines = maxLines,
+        overflow = TextOverflow.Ellipsis,
+        color = color,
+        style = Typography.titleMedium,
+        textAlign = textAlign,
+        fontWeight = if (bold) {
+            FontWeight.Bold
+        } else {
+            Typography.titleMedium.fontWeight
         }
     )
 }

@@ -26,8 +26,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.wandok.R
-import com.example.wandok.ui.core.Body1Text
-import com.example.wandok.ui.core.Body2Text
+import com.example.wandok.ui.core.BodyLargeText
+import com.example.wandok.ui.core.BodyMediumText
 import com.example.wandok.ui.core.H6Text
 import com.example.wandok.ui.core.backGroundWithGradient
 import com.example.wandok.ui.core.shadowExcludeLeft
@@ -131,10 +131,10 @@ fun WandokInfo() {
     Column(
         modifier = Modifier.padding(start = 20.dp)
     ) {
-        Body1Text(
+        BodyLargeText(
             text = "나를 소모하지 않는 현명한 태도에 관하여", maxLines = 2, color = Gray3D
         )
-        Body2Text(text = "전지훈", color = Gray3D)
+        BodyMediumText(text = "전지훈", color = Gray3D)
     }
 }
 
@@ -154,19 +154,19 @@ fun WandokDate() {
     Column(
         modifier = Modifier.padding(start = 20.dp, top = 17.dp)
     ) {
-        Body2Text(
+        BodyMediumText(
             text = stringResource(id = R.string.common_start_date), color = Gray8B
         )
 
-        Body1Text(
+        BodyLargeText(
             modifier = Modifier.padding(top = 3.dp), text = "2024. 06. 20", color = Gray3D
         )
 
-        Body2Text(
+        BodyMediumText(
             modifier = Modifier.padding(top = 13.dp), text = stringResource(id = R.string.common_end_date), color = Gray8B
         )
 
-        Body1Text(
+        BodyLargeText(
             modifier = Modifier.padding(top = 3.dp), text = "2024. 06. 20", color = Gray3D
         )
     }
@@ -182,7 +182,7 @@ fun WandokFooter() {
             .fillMaxWidth()
             .backGroundWithGradient(shape = shape, Orange100, Orange500),
     ) {
-        Body1Text(
+        BodyLargeText(
             modifier = Modifier
                 .align(Alignment.CenterStart)
                 .padding(start = 20.dp),
@@ -202,7 +202,7 @@ fun WandokFooter() {
                 bold = true,
                 text = "2024"
             )
-            Body2Text(
+            BodyMediumText(
                 modifier = Modifier
                     .alignByBaseline()
                     .padding(start = 3.dp),
@@ -216,7 +216,7 @@ fun WandokFooter() {
                 bold = true,
                 text = "06"
             )
-            Body2Text(
+            BodyMediumText(
                 modifier = Modifier
                     .alignByBaseline()
                     .padding(start = 3.dp),
@@ -230,7 +230,7 @@ fun WandokFooter() {
                 bold = true,
                 text = "20"
             )
-            Body2Text(
+            BodyMediumText(
                 modifier = Modifier
                     .alignByBaseline()
                     .padding(start = 3.dp),

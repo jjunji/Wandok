@@ -21,5 +21,5 @@ data class BookDetailEntity(
 data class TableOfContent(
     val index: Int,
     val subTitle: String,
-    val read: Boolean
+    var read: Boolean
 )

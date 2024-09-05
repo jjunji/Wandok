@@ -2,7 +2,7 @@ package com.example.wandok.core
 
 import kotlinx.serialization.Serializable
 
-sealed interface MainTabRoute: Route {
+sealed interface MainTabRoute : Route {
     @Serializable
     data object Home : MainTabRoute
 
@@ -17,6 +17,9 @@ sealed interface MainTabRoute: Route {
 }
 
 sealed interface Route {
+    @Serializable
+    data class HomeDetail(val isbn: String) : Route
+
     @Serializable
     data class SearchDetail(val isbn: String) : Route
 }

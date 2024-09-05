@@ -46,12 +46,20 @@ class LocalDatasourceImpl @Inject constructor(
         return preferences.loginHistory
     }
 
-    override fun getMyBookList(): Flow<List<BookDetailEntity>> {
+    override fun getAllMyBookList(): Flow<List<BookDetailEntity>> {
         return database.bookDao().getAllMyBook()
     }
 
     override suspend fun insertBook(bookDetailEntity: BookDetailEntity) {
         database.bookDao().insertBook(bookDetailEntity)
+    }
+
+    override suspend fun getMyBook(isbn: String): Flow<BookDetailEntity?> {
+        return database.bookDao().getMyBook(isbn)
+    }
+
+    override suspend fun updateMyBookStatus(bookDetailEntity: BookDetailEntity) {
+        database.bookDao().updateMyBookStatus(bookDetailEntity)
     }
 
 }

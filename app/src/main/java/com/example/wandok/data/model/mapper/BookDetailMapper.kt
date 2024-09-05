@@ -5,18 +5,21 @@ import com.example.wandok.data.model.BookDetail
 import com.example.wandok.data.model.local.BookDetailEntity
 import com.example.wandok.data.model.local.TableOfContent
 import com.example.wandok.data.model.remote.BookDetailResponse
+import java.util.Date
 
 object BookDetailMapper {
     // response to model
     fun mapToBookDetail(bookDetailResponse: BookDetailResponse): BookDetail {
-        val bookDetail = bookDetailResponse.item.first()
+        val bookDetail = bookDetailResponse.item
         val tableOfContents = bookDetail
             .bookInfo
             .tableOfContentsJson
             .removeTag()
             .trim()
             .split("\n")
-            .filter { it.isNotEmpty() }
+            .filter {
+                it.isNotEmpty() && !it.startsWith("===")
+            }
             .mapIndexed { index, tableOfContent ->
                 TableOfContent(
                     index = index,
@@ -32,9 +35,7 @@ object BookDetailMapper {
             description = bookDetail.description,
             image = bookDetail.image,
             publisher = bookDetail.publisher,
-            tableOfContents = tableOfContents,
-            registrationTimeMillis = System.currentTimeMillis(),
-            progress = 0
+            tableOfContents = tableOfContents
         )
     }
 
@@ -49,6 +50,20 @@ object BookDetailMapper {
             tableOfContents = entity.tableOfContents ?: emptyList(),
             registrationTimeMillis = entity.registrationDate.time,
             progress = entity.progress
+        )
+    }
+
+    // model to entity
+    fun BookDetail.mapToEntity(): BookDetailEntity {
+        return BookDetailEntity(
+            isbn = this.isbn,
+            title = this.title,
+            author = this.author,
+            image = this.image,
+            publisher = this.publisher,
+            tableOfContents = this.tableOfContents,
+            registrationDate = Date(this.registrationTimeMillis),
+            progress = this.progress
         )
     }
 }

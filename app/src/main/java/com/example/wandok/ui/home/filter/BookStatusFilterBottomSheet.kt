@@ -30,8 +30,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.wandok.R
-import com.example.wandok.ui.core.Body1Text
-import com.example.wandok.ui.core.Body2Text
+import com.example.wandok.ui.core.BodyLargeText
+import com.example.wandok.ui.core.BodyMediumText
 import com.example.wandok.ui.core.FilterItem
 import com.example.wandok.ui.home.model.BookStatus
 import com.example.wandok.ui.theme.BackGround
@@ -76,7 +76,7 @@ fun BookStatusFilterBottomSheet(
 
 @Composable
 fun BookStatusFilterLabel() {
-    Body1Text(
+    BodyLargeText(
         modifier = Modifier.padding(start = 16.dp, bottom = 20.dp),
         text = "독서 상태",
         bold = true
@@ -147,7 +147,7 @@ fun ApplyButton(
                 painter = painterResource(id = R.drawable.ic_refresh),
                 contentDescription = null
             )
-            Body2Text(text = stringResource(id = R.string.common_reset))
+            BodyMediumText(text = stringResource(id = R.string.common_reset))
         }
 
         Box(
@@ -161,7 +161,7 @@ fun ApplyButton(
                 },
             contentAlignment = Alignment.Center
         ) {
-            Body2Text(
+            BodyMediumText(
                 text = "적용",
                 color = Color.White,
                 bold = true

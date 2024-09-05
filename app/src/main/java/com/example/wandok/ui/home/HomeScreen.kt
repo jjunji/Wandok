@@ -38,11 +38,11 @@ import com.example.wandok.ui.home.model.SortType
 import com.example.wandok.ui.home.model.StatusFilterUiState
 import com.example.wandok.ui.theme.DarkGray
 import com.example.wandok.ui.theme.Typography
-import timber.log.Timber
 
 @Composable
 internal fun HomeRoute(
     paddingValues: PaddingValues,
+    onItemClicked: (isbn: String) -> Unit,
     viewModel: HomeViewModel = hiltViewModel()
 ) {
     val statusFilterUiState by viewModel.statusFilterUiState.collectAsStateWithLifecycle()
@@ -64,7 +64,8 @@ internal fun HomeRoute(
             viewModel.onSortFilterSelected(it)
         },
         onSortFilterDismiss = viewModel::onSortFilterDismiss,
-        myBookList
+        myBookList,
+        onItemClicked = { onItemClicked(it) }
     )
 }
 
@@ -80,7 +81,8 @@ fun HomeScreen(
     onStatusFilterDismiss: () -> Unit,
     onSortFilterSelected: (SortType) -> Unit,
     onSortFilterDismiss: () -> Unit,
-    myBookList: List<BookDetail> = emptyList()
+    myBookList: List<BookDetail> = emptyList(),
+    onItemClicked: (isbn: String) -> Unit
 ) {
     Box(
         modifier = Modifier
@@ -96,15 +98,17 @@ fun HomeScreen(
                 style = Typography.titleLarge
             )
 
+            // 상태 필터, 정렬 필터 영역
             HomeFilter(
                 sortType = sortFilterUiState.selectedFilter,
                 onStatusFilterClicked = { onStatusFilterClicked() },
                 onSortFilterClicked = { onSortFilterClicked() }
             )
 
+            // 추가한 책 리스트
             MyBookList(
                 bookList = myBookList,
-                onItemClicked = { Timber.e("onMyBookClicked") }
+                onItemClicked = { onItemClicked(it) }
             )
         }
     }
@@ -181,15 +185,13 @@ fun MyBookList(
     bookList: List<BookDetail>,
     onItemClicked: (isbn: String) -> Unit
 ) {
-    Timber.tag("MyBookList").e("Recomposition") // TODO: 로딩(검색) 동안 recomposition
-
+//    Timber.tag("MyBookList").e("Recomposition") // TODO: 로딩(검색) 동안 recomposition
     LazyColumn(
         contentPadding = PaddingValues(start = 10.dp, end = 10.dp, bottom = 10.dp),
         modifier = Modifier.fillMaxWidth()
     ) {
         itemsIndexed(
             items = bookList,
-//            key = { index, book -> book.isbn }
         ) { _, book ->
             MyBookRow(
                 myBook = book,
@@ -204,6 +206,5 @@ fun MyBookList(
 @Preview(showBackground = true)
 @Composable
 fun PreviewHome() {
-//    val bookEntity = BookEntity("", "Title", "", "", "")
-//    Home(myBookList = listOf(bookEntity), {}, {})
+    MyBookList(bookList = listOf(BookDetail("1234"))) {}
 }

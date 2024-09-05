@@ -56,12 +56,30 @@ class RepositoryImpl @Inject constructor(
     }
 
     override fun getAllMyBook(): Flow<List<BookDetail>> {
-        return localDataSource.getMyBookList()
+        return localDataSource.getAllMyBookList()
             .map { bookEntityList ->
-                bookEntityList.map { entity ->
-                    BookDetailMapper.mapToBookDetail(entity)
+                if (bookEntityList.isEmpty()) {
+                    emptyList()
+                } else {
+                    bookEntityList.map { entity ->
+                        BookDetailMapper.mapToBookDetail(entity)
+                    }
                 }
             }
+    }
+
+    override suspend fun getMyBook(isbn: String): Flow<BookDetail?> {
+        return localDataSource.getMyBook(isbn).map {
+            if (it == null) {
+                null
+            } else {
+                BookDetailMapper.mapToBookDetail(it)
+            }
+        }
+    }
+
+    override suspend fun updateMyBookStatus(bookDetailEntity: BookDetailEntity) {
+        return localDataSource.updateMyBookStatus(bookDetailEntity)
     }
 
     override suspend fun getMyBookList(queryMap: HashMap<String, String>): ResponseState<BookResponse> {

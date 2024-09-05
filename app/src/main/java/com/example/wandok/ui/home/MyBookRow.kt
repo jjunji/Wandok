@@ -19,14 +19,15 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.example.wandok.R
 import com.example.wandok.data.model.BookDetail
-import com.example.wandok.ui.core.Body1Text
-import com.example.wandok.ui.core.Body2Text
+import com.example.wandok.ui.core.BodyLargeText
+import com.example.wandok.ui.core.BodyMediumText
 import com.example.wandok.ui.core.LinearProgressBar
 import com.example.wandok.ui.core.shadow
 import com.example.wandok.ui.theme.DeepShadow
@@ -50,6 +51,7 @@ fun MyBookRow(myBook: BookDetail, onItemClicked: () -> Unit) {
                 spread = 7.dp,
                 blurRadius = CornerRadius
             )
+            .clip(RoundedCornerShape(CornerRadius))
             .clickable { onItemClicked() }
     ) {
         Box(
@@ -71,51 +73,68 @@ fun MyBookRow(myBook: BookDetail, onItemClicked: () -> Unit) {
                         .align(Alignment.CenterVertically)
                 )
 
-                Column(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(top = 10.dp, end = 10.dp)
-                ) {
-                    Body1Text(text = "4 / 30")
-
-                    Row(
-                        modifier = Modifier.padding(top = 5.dp),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        LinearProgressBar(
-                            modifier = Modifier
-                                .weight(1f)
-                                .padding(end = 5.dp),
-                            progress = 0.5f
-                        )
-
-                        Body2Text(text = "40%")
-                    }
-
-                    Text(
-                        modifier = Modifier.padding(top = 10.dp, end = 10.dp),
-                        text = myBook.title,
-                        maxLines = 2,
-                        overflow = TextOverflow.Ellipsis,
-                        color = Color.Black,
-                        style = Typography.bodyMedium
-                    )
-                }
+                MyBookInfo(myBook = myBook)
             }
         }
+    }
+}
+
+@Composable
+fun MyBookInfo(
+    myBook: BookDetail
+) {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(top = 10.dp, end = 10.dp)
+    ) {
+        val countOfAllContents = myBook.tableOfContents.size
+        val countOfDone = myBook.tableOfContents.count { it.read }
+        BodyLargeText(
+            text = stringResource(
+                id = R.string.format_progress,
+                formatArgs = arrayOf(countOfDone, countOfAllContents)
+            )
+        )
+
+        Row(
+            modifier = Modifier.padding(top = 5.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            LinearProgressBar(
+                modifier = Modifier
+                    .weight(1f)
+                    .padding(end = 5.dp),
+                progress = myBook.progress.toFloat()
+            )
+
+            BodyMediumText(
+                text = stringResource(
+                    id = R.string.format_percent,
+                    formatArgs = arrayOf(myBook.progress)
+                )
+            )
+        }
+
+        Text(
+            modifier = Modifier.padding(top = 10.dp, end = 10.dp),
+            text = myBook.title,
+            maxLines = 2,
+            overflow = TextOverflow.Ellipsis,
+            color = Color.Black,
+            style = Typography.bodyMedium
+        )
     }
 }
 
 @Preview(showBackground = true)
 @Composable
 fun PreviewMyBookRow() {
-//    MyBookRow(
-//        myBook = BookEntity(
-//            "123",
-//            "title",
-//            "",
-//            "",
-//            ""
-//        )
-//    ) {}
+    MyBookRow(
+        myBook = BookDetail(
+            isbn = "123",
+            registrationTimeMillis = System.currentTimeMillis(),
+            progress = 9
+        )
+    ) {}
 }

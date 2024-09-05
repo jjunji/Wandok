@@ -26,7 +26,9 @@ internal fun MainNavHost(
         startDestination = navigator.startDestination
     ) {
         homeNavGraph(
-            padding = padding
+            padding = padding,
+            onItemClicked = { navigator.navigateToHomeDetail(it) },
+            onBackClicked = { navigator.popBackStackIfNotHome() }
         )
         searchNavGraph(
             padding = padding,

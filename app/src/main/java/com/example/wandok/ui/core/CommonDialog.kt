@@ -44,14 +44,14 @@ fun ConfirmCancelDialog(
                 .padding(horizontal = 24.dp, vertical = 30.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Body1Text(
+            BodyLargeText(
                 text = title,
                 textAlign = TextAlign.Center,
                 bold = true
             )
             if (description.isNotBlank()) {
                 Spacer(modifier = Modifier.size(4.dp))
-                Body2Text(
+                BodyMediumText(
                     text = description,
                     modifier = Modifier.padding(bottom = 8.dp),
                     color = Color.Black,
@@ -60,7 +60,7 @@ fun ConfirmCancelDialog(
             }
             Spacer(modifier = Modifier.size(25.dp))
             Row(modifier = Modifier.fillMaxWidth()) {
-                Body1Text(
+                BodyLargeText(
                     text = negativeText,
                     modifier = Modifier
                         .weight(1f)
@@ -68,7 +68,7 @@ fun ConfirmCancelDialog(
                     color = Orange300,
                     bold = true
                 )
-                Body1Text(
+                BodyLargeText(
                     text = positiveText,
                     modifier = Modifier
                         .weight(1f)
