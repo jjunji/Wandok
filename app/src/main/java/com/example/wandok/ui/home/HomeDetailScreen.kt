@@ -31,6 +31,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.wandok.R
 import com.example.wandok.data.model.BookDetail
 import com.example.wandok.data.model.local.TableOfContent
+import com.example.wandok.ui.core.BodyLargeText
 import com.example.wandok.ui.core.BodyMediumText
 import com.example.wandok.ui.core.CustomAppBar
 import com.example.wandok.ui.core.IconAttr
@@ -38,6 +39,7 @@ import com.example.wandok.ui.core.RoundedRectText
 import com.example.wandok.ui.theme.Orange100
 import com.example.wandok.ui.theme.Orange500
 import com.example.wandok.ui.theme.Orange800
+import timber.log.Timber
 
 @Composable
 fun HomeDetailRoute(
@@ -49,7 +51,8 @@ fun HomeDetailRoute(
         HomeDetailScreen(
             myBook = it,
             onBackClicked = { onBackClicked() },
-            onItemClicked = { item -> viewModel.updateBookStatus(it, item) }
+            onItemClicked = { item -> viewModel.updateBookStatus(it, item) },
+            onResetClicked = { Timber.tag("test").e("onReset ====== ") }
         )
     }
 }
@@ -58,7 +61,8 @@ fun HomeDetailRoute(
 fun HomeDetailScreen(
     myBook: BookDetail,
     onBackClicked: () -> Unit,
-    onItemClicked: (item: TableOfContent) -> Unit
+    onItemClicked: (item: TableOfContent) -> Unit,
+    onResetClicked: () -> Unit
 ) {
     Column(
         modifier = Modifier.fillMaxSize()
@@ -74,7 +78,28 @@ fun HomeDetailScreen(
         LazyColumn(
             modifier = Modifier.fillMaxSize()
         ) {
-            item { ProgressInfo() } // d-day, 진행률, 목표 설정
+            item {
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .wrapContentHeight()
+                ) {
+                    OvalProgressBar(
+                        modifier = Modifier
+                            .padding(top = 5.dp)
+                            .align(Alignment.Center)
+                            .offset(x = (100).dp)
+                    )
+
+                    // d-day, 진행률, 목표 설정
+                    ProgressInfo(
+                        modifier = Modifier,
+                        dDay = { DDAY(it) },
+                        settingDate = { SettingDate(it) },
+                        btnReset = { ResetGoalButton(it) { onResetClicked() } }
+                    )
+                }
+            }
             itemsIndexed(items = myBook.tableOfContents) { _, item ->
                 IndexRow( // 목차 item
                     tableOfContent = item,
@@ -82,6 +107,49 @@ fun HomeDetailScreen(
                 )
             }
         }
+    }
+}
+
+@Composable
+fun ProgressInfo(
+    modifier: Modifier,
+    dDay: @Composable (modifier: Modifier) -> Unit,
+    settingDate: @Composable (modifier: Modifier) -> Unit,
+    btnReset: @Composable (modifier: Modifier) -> Unit
+) {
+    Column(
+        modifier = Modifier
+            .wrapContentSize()
+            .padding(top = 16.dp)
+    ) {
+        dDay(modifier.padding(start = 16.dp))
+        settingDate(modifier.padding(start = 16.dp))
+        btnReset(modifier.padding(start = 3.dp, top = 8.dp))
+    }
+}
+
+@Composable
+fun SettingDate(modifier: Modifier) {
+    Column(modifier = modifier) {
+        BodyMediumText(text = "설정 목표", color = Orange500)
+        BodyMediumText(
+            modifier = Modifier
+                .padding(top = 3.dp)
+                .offset(y = 5.dp),
+            text = "2024. 8. 28",
+            color = Orange500
+        )
+        BodyLargeText(
+            modifier = Modifier
+                .align(Alignment.CenterHorizontally),
+            text = "~",
+            color = Orange500
+        )
+        BodyMediumText(
+            modifier = Modifier.offset(y = (-5).dp),
+            text = "2024. 8. 28",
+            color = Orange500
+        )
     }
 }
 
@@ -102,26 +170,23 @@ fun DDAY(modifier: Modifier) {
             fontSize = 60.sp,
             color = Orange500
         )
-        BodyMediumText(text = "설정 목표", color = Orange500)
-        BodyMediumText(
-            modifier = Modifier.padding(top = 3.dp),
-            text = "2024. 8. 28 ~ 2024. 8. 28",
-            color = Orange500
-        )
-
-        RoundedRectText(
-            modifier = Modifier.padding(top = 10.dp),
-            text = "목표 재설정",
-            cornerRadius = 16.dp,
-            iconAttr = IconAttr(
-                painter = painterResource(id = R.drawable.ic_edit_goal),
-                space = 5.dp
-            ),
-            onClick = {
-                // TODO: Dialog
-            }
-        )
     }
+}
+
+@Composable
+fun ResetGoalButton(modifier: Modifier, onResetClicked: () -> Unit) {
+    RoundedRectText(
+        modifier = modifier,
+        text = "목표 재설정",
+        cornerRadius = 16.dp,
+        iconAttr = IconAttr(
+            painter = painterResource(id = R.drawable.ic_edit_goal),
+            space = 5.dp
+        ),
+        onClick = {
+            onResetClicked()
+        }
+    )
 }
 
 @Composable
@@ -142,29 +207,5 @@ fun OvalProgressBar(modifier: Modifier) {
             size = Size(width.toPx(), height.toPx()),
             style = Stroke(width = 8.dp.toPx())
         )
-    }
-}
-
-@Composable
-fun ProgressInfo() {
-    Column {
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .wrapContentHeight()
-        ) {
-            OvalProgressBar(
-                modifier = Modifier
-                    .padding(top = 5.dp)
-                    .align(Alignment.Center)
-                    .offset(x = (100).dp)
-            )
-
-            DDAY(
-                modifier = Modifier
-                    .align(Alignment.TopStart)
-                    .padding(top = 16.dp, start = 16.dp)
-            )
-        }
     }
 }

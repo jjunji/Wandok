@@ -98,12 +98,14 @@ fun HomeScreen(
                 style = Typography.titleLarge
             )
 
+            // 상태 필터, 정렬 필터 영역
             HomeFilter(
                 sortType = sortFilterUiState.selectedFilter,
                 onStatusFilterClicked = { onStatusFilterClicked() },
                 onSortFilterClicked = { onSortFilterClicked() }
             )
 
+            // 추가한 책 리스트
             MyBookList(
                 bookList = myBookList,
                 onItemClicked = { onItemClicked(it) }

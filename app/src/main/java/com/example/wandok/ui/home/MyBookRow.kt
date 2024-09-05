@@ -88,7 +88,7 @@ fun MyBookInfo(
             .fillMaxWidth()
             .padding(top = 10.dp, end = 10.dp)
     ) {
-        val countOfAllContents = myBook.tableOfContents.size + 1
+        val countOfAllContents = myBook.tableOfContents.size
         val countOfDone = myBook.tableOfContents.count { it.read }
         BodyLargeText(
             text = stringResource(
