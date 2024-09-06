@@ -55,7 +55,7 @@ fun WandokScreen(
             .fillMaxSize()
             .padding(paddingValues)
     ) {
-        ShadowContainer {
+        ExcludeLeftShadowContainer {
             Column(
                 modifier = Modifier
                     .width(312.dp)
@@ -82,7 +82,7 @@ fun WandokScreen(
 }
 
 @Composable
-fun ShadowContainer(content: @Composable BoxScope.() -> Unit) {
+fun ExcludeLeftShadowContainer(content: @Composable BoxScope.() -> Unit) {
     Box(
         modifier = Modifier
             .padding(top = 45.dp)
