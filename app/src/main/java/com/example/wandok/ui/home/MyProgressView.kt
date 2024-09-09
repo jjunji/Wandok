@@ -14,22 +14,28 @@ import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.wandok.common.extension.toPx
 import com.example.wandok.ui.core.ShadowContainer
 import com.example.wandok.ui.theme.Orange100
+import com.example.wandok.ui.theme.Orange800
 
 @Composable
 fun MyOvalProgressView(
     modifier: Modifier
 ) {
     ShadowContainer(
-        modifier = modifier,
+        modifier = modifier
+            .background(color = Color.White),
+//            .offset(x = (100).dp),
         radius = 164.dp
     ) {
         BackgroundView {
             MyOvalProgressBar(modifier = Modifier)
+            ArchSample()
         }
     }
 }
@@ -68,6 +74,31 @@ fun BackgroundView(
         contentAlignment = Alignment.Center
     ) {
         content()
+    }
+}
+
+@Composable
+fun ArchSample() {
+    val radius = 141.dp.toPx()
+    val frameWidth = 250.dp.toPx()
+    val frameHeight = 390.dp.toPx()
+    val straightLength = frameHeight - (2 * radius) // 직선의 길이 (세로 변에서 곡선이 아닌 영역)
+
+    val path = Path().apply {
+        moveTo(frameWidth, frameHeight / 2)
+        lineTo(frameWidth, frameHeight / 2 - straightLength / 2)
+    }
+
+    Canvas(
+        modifier = Modifier
+            .width(250.dp)
+            .height(390.dp)
+    ) {
+        drawPath(
+            path = path,
+            color = Orange800,
+            style = Stroke(width = 8.dp.toPx())
+        )
     }
 }
 
