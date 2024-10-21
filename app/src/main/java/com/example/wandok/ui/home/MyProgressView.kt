@@ -29,29 +29,55 @@ val frameHeight = 430.dp
 val frameRadius = 164.dp
 val progressWidth = 250.dp
 val progressHeight = 390.dp
+
 val progressRadius = 141.dp
 
 val strokeWidth = 8.dp
+val moveOffset = 80.dp
 
+/*
+    frame
+        - background view (음영)
+        - progress view (진행률)
+ */
 @Composable
 fun MyOvalProgressView(
     modifier: Modifier
 ) {
-    ShadowContainer(
-        modifier = modifier
-            .background(color = Color.White),
-//            .offset(x = (100).dp),
-        radius = 164.dp
-    ) {
-        BackgroundView {
-            MyOvalProgressBar(modifier = Modifier)  // custom progress view
-            ArchSample()                            //
+    Box(modifier = modifier) {
+        ShadowContainer(
+            modifier = Modifier
+                .align(Alignment.CenterEnd)
+//                .offset(moveOffset)
+                .background(color = Color.White),
+            radius = 164.dp
+        ) {
+            RectFrame {
+                ProgressBackground(modifier = Modifier)  // custom progress view
+                ProgressSample()
+            }
         }
     }
 }
 
 @Composable
-fun MyOvalProgressBar(modifier: Modifier) {
+fun RectFrame(
+    modifier: Modifier = Modifier,
+    content: @Composable () -> Unit
+) {
+    Box(
+        modifier = modifier
+            .width(frameWidth)
+            .height(frameHeight)
+            .background(shape = RoundedCornerShape(frameRadius), color = Color.White),
+        contentAlignment = Alignment.Center
+    ) {
+        content()
+    }
+}
+
+@Composable
+fun ProgressBackground(modifier: Modifier) {
     Canvas(
         modifier = modifier
             .width(progressWidth)
@@ -68,34 +94,33 @@ fun MyOvalProgressBar(modifier: Modifier) {
 }
 
 @Composable
-fun BackgroundView(
-    modifier: Modifier = Modifier,
-    content: @Composable () -> Unit
-) {
-    Box(
-        modifier = modifier
-            .width(frameWidth)
-            .height(frameHeight)
-            .background(shape = RoundedCornerShape(frameRadius), color = Color.White),
-        contentAlignment = Alignment.Center
-    ) {
-        content()
-    }
-}
-
-@Composable
-fun ArchSample() {
-    val straightLength = progressWidth.toPx() - (2 * progressRadius.toPx()) // 직선의 길이 (세로 변에서 곡선이 아닌 영역)
-
+fun ProgressSample() {
     val startOffset = Pair(progressWidth.toPx(), progressHeight.toPx() / 2)
+    val straightLength = progressHeight.toPx() - (2 * progressRadius.toPx()) // 직선의 길이 (세로 변에서 곡선이 아닌 영역)
 
-    val topRect = Rect(0f, 0f, startOffset.first, startOffset.second + straightLength / 2)
-    val bottomRect = Rect(0f, startOffset.second, startOffset.first, startOffset.second * 2)
+    val wPx = progressWidth.toPx()
+    val hPx = progressHeight.toPx()
+    val radius = progressRadius.toPx()
+
+    val topRect = Rect(0f, 0f, wPx, hPx - radius)
+    val bottomRect = Rect(0f, radius, wPx, hPx)
 
     val path = Path().apply {
-        moveTo(startOffset.first, startOffset.second + straightLength / 2)
-        arcTo(topRect, 0f, -180f, false)
-        arcTo(bottomRect, 0f, -180f, false)
+        moveTo(startOffset.first, startOffset.second)
+        lineTo(startOffset.first, startOffset.second - straightLength / 2)
+        arcTo(
+            topRect,
+            0f,
+            -180f,
+            false
+        )
+        arcTo(
+            bottomRect,
+            -180f,
+            -180f,
+            false
+        )
+        lineTo(wPx, hPx - radius - straightLength / 2)
     }
 
     Canvas(
@@ -106,7 +131,7 @@ fun ArchSample() {
         drawPath(
             path = path,
             color = Orange800,
-            style = Stroke(width = 8.dp.toPx())
+            style = Stroke(width = strokeWidth.toPx())
         )
     }
 }
@@ -125,5 +150,5 @@ fun PreviewOvalProgress() {
 @Preview(showBackground = true)
 @Composable
 fun PreviewArchSample() {
-    ArchSample()
+    ProgressSample()
 }
