@@ -5,6 +5,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
@@ -23,6 +24,11 @@ import com.example.wandok.common.extension.toPx
 import com.example.wandok.ui.core.ShadowContainer
 import com.example.wandok.ui.theme.Orange100
 import com.example.wandok.ui.theme.Orange800
+import timber.log.Timber
+import kotlin.math.acos
+import kotlin.math.atan2
+import kotlin.math.pow
+import kotlin.math.sqrt
 
 val frameWidth = 280.dp
 val frameHeight = 430.dp
@@ -33,7 +39,7 @@ val progressHeight = 390.dp
 val progressRadius = 141.dp
 
 val strokeWidth = 8.dp
-val moveOffset = 80.dp
+val moveOffset = 0.dp
 
 /*
     frame
@@ -47,14 +53,13 @@ fun MyOvalProgressView(
     Box(modifier = modifier) {
         ShadowContainer(
             modifier = Modifier
-                .align(Alignment.CenterEnd)
 //                .offset(moveOffset)
                 .background(color = Color.White),
             radius = 164.dp
         ) {
             RectFrame {
-                ProgressBackground(modifier = Modifier)  // custom progress view
-                ProgressSample()
+                ProgressBackground(modifier = Modifier.offset(moveOffset))  // custom progress view
+                ProgressSample(modifier = Modifier.offset(moveOffset))
             }
         }
     }
@@ -93,8 +98,38 @@ fun ProgressBackground(modifier: Modifier) {
     }
 }
 
+/**
+ *  1. Background R - offset -> 밑변(w)
+ *  2. (Inner R)^ - 밑변^ 의 루트 -> 높이(h) (밑변^ + 높이^ = Inner R^)
+ *  3. tan-1 (밑변 / 높이) -> 각도
+ *  4. cos-1(r / 밑변) -> 각도
+ */
+@Preview(showBackground = true)
 @Composable
-fun ProgressSample() {
+fun Calc() {
+    // 1.
+    val w = (164 - 80).toFloat()
+    Timber.tag("calc").e("w : $w")
+    // 2.
+    val h = sqrt(141.0.pow(2) - w.pow(2))
+    val h2 = 141.0.pow(2)
+    val h3 = w.pow(2)
+
+    Timber.tag("calc").e("h: $h / h2: $h2 / h3: $h3")
+
+    val a = atan2(w.toDouble(), h)
+    val b = acos(w / 141.0)
+
+    Timber.tag("test").e("a : $a / b : $b")
+}
+
+@Composable
+fun Progress() {
+
+}
+
+@Composable
+fun ProgressSample(modifier: Modifier) {
     val startOffset = Pair(progressWidth.toPx(), progressHeight.toPx() / 2)
     val straightLength = progressHeight.toPx() - (2 * progressRadius.toPx()) // 직선의 길이 (세로 변에서 곡선이 아닌 영역)
 
@@ -124,7 +159,7 @@ fun ProgressSample() {
     }
 
     Canvas(
-        modifier = Modifier
+        modifier = modifier
             .width(250.dp)
             .height(390.dp)
     ) {
@@ -147,8 +182,8 @@ fun PreviewOvalProgress() {
     }
 }
 
-@Preview(showBackground = true)
-@Composable
-fun PreviewArchSample() {
-    ProgressSample()
-}
+//@Preview(showBackground = true)
+//@Composable
+//fun PreviewArchSample() {
+//    ProgressSample()
+//}
