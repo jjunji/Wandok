@@ -26,6 +26,7 @@ import com.example.wandok.ui.theme.Orange100
 import com.example.wandok.ui.theme.Orange800
 import timber.log.Timber
 import kotlin.math.acos
+import kotlin.math.atan
 import kotlin.math.atan2
 import kotlin.math.pow
 import kotlin.math.sqrt
@@ -117,7 +118,7 @@ fun Calc() {
 
     Timber.tag("calc").e("h: $h / h2: $h2 / h3: $h3")
 
-    val a = atan2(w.toDouble(), h)
+    val a = atan(h / w)
     val b = acos(w / 141.0)
 
     Timber.tag("test").e("a : $a / b : $b")
