@@ -25,9 +25,9 @@ import com.example.wandok.ui.core.ShadowContainer
 import com.example.wandok.ui.theme.Orange100
 import com.example.wandok.ui.theme.Orange800
 import timber.log.Timber
+import kotlin.math.PI
 import kotlin.math.acos
 import kotlin.math.atan
-import kotlin.math.atan2
 import kotlin.math.pow
 import kotlin.math.sqrt
 
@@ -40,7 +40,7 @@ val progressHeight = 390.dp
 val progressRadius = 141.dp
 
 val strokeWidth = 8.dp
-val moveOffset = 0.dp
+val moveOffset = 80.dp
 
 /*
     frame
@@ -102,26 +102,51 @@ fun ProgressBackground(modifier: Modifier) {
 /**
  *  1. Background R - offset -> 밑변(w)
  *  2. (Inner R)^ - 밑변^ 의 루트 -> 높이(h) (밑변^ + 높이^ = Inner R^)
- *  3. tan-1 (밑변 / 높이) -> 각도
- *  4. cos-1(r / 밑변) -> 각도
+ *  3. tan-1 (밑변 / 높이) -> 각도 || cos-1(r / 밑변) -> x축 기준 교점까지 각도
+ *  4. 각도 / pie -> 180도 기준으로 각도가 가지는 비율
+ *  5. 비율에 따른 길이
+ *  6. startOffset 부터 교점 까지의 길이(직선 구간)
+ *  7. 제외할 영역 (직선 + 곡선) / 전체 영역 (반원 호 + 양 끝 직선) -> 제외할 구간의 비율
  */
 @Preview(showBackground = true)
 @Composable
 fun Calc() {
+    val progressWidthPx = progressWidth.toPx()
+    val progressHeightPx = progressHeight.toPx()
+    val frameRadiusPx = frameRadius.toPx()
+    val moveOffsetPx = moveOffset.toPx()
+    val progressRadiusPx = progressRadius.toPx()
+
     // 1.
-    val w = (164 - 80).toFloat()
-    Timber.tag("calc").e("w : $w")
+    val bottomLine = frameRadiusPx - moveOffsetPx
+    Timber.tag("calc").e("bottomLine : $bottomLine")
     // 2.
-    val h = sqrt(141.0.pow(2) - w.pow(2))
-    val h2 = 141.0.pow(2)
-    val h3 = w.pow(2)
+    val h = sqrt(progressRadiusPx.pow(2) - bottomLine.pow(2))
+    Timber.tag("calc").e("h: $h")
 
-    Timber.tag("calc").e("h: $h / h2: $h2 / h3: $h3")
+    // 3.
+    val angle = atan(h / bottomLine)
+    val angle2 = acos(bottomLine / progressRadiusPx)
+    Timber.tag("calc").e("a : $angle / b : $angle2")
 
-    val a = atan(h / w)
-    val b = acos(w / 141.0)
+    // 4.
+    val angleRatio = angle / PI
+    Timber.tag("calc").e("angleRatio : $angleRatio")
 
-    Timber.tag("test").e("a : $a / b : $b")
+    // 5.
+    val halfCircumference = PI * progressRadiusPx
+    val arcDistance = halfCircumference * angleRatio
+    Timber.tag("calc").e("distance : $arcDistance")
+
+    // 6.
+    val straightDistance = (progressHeightPx - progressWidthPx) / 2
+    Timber.tag("calc").e("straightDistance : $straightDistance")
+
+    // 7.
+    val cutRatio = (arcDistance + straightDistance) / (PI * progressRadiusPx + straightDistance * 2)
+    Timber.tag("calc").e("cutRatio : $cutRatio")
+
+
 }
 
 @Composable
@@ -182,9 +207,3 @@ fun PreviewOvalProgress() {
         MyOvalProgressView(modifier = Modifier)
     }
 }
-
-//@Preview(showBackground = true)
-//@Composable
-//fun PreviewArchSample() {
-//    ProgressSample()
-//}
