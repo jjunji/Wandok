@@ -27,7 +27,6 @@ import com.example.wandok.ui.theme.Orange100
 import com.example.wandok.ui.theme.Orange800
 import timber.log.Timber
 import kotlin.math.PI
-import kotlin.math.acos
 import kotlin.math.atan
 import kotlin.math.pow
 import kotlin.math.sqrt
@@ -35,9 +34,9 @@ import kotlin.math.sqrt
 val frameWidth = 280.dp
 val frameHeight = 430.dp
 val frameRadius = 164.dp
+
 val progressWidth = 250.dp
 val progressHeight = 390.dp
-
 val progressRadius = 141.dp
 
 val strokeWidth = 8.dp
@@ -55,7 +54,7 @@ fun MyOvalProgressView(
     Box(modifier = modifier) {
         ShadowContainer(
             modifier = Modifier
-                .offset(moveOffset)
+                .offset()
                 .background(color = Color.White),
             radius = 164.dp
         ) {
@@ -66,7 +65,11 @@ fun MyOvalProgressView(
             }
         }
 
-        VerticalLine(modifier = Modifier.align(Alignment.TopEnd))
+        VerticalLine(
+            modifier = Modifier
+                .align(Alignment.TopEnd)
+                .offset(x = (-80).dp)
+        )
     }
 }
 
@@ -136,25 +139,28 @@ fun Calc() {
     val moveOffsetPx = moveOffset.toPx()
     val progressRadiusPx = progressRadius.toPx()
 
+    val lineLength = progressHeightPx - (progressRadiusPx * 2)  // 직선의 길이 (세로 변에서 곡선이 아닌 영역)
+
     // 1.
     val bottomLine = frameRadiusPx - moveOffsetPx
     Timber.tag("calc").e("bottomLine : $bottomLine")
+
     // 2.
     val h = sqrt(progressRadiusPx.pow(2) - bottomLine.pow(2))
     Timber.tag("calc").e("h: $h")
 
     // 3.
     val angle = atan(h / bottomLine)
-    val angle2 = acos(bottomLine / progressRadiusPx)
-    Timber.tag("calc").e("a : $angle / b : $angle2")
+//    val angle2 = acos(bottomLine / progressRadiusPx)
+//    Timber.tag("calc").e("a : $angle / b : $angle2")
 
     // 4. 비율
     val angleRatio = angle / PI
     Timber.tag("calc").e("angleRatio : $angleRatio")
 
     // 4.
-    val angleRatio2 = angle / (2 * PI)
-    Timber.tag("calc").e("angleRatio : $angleRatio2")
+//    val angleRatio2 = angle / (2 * PI)
+//    Timber.tag("calc").e("angleRatio : $angleRatio2")
 
     // 5.
     val halfCircumference = PI * progressRadiusPx
@@ -162,60 +168,58 @@ fun Calc() {
     Timber.tag("calc").e("distance : $arcDistance")
 
     // 5.
-    val circumference = 2 * PI * progressRadiusPx   // 호
-    val arcDistance2 = circumference * angleRatio2  // 곡선 길이
+//    val circumference = 2 * PI * progressRadiusPx   // 호
+//    val arcDistance2 = circumference * angleRatio2  // 곡선 길이
 
     // 6.
-    val straightDistance = (progressHeightPx - progressWidthPx) / 2
-    Timber.tag("calc").e("straightDistance : $straightDistance")
+//    val straightDistance = (progressHeightPx - progressWidthPx) / 2
+//    Timber.tag("calc").e("straightDistance : $straightDistance")
 
     // 6.
-    val straightDistance2 = (progressHeightPx - progressWidthPx)    // 한쪽 직선 길이
-    Timber.tag("calc").e("straightDistance2 : $straightDistance2")
+//    val straightDistance2 = (progressHeightPx - progressWidthPx)    // 한쪽 직선 길이
+//    Timber.tag("calc").e("straightDistance2 : $straightDistance2")
 
     // 7.
-    val cutRatio = (arcDistance + straightDistance) / (PI * progressRadiusPx + straightDistance * 2)
+    val cutRatio = (arcDistance + lineLength) / (PI * progressRadiusPx + lineLength * 2)
     Timber.tag("calc").e("cutRatio : $cutRatio")
 
-    val cutRatio2 = (arcDistance2 + straightDistance2) / (2 * PI + progressRadiusPx + straightDistance2 * 2)
+//    val cutRatio2 = (arcDistance2 + straightDistance2) / (2 * PI * progressRadiusPx + straightDistance2 * 2)
 
     // TODO: 직선 + 위 곡선 아래 곡선 길이 합 / 전체 길이
-
     val startOffset = Pair(progressWidthPx, progressHeightPx / 2)
-    val straightLength = progressHeightPx - (2 * progressRadiusPx)  // 직선의 길이 (세로 변에서 곡선이 아닌 영역)
     val topRect = Rect(0f, 0f, progressWidthPx, progressHeightPx - progressRadiusPx)
     val bottomRect = Rect(0f, progressRadiusPx, progressWidthPx, progressHeightPx)
 
     val completePath = Path().apply {
         moveTo(startOffset.first, startOffset.second)
-        lineTo(startOffset.first, startOffset.second - straightLength / 2)
-        arcTo(
-            topRect,
-            0f,
-            -180f,
-            false
-        )
-        lineTo(0f, progressRadiusPx + straightLength)
-        arcTo(
-            bottomRect,
-            -180f,
-            -180f,
-            false
-        )
-        lineTo(progressWidthPx, progressHeightPx - progressRadiusPx - straightLength / 2)
+        lineTo(startOffset.first, startOffset.second - lineLength / 2)
+        arcTo(topRect, 0f, -180f, false)
+        lineTo(0f, startOffset.second + lineLength / 2)
+        arcTo(bottomRect, -180f, -180f, false)
+        lineTo(startOffset.first, startOffset.second)
     }
 
     val completePathMeasure = PathMeasure().apply {
         setPath(completePath, false)
     }
 
-//    val progress = (1 / 100f) * (1 - cutRatio2) + cutRatio2
-    val progress = cutRatio2
+    val progress = (0 / 100f) * (1 - cutRatio) + cutRatio
+//    val progress = cutRatio2
 
     val pathMeasure = PathMeasure()
     val trimmedPath = Path()
 
-    pathMeasure.setPath(completePath, false)
+    val myPath = Path()
+    myPath.apply {
+        moveTo(startOffset.first, startOffset.second)
+        lineTo(startOffset.first, startOffset.second - lineLength / 2)
+        arcTo(topRect, 0f, -180f, false)
+        lineTo(0f, startOffset.second)
+    }
+
+
+    // TODO: start, end 조정
+    pathMeasure.setPath(myPath, false)
     pathMeasure.getSegment(
         progress.toFloat(),
         (progress * pathMeasure.length).toFloat(),
@@ -235,7 +239,6 @@ fun Calc() {
         )
     }
 }
-
 
 @Composable
 fun ProgressSample(modifier: Modifier) {
@@ -279,6 +282,82 @@ fun ProgressSample(modifier: Modifier) {
         )
     }
 }
+
+//@Preview(showBackground = true)
+//@Composable
+//fun Calc2() {
+//    val progressHeightPx = progressHeight.toPx()
+//    val progressWidthPx = progressWidth.toPx()
+//    val frameRadiusPx = frameRadius.toPx()
+//    val moveOffsetPx = moveOffset.toPx()
+//    val progressRadiusPx = progressRadius.toPx()
+//
+//    val startOffset = Pair(progressWidthPx, progressHeightPx / 2)
+//
+//    val lineLength = progressHeightPx - (progressRadiusPx * 2)
+//
+//    val topRect = Rect(0f, 0f, startOffset.first, startOffset.second + lineLength / 2)
+//    val bottomRect = Rect(0f, startOffset.second - lineLength / 2, startOffset.first, progressHeightPx)
+//
+//    val completePath = Path().apply {
+//        moveTo(startOffset.first, startOffset.second)
+//        lineTo(startOffset.first, startOffset.second - lineLength / 2)
+//        arcTo(topRect, 0f, -180f, false)
+//        lineTo(0f, startOffset.second + lineLength / 2)
+//        arcTo(bottomRect, -180f, -180f, false)
+//        lineTo(startOffset.first, startOffset.second)
+//    }
+//
+//    val circle = Rect(
+//        0f,
+//        0f,
+//        progressRadiusPx * 2,
+//        progressRadiusPx * 2
+//    )
+//    val circlePath = Path().apply {
+//        addOval(circle, Path.Direction.Clockwise)
+//    }
+//
+//    val circleMeasure = PathMeasure()
+//    circleMeasure.setPath(circlePath, false)
+//
+//    Canvas(modifier = Modifier
+//        .width(300.dp)
+//        .height(420.dp)) {
+//        drawPath(
+//            path = completePath,
+//            color = Orange800,
+//            style = Stroke(width = strokeWidth.toPx())
+//        )
+//    }
+//
+//    val completePathMeasure = PathMeasure()
+//    completePathMeasure.setPath(completePath, false)
+//    Timber.tag("a").e("전체 길이 : ${completePathMeasure.length}")
+//    Timber.tag("a").e("한쪽 직선 : ${progressHeightPx - (progressRadiusPx * 2)}")
+//    Timber.tag("a").e("원 길이 : ${circleMeasure.length}")
+//
+//    val path1 = Path().apply {
+//        moveTo(startOffset.first, startOffset.second)
+//        lineTo(startOffset.first, startOffset.second - lineLength / 2)
+//        arcTo(topRect, 0f, -180f, false)
+//        lineTo(0f, startOffset.second)
+//    }
+//    val measure1 = PathMeasure()
+//    measure1.setPath(path1, false)
+//    Timber.tag("a").e("top 길이 : ${measure1.length}")
+//
+//    Canvas(modifier = Modifier
+//        .width(300.dp)
+//        .height(420.dp)) {
+//        drawPath(
+//            path = path1,
+//            color = Color.Black,
+//            style = Stroke(width = strokeWidth.toPx())
+//        )
+//    }
+//}
+
 
 @Preview(showBackground = true)
 @Composable
