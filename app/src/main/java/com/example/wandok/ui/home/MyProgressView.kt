@@ -42,11 +42,6 @@ val progressRadius = 141.dp
 val strokeWidth = 8.dp
 val moveOffset = 80.dp
 
-/*
-    frame
-        - background view (음영)
-        - progress view (진행률)
- */
 @Composable
 fun MyOvalProgressView(
     modifier: Modifier
@@ -134,33 +129,35 @@ fun ProgressBackground(modifier: Modifier) {
 fun Calc() {
     val progressWidthPx = progressWidth.toPx()
     val progressHeightPx = progressHeight.toPx()
+    val progressRadiusPx = progressRadius.toPx()
     val frameRadiusPx = frameRadius.toPx()
     val moveOffsetPx = moveOffset.toPx()
-    val progressRadiusPx = progressRadius.toPx()
 
-    val lineLength = progressHeightPx - (progressRadiusPx * 2)  // 직선의 길이 (세로 변에서 곡선이 아닌 영역)
+    val verticalWithoutCurves =
+        progressHeightPx - (progressRadiusPx * 2)  // 직선의 길이 (세로 변에서 곡선이 아닌 영역)
 
-    // 1.
+    // 1. 밑변
     val bottomLine = frameRadiusPx - moveOffsetPx
     Timber.tag("calc").e("bottomLine : $bottomLine")
 
-    // 2.
-    val h = sqrt(progressRadiusPx.pow(2) - bottomLine.pow(2))
-    Timber.tag("calc").e("h: $h")
+    // 2. 높이
+    val height = sqrt(progressRadiusPx.pow(2) - bottomLine.pow(2))
+    Timber.tag("calc").e("h: $height")
 
-    // 3.
-    val angle = atan(h / bottomLine)
+    // 3. (밑변 높이 빗변(radius) 를 이은 직각 삼각형에서 빗변의 각도))
+    val angle = atan(height / bottomLine)
 
     // 4. 비율
     val angleRatio = angle / PI
 
     // 5.
-    val halfCircumference = PI * progressRadiusPx
+    val halfCircumference = PI * progressRadiusPx // 반원 길이
     val arcDistance = halfCircumference * angleRatio
     Timber.tag("calc").e("distance : $arcDistance")
 
-    // 6.
-    val cutRatio = (arcDistance + lineLength) / (PI * progressRadiusPx + lineLength * 2)
+    // 6. Progress Bar 에서 제외할 경로의 비율
+    val cutRatio =
+        (arcDistance + verticalWithoutCurves) / (PI * progressRadiusPx + verticalWithoutCurves * 2)
 
     val startOffset = Pair(progressWidthPx, progressHeightPx / 2)
     val topRect = Rect(0f, 0f, progressWidthPx, progressHeightPx - progressRadiusPx)
@@ -168,7 +165,7 @@ fun Calc() {
 
     val topPartPath = Path().apply {
         moveTo(startOffset.first, startOffset.second)
-        lineTo(startOffset.first, startOffset.second - lineLength / 2)
+        lineTo(startOffset.first, startOffset.second - verticalWithoutCurves / 2)
         arcTo(topRect, 0f, -180f, false)
         lineTo(0f, startOffset.second)
     }
@@ -182,13 +179,20 @@ fun Calc() {
         destination = trimmedTopPart
     )
 
-    val trimmedTopPartMeasured = PathMeasure().apply {
-        setPath(trimmedTopPart, false)
-    }
+    val combinedPath = Path()   // Rect 에서 위(진행률 경로) 와 아래(진행률 경로) 를 합친 경로
+
+    val trimmedTopPartMeasured = PathMeasure()
+    trimmedTopPartMeasured.setPath(trimmedTopPart, false)
+    trimmedTopPartMeasured.getSegment(
+        0f,
+        stopDistance = trimmedTopPartMeasured.length,
+        destination = combinedPath,
+        true
+    )
 
     val bottomPartPath = Path().apply {
         moveTo(0f, startOffset.second)
-        lineTo(0f, startOffset.second + lineLength / 2)
+        lineTo(0f, startOffset.second + verticalWithoutCurves / 2)
         arcTo(bottomRect, -180f, -180f, false)
         lineTo(startOffset.first, startOffset.second)
     }
@@ -202,29 +206,24 @@ fun Calc() {
         destination = trimmedBottomPart,
     )
 
-    val trimmedBottomPartMeasured = PathMeasure().apply {
-        setPath(trimmedBottomPart, false)
-    }
+    val trimmedBottomPartMeasured = PathMeasure()
+    trimmedBottomPartMeasured.setPath(trimmedBottomPart, false)
+    trimmedBottomPartMeasured.getSegment(
+        startDistance = 0f,
+        stopDistance = trimmedBottomPartMeasured.length,
+        destination = combinedPath,
+        false
+    )
 
-    val trimmedPath = Path()
-    trimmedPath.addPath(trimmedTopPart)
-    trimmedPath.moveTo(0f, startOffset.second)
-    trimmedPath.lineTo(0f, startOffset.second + lineLength / 2)
-    trimmedPath.addPath(trimmedBottomPart)
-
-    val trimmedPathMeasure = PathMeasure()
-    trimmedPathMeasure.setPath(trimmedPath, false)
-
-    Timber.tag("calc").e("${trimmedTopPartMeasured.length}")
-    Timber.tag("calc").e("${trimmedBottomPartMeasured.length}")
-    Timber.tag("calc").e("${trimmedPathMeasure.length}")
+    val combinePathMeasure = PathMeasure()
+    combinePathMeasure.setPath(combinedPath, false)
 
     val progressPath = Path()
     val progressPathMeasure = PathMeasure()
-    progressPathMeasure.setPath(trimmedPath, false)
+    progressPathMeasure.setPath(combinedPath, false)
     progressPathMeasure.getSegment(
         startDistance = 0f,
-        stopDistance = trimmedPathMeasure.length * 0.9f,
+        stopDistance = combinePathMeasure.length * 0.7f,
         destination = progressPath
     )
 
@@ -234,7 +233,7 @@ fun Calc() {
             .height(390.dp)
     ) {
         drawPath(
-            path = trimmedPath,
+            path = progressPath,
             color = Orange800,
             style = Stroke(width = strokeWidth.toPx())
         )
@@ -249,4 +248,10 @@ fun PreviewOvalProgress() {
     ) {
         MyOvalProgressView(modifier = Modifier)
     }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun PreviewProgressBackground() {
+    ProgressBackground(modifier = Modifier)
 }
