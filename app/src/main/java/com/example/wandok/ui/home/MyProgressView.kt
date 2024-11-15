@@ -1,5 +1,7 @@
 package com.example.wandok.ui.home
 
+import androidx.compose.animation.core.Animatable
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -9,6 +11,8 @@ import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.CornerRadius
@@ -25,7 +29,7 @@ import com.example.wandok.common.extension.toPx
 import com.example.wandok.ui.core.ShadowContainer
 import com.example.wandok.ui.theme.Orange100
 import com.example.wandok.ui.theme.Orange800
-import timber.log.Timber
+import kotlinx.coroutines.launch
 import kotlin.math.PI
 import kotlin.math.atan
 import kotlin.math.pow
@@ -44,9 +48,10 @@ val moveOffset = 80.dp
 
 @Composable
 fun MyOvalProgressView(
-    modifier: Modifier
+    modifier: Modifier,
+    progress: Int
 ) {
-    Box(modifier = modifier) {
+    Box(modifier = modifier.offset(moveOffset)) {
         ShadowContainer(
             modifier = Modifier
                 .offset()
@@ -55,15 +60,15 @@ fun MyOvalProgressView(
         ) {
             RectFrame {
                 ProgressBackground(modifier = Modifier.offset())  // custom progress view
-                Calc()
+                ProgressBar(progress)
             }
         }
 
-        VerticalLine(
-            modifier = Modifier
-                .align(Alignment.TopEnd)
-                .offset(x = (-80).dp)
-        )
+//        VerticalLine(
+//            modifier = Modifier
+//                .align(Alignment.TopEnd)
+//                .offset(x = (-80).dp)
+//        )
     }
 }
 
@@ -126,7 +131,7 @@ fun ProgressBackground(modifier: Modifier) {
  *  7. 제외할 영역 (직선 + 곡선) / 전체 영역 (반원 호 + 양 끝 직선) -> 제외할 구간의 비율
  */
 @Composable
-fun Calc() {
+fun ProgressBar(progress: Int) {
     val progressWidthPx = progressWidth.toPx()
     val progressHeightPx = progressHeight.toPx()
     val progressRadiusPx = progressRadius.toPx()
@@ -138,11 +143,11 @@ fun Calc() {
 
     // 1. 밑변
     val bottomLine = frameRadiusPx - moveOffsetPx
-    Timber.tag("calc").e("bottomLine : $bottomLine")
+//    Timber.tag("calc").e("bottomLine : $bottomLine")
 
     // 2. 높이
     val height = sqrt(progressRadiusPx.pow(2) - bottomLine.pow(2))
-    Timber.tag("calc").e("h: $height")
+//    Timber.tag("calc").e("h: $height")
 
     // 3. (밑변 높이 빗변(radius) 를 이은 직각 삼각형에서 빗변의 각도))
     val angle = atan(height / bottomLine)
@@ -153,7 +158,7 @@ fun Calc() {
     // 5.
     val halfCircumference = PI * progressRadiusPx // 반원 길이
     val arcDistance = halfCircumference * angleRatio
-    Timber.tag("calc").e("distance : $arcDistance")
+//    Timber.tag("calc").e("distance : $arcDistance")
 
     // 6. Progress Bar 에서 제외할 경로의 비율
     val cutRatio =
@@ -221,22 +226,69 @@ fun Calc() {
     val progressPath = Path()
     val progressPathMeasure = PathMeasure()
     progressPathMeasure.setPath(combinedPath, false)
+
+    val percent = progress.toFloat() / 100f
+
+    Draw(progressPathMeasure = progressPathMeasure, combinePathMeasure = combinePathMeasure, progressPath = progressPath, percent = percent)
+}
+
+@Composable
+fun Draw(
+    progressPathMeasure: PathMeasure,
+    combinePathMeasure: PathMeasure,
+    progressPath: Path,
+    percent: Float
+) {
+    val animationProgress = remember { Animatable(0f) }
+    LaunchedEffect(Unit) {
+        launch {
+            animationProgress.animateTo(
+                targetValue = 1f,
+                animationSpec = tween(durationMillis = 3000)
+            )
+        }
+    }
+
     progressPathMeasure.getSegment(
         startDistance = 0f,
-        stopDistance = combinePathMeasure.length * 0.7f,
+        stopDistance = combinePathMeasure.length * percent,
         destination = progressPath
     )
+
+    val animatedPath = Path()
+    val animatedPathLength = progressPathMeasure.length * animationProgress.value
+
+    progressPathMeasure.getSegment(
+        startDistance = 0f,
+        stopDistance = animatedPathLength,
+        destination = animatedPath,
+        false
+    )
+
+    val animatedPathMeasure = PathMeasure()
+    animatedPathMeasure.setPath(animatedPath, false)
+    val position = animatedPathMeasure.getPosition(animatedPathLength)
 
     Canvas(
         modifier = Modifier
             .width(250.dp)
             .height(390.dp)
     ) {
-        drawPath(
-            path = progressPath,
-            color = Orange800,
-            style = Stroke(width = strokeWidth.toPx())
-        )
+//        drawPath(
+//            path = progressPath,
+//            color = Orange800,
+//            style = Stroke(width = strokeWidth.toPx(), pathEffect = PathEffect.dashPathEffect(
+//                floatArrayOf(animatedPathLength, progressPathMeasure.length), 0f
+//            ))
+//        )
+
+        if (animatedPathLength > 0) {
+            drawCircle(
+                color = Orange800,
+                radius = 8.dp.toPx(),
+                center = position
+            )
+        }
     }
 }
 
@@ -246,7 +298,7 @@ fun PreviewOvalProgress() {
     Box(
         modifier = Modifier.fillMaxSize()
     ) {
-        MyOvalProgressView(modifier = Modifier)
+        MyOvalProgressView(modifier = Modifier, 70)
     }
 }
 

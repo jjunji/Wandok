@@ -79,7 +79,8 @@ fun HomeDetailScreen(
                     MyOvalProgressView(
                         modifier = Modifier
                             .padding(top = 5.dp)
-                            .align(Alignment.CenterEnd)
+                            .align(Alignment.CenterEnd),
+                        myBook.progress
                     )
 
                     // d-day, 진행률, 목표 설정
