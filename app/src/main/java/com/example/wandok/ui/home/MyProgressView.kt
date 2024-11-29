@@ -21,6 +21,7 @@ import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
+import androidx.compose.ui.graphics.PathEffect
 import androidx.compose.ui.graphics.PathMeasure
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.tooling.preview.Preview
@@ -30,6 +31,7 @@ import com.example.wandok.ui.core.ShadowContainer
 import com.example.wandok.ui.theme.Orange100
 import com.example.wandok.ui.theme.Orange800
 import kotlinx.coroutines.launch
+import timber.log.Timber
 import kotlin.math.PI
 import kotlin.math.atan
 import kotlin.math.pow
@@ -223,51 +225,49 @@ fun ProgressBar(progress: Int) {
     val combinePathMeasure = PathMeasure()
     combinePathMeasure.setPath(combinedPath, false)
 
-    val progressPath = Path()
-    val progressPathMeasure = PathMeasure()
-    progressPathMeasure.setPath(combinedPath, false)
-
     val percent = progress.toFloat() / 100f
+    val progressPath = Path()
+    combinePathMeasure.getSegment(
+        startDistance = 0f,
+        stopDistance = combinePathMeasure.length * percent,
+        destination = progressPath
+    )
 
-    Draw(progressPathMeasure = progressPathMeasure, combinePathMeasure = combinePathMeasure, progressPath = progressPath, percent = percent)
+    Draw(progressPath)
 }
 
 @Composable
-fun Draw(
-    progressPathMeasure: PathMeasure,
-    combinePathMeasure: PathMeasure,
-    progressPath: Path,
-    percent: Float
-) {
-    val animationProgress = remember { Animatable(0f) }
+fun Draw(progressPath: Path) {
+    val animatable = remember { Animatable(0f) }
     LaunchedEffect(Unit) {
         launch {
-            animationProgress.animateTo(
+            animatable.animateTo(
                 targetValue = 1f,
                 animationSpec = tween(durationMillis = 3000)
             )
         }
     }
 
-    progressPathMeasure.getSegment(
-        startDistance = 0f,
-        stopDistance = combinePathMeasure.length * percent,
-        destination = progressPath
-    )
+    // 진행률 PathMeasure
+    val progressPathMeasure = PathMeasure().apply {
+        setPath(progressPath, false)
+    }
 
+    // 애니메이션 진행률에 따른 Path
     val animatedPath = Path()
-    val animatedPathLength = progressPathMeasure.length * animationProgress.value
-
     progressPathMeasure.getSegment(
         startDistance = 0f,
-        stopDistance = animatedPathLength,
+        stopDistance = progressPathMeasure.length * animatable.value,
         destination = animatedPath,
         false
     )
 
-    val animatedPathMeasure = PathMeasure()
-    animatedPathMeasure.setPath(animatedPath, false)
-    val position = animatedPathMeasure.getPosition(animatedPathLength)
+    val animatedPathMeasure = PathMeasure().apply {
+        setPath(animatedPath, false)
+    }
+
+    Timber.tag("test").e("animPath length : ${animatedPathMeasure.length} / ${progressPathMeasure.length} / ${animatable.value}")
+    val position = animatedPathMeasure.getPosition(animatedPathMeasure.length)
 
     Canvas(
         modifier = Modifier
@@ -277,18 +277,27 @@ fun Draw(
 //        drawPath(
 //            path = progressPath,
 //            color = Orange800,
-//            style = Stroke(width = strokeWidth.toPx(), pathEffect = PathEffect.dashPathEffect(
-//                floatArrayOf(animatedPathLength, progressPathMeasure.length), 0f
-//            ))
+//            style = Stroke(
+//                width = strokeWidth.toPx(), pathEffect = PathEffect.dashPathEffect(
+//                    // 구간 (animatedPathLength 값은 계속 변경될 것이고,
+//                    floatArrayOf(animatedPathMeasure.length, progressPathMeasure.length), 0f
+//                )
+//            )
 //        )
 
-        if (animatedPathLength > 0) {
-            drawCircle(
-                color = Orange800,
-                radius = 8.dp.toPx(),
-                center = position
-            )
-        }
+//        drawPath(
+//            path = progressPath,
+//            color =  Orange800,
+//            style = Stroke(width = strokeWidth.toPx())
+//        )
+
+//        Timber.tag("test").e("position:$position")
+        drawCircle(
+            color = Orange800,
+            radius = 8.dp.toPx(),
+            center = position
+        )
+
     }
 }
 
