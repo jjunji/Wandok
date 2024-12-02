@@ -23,14 +23,15 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.PathMeasure
 import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.dp
 import com.example.wandok.common.extension.toPx
 import com.example.wandok.ui.core.ShadowContainer
 import com.example.wandok.ui.theme.Orange100
 import com.example.wandok.ui.theme.Orange800
 import kotlinx.coroutines.launch
-import timber.log.Timber
 import kotlin.math.PI
 import kotlin.math.atan
 import kotlin.math.pow
@@ -48,10 +49,12 @@ val strokeWidth = 8.dp
 val moveOffset = 80.dp
 
 @Composable
-fun MyOvalProgressView(
+fun MyProgressView(
     modifier: Modifier,
     progress: Int
 ) {
+    val progressPath = getProgressPath(progress, LocalDensity.current)
+
     Box(modifier = modifier.offset(moveOffset)) {
         ShadowContainer(
             modifier = Modifier
@@ -61,7 +64,7 @@ fun MyOvalProgressView(
         ) {
             RectFrame {
                 ProgressBackground(modifier = Modifier.offset())  // custom progress view
-                ProgressBar(progress)
+                ProgressBar(progressPath)
             }
         }
     }
@@ -109,16 +112,15 @@ fun ProgressBackground(modifier: Modifier) {
  *  6. startOffset 부터 교점 까지의 구간 중 직선이 가지는 길이
  *  7. 제외할 영역 (직선 + 곡선) / 전체 영역 (반원 호 + 양 끝 직선) -> 제외할 구간의 비율
  */
-@Composable
-fun ProgressBar(progress: Int) {
-    val progressWidthPx = progressWidth.toPx()
-    val progressHeightPx = progressHeight.toPx()
-    val progressRadiusPx = progressRadius.toPx()
-    val frameRadiusPx = frameRadius.toPx()
-    val moveOffsetPx = moveOffset.toPx()
+private fun getProgressPath(progress: Int, density: Density): Path {
+    val progressWidthPx = progressWidth.toPx(density)
+    val progressHeightPx = progressHeight.toPx(density)
+    val progressRadiusPx = progressRadius.toPx(density)
+    val frameRadiusPx = frameRadius.toPx(density)
+    val moveOffsetPx = moveOffset.toPx(density)
 
-    val verticalWithoutCurves =
-        progressHeightPx - (progressRadiusPx * 2)  // 직선의 길이 (세로 변에서 곡선이 아닌 영역)
+    // 직선의 길이 (세로 변에서 곡선이 아닌 영역)
+    val verticalWithoutCurves = progressHeightPx - (progressRadiusPx * 2)
 
     // 1. 밑변
     val bottomLine = frameRadiusPx - moveOffsetPx
@@ -207,11 +209,11 @@ fun ProgressBar(progress: Int) {
         destination = progressPath
     )
 
-    Draw(progressPath)
+    return progressPath
 }
 
 @Composable
-fun Draw(progressPath: Path) {
+fun ProgressBar(progressPath: Path) {
     val animatable = remember { Animatable(0f) }
     LaunchedEffect(Unit) {
         launch {
@@ -247,11 +249,13 @@ fun Draw(progressPath: Path) {
             .width(250.dp)
             .height(390.dp)
     ) {
+        // 진행률
         drawPath(
             path = animatedPath,
             color = Orange800,
             style = Stroke(width = strokeWidth.toPx())
         )
+        // 진행률 헤더(콩나물)
         drawCircle(
             color = Orange800,
             radius = 8.dp.toPx(),
@@ -263,15 +267,7 @@ fun Draw(progressPath: Path) {
 @Preview(showBackground = true)
 @Composable
 fun PreviewOvalProgress() {
-    Box(
-        modifier = Modifier.fillMaxSize()
-    ) {
-        MyOvalProgressView(modifier = Modifier, 70)
+    Box(modifier = Modifier.fillMaxSize()) {
+        MyProgressView(modifier = Modifier, 70)
     }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun PreviewProgressBackground() {
-    ProgressBackground(modifier = Modifier)
 }

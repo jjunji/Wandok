@@ -3,6 +3,7 @@ package com.example.wandok.common.extension
 import android.content.res.Resources
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 
@@ -24,4 +25,9 @@ fun Float.pxToDp(): Dp {
 
 fun Int.pxToDp(): Dp {
     return (this / Resources.getSystem().displayMetrics.density).dp
+}
+
+
+fun Dp.toPx(density: Density): Float {
+    return with(density) { this@toPx.toPx() }
 }

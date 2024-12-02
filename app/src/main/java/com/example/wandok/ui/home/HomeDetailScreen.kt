@@ -76,7 +76,7 @@ fun HomeDetailScreen(
                         .fillMaxWidth()
                         .wrapContentHeight()
                 ) {
-                    MyOvalProgressView(
+                    MyProgressView(
                         modifier = Modifier
                             .padding(top = 5.dp)
                             .align(Alignment.CenterEnd),
