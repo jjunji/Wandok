@@ -21,7 +21,6 @@ import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
-import androidx.compose.ui.graphics.PathEffect
 import androidx.compose.ui.graphics.PathMeasure
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.tooling.preview.Preview
@@ -65,28 +64,6 @@ fun MyOvalProgressView(
                 ProgressBar(progress)
             }
         }
-
-//        VerticalLine(
-//            modifier = Modifier
-//                .align(Alignment.TopEnd)
-//                .offset(x = (-80).dp)
-//        )
-    }
-}
-
-@Composable
-fun VerticalLine(
-    modifier: Modifier
-) {
-    Canvas(
-        modifier = modifier
-    ) {
-        drawLine(
-            color = Color.Red,
-            start = Offset(0f, 0f),
-            end = Offset(0f, frameHeight.toPx()),
-            strokeWidth = 8.dp.toPx()
-        )
     }
 }
 
@@ -145,11 +122,9 @@ fun ProgressBar(progress: Int) {
 
     // 1. 밑변
     val bottomLine = frameRadiusPx - moveOffsetPx
-//    Timber.tag("calc").e("bottomLine : $bottomLine")
 
     // 2. 높이
     val height = sqrt(progressRadiusPx.pow(2) - bottomLine.pow(2))
-//    Timber.tag("calc").e("h: $height")
 
     // 3. (밑변 높이 빗변(radius) 를 이은 직각 삼각형에서 빗변의 각도))
     val angle = atan(height / bottomLine)
@@ -160,7 +135,6 @@ fun ProgressBar(progress: Int) {
     // 5.
     val halfCircumference = PI * progressRadiusPx // 반원 길이
     val arcDistance = halfCircumference * angleRatio
-//    Timber.tag("calc").e("distance : $arcDistance")
 
     // 6. Progress Bar 에서 제외할 경로의 비율
     val cutRatio =
@@ -259,14 +233,13 @@ fun Draw(progressPath: Path) {
         startDistance = 0f,
         stopDistance = progressPathMeasure.length * animatable.value,
         destination = animatedPath,
-        false
+        true
     )
 
     val animatedPathMeasure = PathMeasure().apply {
         setPath(animatedPath, false)
     }
 
-    Timber.tag("test").e("animPath length : ${animatedPathMeasure.length} / ${progressPathMeasure.length} / ${animatable.value}")
     val position = animatedPathMeasure.getPosition(animatedPathMeasure.length)
 
     Canvas(
@@ -274,30 +247,16 @@ fun Draw(progressPath: Path) {
             .width(250.dp)
             .height(390.dp)
     ) {
-//        drawPath(
-//            path = progressPath,
-//            color = Orange800,
-//            style = Stroke(
-//                width = strokeWidth.toPx(), pathEffect = PathEffect.dashPathEffect(
-//                    // 구간 (animatedPathLength 값은 계속 변경될 것이고,
-//                    floatArrayOf(animatedPathMeasure.length, progressPathMeasure.length), 0f
-//                )
-//            )
-//        )
-
-//        drawPath(
-//            path = progressPath,
-//            color =  Orange800,
-//            style = Stroke(width = strokeWidth.toPx())
-//        )
-
-//        Timber.tag("test").e("position:$position")
+        drawPath(
+            path = animatedPath,
+            color = Orange800,
+            style = Stroke(width = strokeWidth.toPx())
+        )
         drawCircle(
             color = Orange800,
             radius = 8.dp.toPx(),
             center = position
         )
-
     }
 }
 
