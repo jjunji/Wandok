@@ -3,6 +3,7 @@ package com.example.wandok.ui.search
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
@@ -33,6 +34,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -86,6 +89,9 @@ fun SearchRoute(
         }
     }
 
+//    val keyboardController = LocalSoftwareKeyboardController.current // cursor 남는 이슈로 focusManager 사용
+    val focusManager = LocalFocusManager.current
+
     SearchScreen(
         paddingValues,
         onItemClick = onItemClick,
@@ -96,7 +102,13 @@ fun SearchRoute(
         refreshing,
         pullRefreshState,
         onKeywordChanged = { viewModel.onKeywordChanged(it) },
-        onSearch = { viewModel.onSearch(keyword) }
+        onSearch = {
+            viewModel.onSearch(keyword)
+            focusManager.clearFocus()
+        },
+        onTouchOutside = {
+            focusManager.clearFocus()
+        }
     )
 }
 
@@ -112,12 +124,18 @@ fun SearchScreen(
     refreshing: Boolean,
     pullRefreshState: PullRefreshState,
     onKeywordChanged: (String) -> Unit,
-    onSearch: () -> Unit
+    onSearch: () -> Unit,
+    onTouchOutside: () -> Unit
 ) {
     Column(
         modifier = Modifier
             .fillMaxSize()
             .padding(paddingValues)
+            .pointerInput(Unit) {
+                detectTapGestures(onTap = {
+                    onTouchOutside()
+                })
+            }
     ) {
         SearchTitle()
         SearchField(
