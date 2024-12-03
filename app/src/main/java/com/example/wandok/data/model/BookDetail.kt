@@ -9,6 +9,8 @@ import com.example.wandok.data.model.local.TableOfContent
  * @property image 책 이미지
  * @property publisher 출판사
  * @property tableOfContents 목차 리스트
+ * @property registrationTimeMillis 읽을 책으로 등록한 시간
+ * @property progress 진척도 (0~100)
  */
 data class BookDetail(
     val isbn: String,

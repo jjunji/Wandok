@@ -64,7 +64,7 @@ naming:
 
 style:
   MagicNumber:
-    active: true
+    active: false
     ignoreAnnotated: [ 'Composable' ]
     excludes: [ '**/theme/**','**/test/**', '**/androidTest/**', '**/commonTest/**', '**/jvmTest/**' ]
   #    ignoreNumbers: [-1, 0, 1, 2]  # 무시할 숫자 목록

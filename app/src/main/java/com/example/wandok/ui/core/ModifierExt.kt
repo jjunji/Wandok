@@ -16,7 +16,6 @@ import androidx.compose.ui.graphics.drawscope.drawIntoCanvas
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import com.example.wandok.ui.theme.DeepShadow
 import com.example.wandok.ui.theme.GrayC1
 import com.example.wandok.ui.theme.LightShadow
 
@@ -48,7 +47,7 @@ fun Modifier.backGroundWithGradient(
  * Drop Shadow
  */
 fun Modifier.shadow(
-    color: Color = DeepShadow,
+    color: Color = LightShadow,
     borderRadius: Dp = 10.dp,
     blurRadius: Dp = 10.dp,
     offsetY: Dp = 7.dp,

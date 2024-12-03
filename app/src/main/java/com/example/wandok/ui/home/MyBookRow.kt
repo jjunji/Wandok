@@ -30,10 +30,10 @@ import com.example.wandok.ui.core.BodyLargeText
 import com.example.wandok.ui.core.BodyMediumText
 import com.example.wandok.ui.core.LinearProgressBar
 import com.example.wandok.ui.core.shadow
-import com.example.wandok.ui.theme.DeepShadow
+import com.example.wandok.ui.theme.LightShadow
 import com.example.wandok.ui.theme.Typography
 
-val shadowColor = DeepShadow
+val shadowColor = LightShadow
 val CornerRadius = 10.dp
 
 @Composable
@@ -48,7 +48,7 @@ fun MyBookRow(myBook: BookDetail, onItemClicked: () -> Unit) {
                 borderRadius = CornerRadius,
                 offsetX = 7.dp,
                 offsetY = 7.dp,
-                spread = 7.dp,
+                spread = 3.dp,
                 blurRadius = CornerRadius
             )
             .clip(RoundedCornerShape(CornerRadius))
