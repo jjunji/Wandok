@@ -20,6 +20,7 @@
     <string name="common_year">년</string>
     <string name="common_month">월</string>
     <string name="common_day">일</string>
+    <string name="message_add_book_to_read">읽을 책을 담아볼까요?</string>
 
     <!-- 검색 -->
     <string name="search_title">독서를 시작해 보세요!</string>

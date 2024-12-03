@@ -45,6 +45,7 @@ import com.example.wandok.common.LoadState
 import com.example.wandok.data.model.remote.Book
 import com.example.wandok.ui.core.DotsPulsing
 import com.example.wandok.ui.core.EditText
+import com.example.wandok.ui.core.EmptyScreen
 import com.example.wandok.ui.core.SwipeRefreshBox
 import com.example.wandok.ui.core.grayRoundCorner
 import com.example.wandok.ui.theme.GrayC1
@@ -68,6 +69,7 @@ fun SearchRoute(
             // 마지막 항목이 현재 화면에 표시 되는지 여부를 나타냄
             val isLastItemDisplayed = (listState.layoutInfo.visibleItemsInfo.lastOrNull()?.index
                 ?: -1) >= listState.layoutInfo.totalItemsCount - 1
+
             isLastItemDisplayed && viewModel.pageStatus.hasMore
         }
     }
@@ -87,8 +89,8 @@ fun SearchRoute(
     SearchScreen(
         paddingValues,
         onItemClick = onItemClick,
-        keyword,
-        viewModel.bookList,
+        keyword = keyword,
+        searchList = viewModel.bookList,
         listState,
         loadState,
         refreshing,
@@ -123,18 +125,23 @@ fun SearchScreen(
             onKeywordChanged = { onKeywordChanged(it) },
             onSearch = { onSearch() }
         )
-        SwipeRefreshBox(
-            refreshing = refreshing,
-            pullRefreshState = pullRefreshState,
-            content = {
-                BookList(
-                    bookList = searchList,
-                    listState = listState,
-                    loadState = loadState,
-                    onItemClicked = { onItemClick(it) }
-                )
-            }
-        )
+
+        if (searchList.isEmpty()) {
+            EmptyScreen(modifier = Modifier)
+        } else {
+            SwipeRefreshBox(
+                refreshing = refreshing,
+                pullRefreshState = pullRefreshState,
+                content = {
+                    BookList(
+                        bookList = searchList,
+                        listState = listState,
+                        loadState = loadState,
+                        onItemClicked = { onItemClick(it) }
+                    )
+                }
+            )
+        }
     }
 }
 
@@ -275,4 +282,10 @@ fun PreviewBookList() {
         loadState = LoadState.IDLE,
         onItemClicked = {}
     )
+}
+
+@Preview(showBackground = true)
+@Composable
+fun PreviewEmptyScreen() {
+    EmptyScreen(modifier = Modifier)
 }
