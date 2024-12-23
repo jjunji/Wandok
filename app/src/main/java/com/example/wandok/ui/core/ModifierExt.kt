@@ -14,6 +14,7 @@ import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.drawscope.drawIntoCanvas
 import androidx.compose.ui.graphics.toArgb
+import androidx.compose.ui.layout.layout
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.example.wandok.ui.theme.GrayC1
@@ -125,3 +126,15 @@ fun Modifier.shadowExcludeLeft(
         }
     }
 )
+
+fun Modifier.suitablePlace() = this
+    .layout { measurable, constraints ->
+        val placeable = measurable.measure(constraints)
+        val yOffset = (placeable.height * 0.3f).toInt()
+        layout(constraints.maxWidth, constraints.maxHeight) {
+            placeable.place(
+                x = (constraints.maxWidth - placeable.width) / 2,
+                y = yOffset
+            )
+        }
+    }

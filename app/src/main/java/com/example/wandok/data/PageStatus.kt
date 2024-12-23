@@ -3,6 +3,7 @@ package com.example.wandok.data
 import androidx.compose.runtime.mutableStateListOf
 import com.example.wandok.common.LoadState
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 
 class PageStatus<T> {
@@ -15,8 +16,14 @@ class PageStatus<T> {
     private val _items = mutableStateListOf<T>()
     val items: List<T> get() = _items
 
+    private val _items2 = MutableStateFlow<List<T>>(emptyList())
+    val items2: StateFlow<List<T>> = _items2
+
     private val _loadState = MutableStateFlow(LoadState.IDLE)
     val loadState = _loadState.asStateFlow()
+
+    private val _newRequest = MutableStateFlow(false)
+    val newRequest = _newRequest.asStateFlow()
 
     fun notifyPageStatusChanged(newItems: List<T>, countOfAllItems: Int, page: Int) {
         _items.addAll(newItems)
@@ -24,13 +31,18 @@ class PageStatus<T> {
         hasMore = countOfAllItems > items.size
     }
 
-    fun setLoadState(loadState: LoadState) {
-        _loadState.value = loadState
+    suspend fun setLoadState(loadState: LoadState, newRequest: Boolean = false) {
+        _loadState.emit(loadState)
+        _newRequest.emit(newRequest)
     }
 
     fun init() {
         _items.clear()
         currentPage = 0
         hasMore = false
+    }
+
+    suspend fun test(newItems: List<T>, countOfAllItems: Int, page: Int) {
+        _items2.emit(newItems)
     }
 }

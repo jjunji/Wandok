@@ -20,7 +20,12 @@ import com.example.wandok.data.repository.Repository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
@@ -33,35 +38,56 @@ class SearchViewModel @Inject constructor(
     var bookList = pageStatus.items
     val refreshing: MutableSharedFlow<Boolean> = MutableSharedFlow(replay = 0)
 
+    val showCenterLoading: StateFlow<Boolean> = combine(
+        pageStatus.loadState,
+        pageStatus.newRequest
+    ) { loadState, newRequest ->
+        loadState == LoadState.LOADING && newRequest
+    }.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.Eagerly,
+        initialValue = false
+    )
+
+    val showBottomLoading: StateFlow<Boolean> = combine(
+        pageStatus.loadState,
+        pageStatus.newRequest
+    ) { loadState, newRequest ->
+        loadState == LoadState.LOADING && !newRequest
+    }.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.Eagerly,
+        initialValue = false
+    )
+
     fun onKeywordChanged(value: String) {
         viewModelScope.launch {
             keyword.emit(value)
         }
     }
 
+    // 검색하기
     fun onSearch(keyword: String) {
+        Timber.tag("test").e("onSearch ============ ")
         viewModelScope.launch {
             searchedKeyword.emit(keyword)
         }
-        pageStatus.init()
         requestBookList(true)
     }
 
     fun requestBookList(newRequest: Boolean = false) {
+        Timber.tag("test").e("requestBook ================== ")
         if (pageStatus.loadState.value == LoadState.LOADING) return
-        if (newRequest) pageStatus.init()
-
         val params = params(searchedKeyword.value, pageStatus.currentPage + 1)
 
         viewModelScope.launch {
-            pageStatus.setLoadState(LoadState.LOADING)
+            pageStatus.setLoadState(LoadState.LOADING, newRequest)
             repository.getMyBookList(params)
                 .onSuccess {
+                    if (newRequest) pageStatus.init()
                     pageStatus.notifyPageStatusChanged(it.items, it.countOfAllItems, it.page)
                 }
-                .onError { _, message ->
-                    // toast message
-                }
+                .onError { _, _ -> }
                 .onException {}
             pageStatus.setLoadState(LoadState.IDLE)
             refreshing.emit(false)
@@ -69,6 +95,7 @@ class SearchViewModel @Inject constructor(
     }
 
     fun refresh() {
+        Timber.tag("test").e("refresh ============= ")
         viewModelScope.launch {
             refreshing.emit(true)
         }

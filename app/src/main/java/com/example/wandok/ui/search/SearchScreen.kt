@@ -49,11 +49,14 @@ import com.example.wandok.data.model.remote.Book
 import com.example.wandok.ui.core.DotsPulsing
 import com.example.wandok.ui.core.EditText
 import com.example.wandok.ui.core.EmptyScreen
+import com.example.wandok.ui.core.LoadingView
 import com.example.wandok.ui.core.SwipeRefreshBox
 import com.example.wandok.ui.core.grayRoundCorner
+import com.example.wandok.ui.core.suitablePlace
 import com.example.wandok.ui.theme.GrayC1
 import com.example.wandok.ui.theme.Orange300
 import com.example.wandok.ui.theme.Typography
+import timber.log.Timber
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
@@ -70,10 +73,24 @@ fun SearchRoute(
     val shouldStartPaginate = remember {
         derivedStateOf {
             // 마지막 항목이 현재 화면에 표시 되는지 여부를 나타냄
+//            val isLastItemDisplayed = (listState.layoutInfo.visibleItemsInfo.lastOrNull()?.index
+//                ?: -1) >= listState.layoutInfo.totalItemsCount - 1
+
             val isLastItemDisplayed = (listState.layoutInfo.visibleItemsInfo.lastOrNull()?.index
-                ?: -1) >= listState.layoutInfo.totalItemsCount - 1
+                ?: -1) >= viewModel.bookList.size - 1
+
+            Timber.tag("test")
+                .e("isLastItemDisplayed : $isLastItemDisplayed / ${listState.layoutInfo.visibleItemsInfo.lastOrNull()?.index} / ${listState.layoutInfo.totalItemsCount}")
 
             isLastItemDisplayed && viewModel.pageStatus.hasMore
+        }
+    }
+
+    // paging 조건 만족 시 다음 페이지 호출
+    LaunchedEffect(key1 = shouldStartPaginate.value) {
+        if (shouldStartPaginate.value && (loadState == LoadState.IDLE)) {
+            Timber.tag("test").e("launchedEffect -===================== ")
+            viewModel.requestBookList()
         }
     }
 
@@ -82,12 +99,8 @@ fun SearchRoute(
         onRefresh = { viewModel.refresh() }
     )
 
-    // paging 조건 만족 시 다음 페이지 호출
-    LaunchedEffect(key1 = shouldStartPaginate.value) {
-        if (shouldStartPaginate.value && (loadState == LoadState.IDLE)) {
-            viewModel.requestBookList()
-        }
-    }
+    val showCenterLoading by viewModel.showCenterLoading.collectAsStateWithLifecycle()
+    val showBottomLoading by viewModel.showBottomLoading.collectAsStateWithLifecycle()
 
 //    val keyboardController = LocalSoftwareKeyboardController.current // cursor 남는 이슈로 focusManager 사용
     val focusManager = LocalFocusManager.current
@@ -97,10 +110,11 @@ fun SearchRoute(
         onItemClick = onItemClick,
         keyword = keyword,
         searchList = viewModel.bookList,
-        listState,
-        loadState,
-        refreshing,
-        pullRefreshState,
+        listState = listState,
+        showCenterLoading = showCenterLoading,
+        showBottomLoading = showBottomLoading,
+        refreshing = refreshing,
+        pullRefreshState = pullRefreshState,
         onKeywordChanged = { viewModel.onKeywordChanged(it) },
         onSearch = {
             viewModel.onSearch(keyword)
@@ -120,7 +134,8 @@ fun SearchScreen(
     keyword: String,
     searchList: List<Book>,
     listState: LazyListState,
-    loadState: LoadState,
+    showCenterLoading: Boolean,
+    showBottomLoading: Boolean,
     refreshing: Boolean,
     pullRefreshState: PullRefreshState,
     onKeywordChanged: (String) -> Unit,
@@ -137,34 +152,62 @@ fun SearchScreen(
                 })
             }
     ) {
-        SearchTitle()
+        SearchScreenLabel()
+        /* 검색창 */
         SearchField(
             keyword = keyword,
             onKeywordChanged = { onKeywordChanged(it) },
             onSearch = { onSearch() }
         )
 
-        if (searchList.isEmpty()) {
-            EmptyScreen(modifier = Modifier)
-        } else {
-            SwipeRefreshBox(
-                refreshing = refreshing,
-                pullRefreshState = pullRefreshState,
-                content = {
-                    BookList(
-                        bookList = searchList,
-                        listState = listState,
-                        loadState = loadState,
-                        onItemClicked = { onItemClick(it) }
-                    )
-                }
+        Box {
+            /* 중앙 로딩바 */
+            if (showCenterLoading) {
+                LoadingView(modifier = Modifier.suitablePlace())
+            }
+            /* 검색 결과 */
+            SearchResult(
+                onItemClick = onItemClick,
+                searchList = searchList,
+                listState = listState,
+                showBottomLoading = showBottomLoading,
+                refreshing,
+                pullRefreshState
             )
         }
     }
 }
 
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun SearchTitle() {
+fun SearchResult(
+    onItemClick: (isbn: String) -> Unit,
+    searchList: List<Book>,
+    listState: LazyListState,
+    showBottomLoading: Boolean,
+    refreshing: Boolean,
+    pullRefreshState: PullRefreshState
+) {
+    if (searchList.isEmpty()) {
+        EmptyScreen(modifier = Modifier)
+    } else {
+        SwipeRefreshBox(
+            refreshing = refreshing,
+            pullRefreshState = pullRefreshState,
+            content = {
+                BookList(
+                    bookList = searchList,
+                    listState = listState,
+                    showBottomLoading = showBottomLoading,
+                    onItemClicked = { onItemClick(it) }
+                )
+            }
+        )
+    }
+}
+
+@Composable
+fun SearchScreenLabel() {
     Column(
         modifier = Modifier
             .width(IntrinsicSize.Max)
@@ -244,10 +287,10 @@ fun SearchField(
 fun BookList(
     bookList: List<Book>,
     listState: LazyListState,
-    loadState: LoadState,
+    showBottomLoading: Boolean,
     onItemClicked: (isbn: String) -> Unit
 ) {
-//    Timber.tag("test").e("Recomposition")
+//    Timber.tag("test").e("Recomposition / ${bookList}")
     LazyColumn(
         contentPadding = PaddingValues(10.dp),
         state = listState,
@@ -271,7 +314,8 @@ fun BookList(
             }
 
             // paging 시 하단 로딩 바
-            if (index == bookList.lastIndex && loadState == LoadState.LOADING) {
+            Timber.tag("test").e("showBottom : $showBottomLoading")
+            if (index == bookList.lastIndex && showBottomLoading) {
                 DotsPulsing()
             }
         }
@@ -282,7 +326,7 @@ fun BookList(
 @Preview(showBackground = true)
 @Composable
 fun PreviewSearchTitle() {
-    SearchTitle()
+    SearchScreenLabel()
 }
 
 @Preview(showBackground = true)
@@ -297,7 +341,7 @@ fun PreviewBookList() {
     BookList(
         bookList = listOf(Book("책 제목")),
         listState = LazyListState(),
-        loadState = LoadState.IDLE,
+        showBottomLoading = true,
         onItemClicked = {}
     )
 }

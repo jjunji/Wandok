@@ -7,6 +7,7 @@ import androidx.compose.ui.Alignment.Companion.TopCenter
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.layout
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import com.example.wandok.R
 
 @Composable
@@ -30,4 +31,10 @@ fun EmptyScreen(modifier: Modifier) {
             text = stringResource(R.string.message_add_book_to_read)
         )
     }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun PreviewEmptyScreen() {
+    EmptyScreen(modifier = Modifier.fillMaxSize())
 }
