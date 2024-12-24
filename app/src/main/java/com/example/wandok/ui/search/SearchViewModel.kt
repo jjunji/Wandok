@@ -25,7 +25,6 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
-import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
@@ -38,6 +37,7 @@ class SearchViewModel @Inject constructor(
     var bookList = pageStatus.items
     val refreshing: MutableSharedFlow<Boolean> = MutableSharedFlow(replay = 0)
 
+    // 새 요청 시, 중앙 로딩 바
     val showCenterLoading: StateFlow<Boolean> = combine(
         pageStatus.loadState,
         pageStatus.newRequest
@@ -49,6 +49,7 @@ class SearchViewModel @Inject constructor(
         initialValue = false
     )
 
+    // 페이징 시, 하단 로딩 바
     val showBottomLoading: StateFlow<Boolean> = combine(
         pageStatus.loadState,
         pageStatus.newRequest
@@ -68,7 +69,6 @@ class SearchViewModel @Inject constructor(
 
     // 검색하기
     fun onSearch(keyword: String) {
-        Timber.tag("test").e("onSearch ============ ")
         viewModelScope.launch {
             searchedKeyword.emit(keyword)
         }
@@ -76,11 +76,9 @@ class SearchViewModel @Inject constructor(
     }
 
     fun requestBookList(newRequest: Boolean = false) {
-        Timber.tag("test").e("requestBook ================== ")
         if (pageStatus.loadState.value == LoadState.LOADING) return
-        val params = params(searchedKeyword.value, pageStatus.currentPage + 1)
-
         viewModelScope.launch {
+            val params = params(searchedKeyword.value, if (newRequest) 0 else pageStatus.currentPage + 1)
             pageStatus.setLoadState(LoadState.LOADING, newRequest)
             repository.getMyBookList(params)
                 .onSuccess {
@@ -88,14 +86,13 @@ class SearchViewModel @Inject constructor(
                     pageStatus.notifyPageStatusChanged(it.items, it.countOfAllItems, it.page)
                 }
                 .onError { _, _ -> }
-                .onException {}
+                .onException { }
             pageStatus.setLoadState(LoadState.IDLE)
             refreshing.emit(false)
         }
     }
 
     fun refresh() {
-        Timber.tag("test").e("refresh ============= ")
         viewModelScope.launch {
             refreshing.emit(true)
         }

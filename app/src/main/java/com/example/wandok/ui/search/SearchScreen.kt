@@ -68,19 +68,14 @@ fun SearchRoute(
     val keyword by viewModel.keyword.collectAsStateWithLifecycle()
     val loadState by viewModel.pageStatus.loadState.collectAsStateWithLifecycle(initialValue = LoadState.IDLE)
     val refreshing by viewModel.refreshing.collectAsStateWithLifecycle(initialValue = false)
+    val newRequest by viewModel.pageStatus.newRequest.collectAsStateWithLifecycle()
 
     val listState = rememberLazyListState()
     val shouldStartPaginate = remember {
         derivedStateOf {
             // 마지막 항목이 현재 화면에 표시 되는지 여부를 나타냄
-//            val isLastItemDisplayed = (listState.layoutInfo.visibleItemsInfo.lastOrNull()?.index
-//                ?: -1) >= listState.layoutInfo.totalItemsCount - 1
-
             val isLastItemDisplayed = (listState.layoutInfo.visibleItemsInfo.lastOrNull()?.index
-                ?: -1) >= viewModel.bookList.size - 1
-
-            Timber.tag("test")
-                .e("isLastItemDisplayed : $isLastItemDisplayed / ${listState.layoutInfo.visibleItemsInfo.lastOrNull()?.index} / ${listState.layoutInfo.totalItemsCount}")
+                ?: -1) >= listState.layoutInfo.totalItemsCount - 1
 
             isLastItemDisplayed && viewModel.pageStatus.hasMore
         }
@@ -89,8 +84,14 @@ fun SearchRoute(
     // paging 조건 만족 시 다음 페이지 호출
     LaunchedEffect(key1 = shouldStartPaginate.value) {
         if (shouldStartPaginate.value && (loadState == LoadState.IDLE)) {
-            Timber.tag("test").e("launchedEffect -===================== ")
             viewModel.requestBookList()
+        }
+    }
+
+    // 새 요청시 스크롤 초기화
+    LaunchedEffect(newRequest) {
+        if (newRequest) {
+            listState.scrollToItem(0)
         }
     }
 
