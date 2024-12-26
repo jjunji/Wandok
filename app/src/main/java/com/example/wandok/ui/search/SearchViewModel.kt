@@ -76,7 +76,7 @@ class SearchViewModel @Inject constructor(
     }
 
     fun requestBookList(newRequest: Boolean = false) {
-        if (pageStatus.loadState.value == LoadState.LOADING) return
+        if (pageStatus.loading()) return
         viewModelScope.launch {
             val params = params(searchedKeyword.value, if (newRequest) 0 else pageStatus.currentPage + 1)
             pageStatus.setLoadState(LoadState.LOADING, newRequest)

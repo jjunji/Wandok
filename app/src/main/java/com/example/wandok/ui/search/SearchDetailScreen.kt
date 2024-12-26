@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.CircleShape
@@ -63,11 +64,30 @@ fun SearchDetailRoute(
         }
     }
 
-    SearchDetailScreen(
-        onBackClicked = onBackClicked,
-        onAddBookClicked = { viewModel.onAddBookClicked() },    // 책 추가 fab Clicked
-        responseState = responseState
-    )
+    when (val currentState = responseState) {
+        is ResponseState.Success -> {
+            Box(modifier = Modifier.fillMaxSize()) {
+                SearchDetailScreen(
+                    onBackClicked = onBackClicked,
+                    bookDetail = currentState.body
+                )
+
+                AddBookButton(
+                    modifier = Modifier
+                        .align(Alignment.BottomEnd)
+                        .offset(x = (-20).dp, y = (-20).dp)
+                ) {
+                    viewModel.onAddBookClicked()    // 책 추가 fab Clicked
+                }
+            }
+        }
+
+        is ResponseState.Loading -> {
+            LoadingProgress(modifier = Modifier, state = responseState)
+        }
+
+        else -> {}
+    }
 
     AddBookDialog(
         addBookDialogState,
@@ -79,37 +99,27 @@ fun SearchDetailRoute(
 @Composable
 fun SearchDetailScreen(
     onBackClicked: () -> Unit,
-    onAddBookClicked: () -> Unit,
-    responseState: ResponseState<BookDetail>,
+    bookDetail: BookDetail
 ) {
-    Box(modifier = Modifier.fillMaxSize()) {
-        Column(modifier = Modifier.fillMaxSize()) {
-            CustomAppBar(modifier = Modifier, onBackClicked = { onBackClicked() })
-            when (responseState) {
-                is ResponseState.Success -> {
-                    BookDetailLayout(modifier = Modifier, responseState.body)
-                }
-
-                is ResponseState.Loading -> {
-                    LoadingProgress(modifier = Modifier, state = responseState)
-                }
-
-                else -> {}
+    Column(modifier = Modifier.fillMaxSize()) {
+        CustomAppBar(modifier = Modifier, onBackClicked = { onBackClicked() })
+        LazyColumn(modifier = Modifier.fillMaxSize()) {
+            item {
+                BookDetailLayout(modifier = Modifier, bookDetail)
             }
-        }
-        AddBookButton(
-            modifier = Modifier
-                .align(Alignment.BottomEnd)
-                .offset(x = (-20).dp, y = (-20).dp)
-        ) {
-            onAddBookClicked()
+            itemsIndexed(
+                items = bookDetail.tableOfContents,
+            ) { index, item ->
+                TableOfContentRow(index, item = item)               // 아이템
+                HorizontalDivider(color = GrayC1, thickness = 1.dp) // 아이템 구분선
+            }
         }
     }
 }
 
 @Composable
 fun BookDetailLayout(modifier: Modifier, item: BookDetail) {
-    Column(modifier = modifier.fillMaxSize()) {
+    Column(modifier = modifier.wrapContentHeight()) {
         AsyncImage(
             model = item.image,
             contentDescription = null,
@@ -131,11 +141,11 @@ fun BookDetailLayout(modifier: Modifier, item: BookDetail) {
         )
         Spacer(modifier = modifier.height(5.dp))
 
-        // 목차
-        TableOfContents(
-            modifier = modifier,
-            itemList = item.tableOfContents
-        )
+//        // 목차
+//        TableOfContents(
+//            modifier = modifier,
+//            itemList = item.tableOfContents
+//        )
     }
 }
 
@@ -169,14 +179,7 @@ fun TableOfContents(modifier: Modifier, itemList: List<TableOfContent>) {
         contentPadding = PaddingValues(10.dp),
         modifier = modifier.fillMaxWidth()
     ) {
-        itemsIndexed(
-            items = itemList,
-        ) { index, item ->
-            TableOfContentRow(index, item = item)
 
-            // 아이템 구분선
-            HorizontalDivider(color = GrayC1, thickness = 1.dp)
-        }
     }
 }
 
@@ -246,4 +249,15 @@ fun AddBookDialog(
 @Composable
 fun PreviewAddBookButton() {
     AddBookButton(modifier = Modifier) {}
+}
+
+@Preview(showBackground = true)
+@Composable
+fun PreviewSearchDetail() {
+    val bookDetail = BookDetail(
+        isbn = "1234",
+        title = "테스트",
+        author = "테스트"
+    )
+    SearchDetailScreen({}, bookDetail)
 }
