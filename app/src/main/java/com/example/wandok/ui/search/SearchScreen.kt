@@ -56,13 +56,12 @@ import com.example.wandok.ui.core.suitablePlace
 import com.example.wandok.ui.theme.GrayC1
 import com.example.wandok.ui.theme.Orange300
 import com.example.wandok.ui.theme.Typography
-import timber.log.Timber
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun SearchRoute(
     paddingValues: PaddingValues,
-    onItemClick: (isbn: String) -> Unit,
+    onItemClick: (isbn: String, isbn13: String) -> Unit,
     viewModel: SearchViewModel = hiltViewModel()
 ) {
     val keyword by viewModel.keyword.collectAsStateWithLifecycle()
@@ -131,7 +130,7 @@ fun SearchRoute(
 @Composable
 fun SearchScreen(
     paddingValues: PaddingValues,
-    onItemClick: (isbn: String) -> Unit,
+    onItemClick: (isbn: String, isbn13: String) -> Unit,
     keyword: String,
     searchList: List<Book>,
     listState: LazyListState,
@@ -182,7 +181,7 @@ fun SearchScreen(
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun SearchResult(
-    onItemClick: (isbn: String) -> Unit,
+    onItemClick: (isbn: String, isbn13: String) -> Unit,
     searchList: List<Book>,
     listState: LazyListState,
     showBottomLoading: Boolean,
@@ -200,7 +199,9 @@ fun SearchResult(
                     bookList = searchList,
                     listState = listState,
                     showBottomLoading = showBottomLoading,
-                    onItemClicked = { onItemClick(it) }
+                    onItemClicked = { isbn, isbn13 ->
+                        onItemClick(isbn, isbn13)
+                    }
                 )
             }
         )
@@ -289,7 +290,7 @@ fun BookList(
     bookList: List<Book>,
     listState: LazyListState,
     showBottomLoading: Boolean,
-    onItemClicked: (isbn: String) -> Unit
+    onItemClicked: (isbn: String, isbn13: String) -> Unit
 ) {
 //    Timber.tag("test").e("Recomposition / ${bookList}")
     LazyColumn(
@@ -306,7 +307,7 @@ fun BookList(
             BookRow(
                 Modifier.height(150.dp),
                 book = book,
-                onItemClicked = { onItemClicked(book.isbn) }
+                onItemClicked = { onItemClicked(book.isbn, book.isbn13) }
             )
 
             // 아이템 구분선
@@ -315,7 +316,6 @@ fun BookList(
             }
 
             // paging 시 하단 로딩 바
-            Timber.tag("test").e("showBottom : $showBottomLoading")
             if (index == bookList.lastIndex && showBottomLoading) {
                 DotsPulsing()
             }
@@ -343,7 +343,7 @@ fun PreviewBookList() {
         bookList = listOf(Book("책 제목")),
         listState = LazyListState(),
         showBottomLoading = true,
-        onItemClicked = {}
+        onItemClicked = { _, _ -> }
     )
 }
 

@@ -11,10 +11,13 @@ data class BookDetailResponse(
 data class BookInfo(
     @SerializedName("isbn") val isbn: String = "",
     @SerializedName("title") val title: String = "",
-    @SerializedName("author") val author: String = "",
-    @SerializedName("description") val description: String = "",
+    @SerializedName("author") val author: String = "",                  // 저자
+    @SerializedName("description") val description: String = "",        // 설명
     @SerializedName("cover") val image: String = "",
-    @SerializedName("publisher") val publisher: String = "",
+    @SerializedName("publisher") val publisher: String = "",            // 출판사
+    @SerializedName("pubDate") val pubDate: String = "",                // 발행일
+    @SerializedName("link") val link: String = "",
+    @SerializedName("priceStandard") val priceStandard: String = "",    // 정가
     @SerializedName("bookinfo") val bookInfo: AdditionalInfo
 )
 

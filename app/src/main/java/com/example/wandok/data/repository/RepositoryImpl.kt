@@ -9,7 +9,6 @@ import com.example.wandok.data.model.remote.BookResponse
 import com.example.wandok.network.ResponseState
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
-import timber.log.Timber
 import javax.inject.Inject
 
 class RepositoryImpl @Inject constructor(
@@ -84,7 +83,6 @@ class RepositoryImpl @Inject constructor(
     }
 
     override suspend fun getMyBookList(queryMap: HashMap<String, String>): ResponseState<BookResponse> {
-        Timber.tag("test").e("repository ======= get")
         return remoteDatasource.getBookList(queryMap)
     }
 

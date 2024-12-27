@@ -32,7 +32,9 @@ internal fun MainNavHost(
         )
         searchNavGraph(
             padding = padding,
-            onItemClicked = { navigator.navigateToSearchDetail(it) },
+            onItemClicked = { isbn, isbn13 ->
+                navigator.navigateToSearchDetail(isbn, isbn13)
+            },
             onBackClicked = { navigator.popBackStackIfNotHome() },
             onAddCompleted = { navigator.navigateToRootScreen() }
         )

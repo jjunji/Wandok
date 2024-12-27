@@ -18,6 +18,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -179,4 +180,11 @@ fun ResetGoalButton(modifier: Modifier, onResetClicked: () -> Unit) {
             onResetClicked()
         }
     )
+}
+
+@Preview(showBackground = true)
+@Composable
+fun HomeDetailScreenPreview() {
+    val bookDetail = BookDetail("1234")
+//    HomeDetailScreen(bookDetail, {},{},{})
 }

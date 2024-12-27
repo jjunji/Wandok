@@ -12,4 +12,5 @@ object KeyValueConstant {
     const val OUTPUT_TYPE_JS = "js"
 
     const val NAV_ARGS_ISBN = "isbn"
+    const val NAV_ARGS_ISBN13 = "isbn13"
 }

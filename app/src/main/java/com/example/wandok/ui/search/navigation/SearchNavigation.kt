@@ -14,18 +14,20 @@ fun NavController.navigateSearch(navOptions: NavOptions) {
     navigate(MainTabRoute.Search, navOptions)
 }
 
-fun NavController.navigateSearchDetail(isbn: String) {
-    navigate(Route.SearchDetail(isbn))
+fun NavController.navigateSearchDetail(isbn: String, isbn13: String) {
+    navigate(Route.SearchDetail(isbn, isbn13))
 }
 
 fun NavGraphBuilder.searchNavGraph(
     padding: PaddingValues,
-    onItemClicked: (isbn: String) -> Unit,
+    onItemClicked: (isbn: String, isbn13: String) -> Unit,
     onBackClicked: () -> Unit,
     onAddCompleted: () -> Unit
 ) {
     composable<MainTabRoute.Search> {
-        SearchRoute(padding, onItemClick = { onItemClicked(it) })
+        SearchRoute(padding, onItemClick = { isbn, isbn13 ->
+            onItemClicked(isbn, isbn13)
+        })
     }
 
     composable<Route.SearchDetail> { _ ->

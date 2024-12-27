@@ -21,5 +21,5 @@ sealed interface Route {
     data class HomeDetail(val isbn: String) : Route
 
     @Serializable
-    data class SearchDetail(val isbn: String) : Route
+    data class SearchDetail(val isbn: String, val isbn13: String) : Route
 }

@@ -127,7 +127,7 @@ fun BookDetailLayout(modifier: Modifier, item: BookDetail) {
             contentScale = ContentScale.FillBounds,
             modifier = modifier
                 .align(Alignment.CenterHorizontally)
-                .width(180.dp)
+                .width(150.dp)
                 .aspectRatio(1f / 1.4f)
         )
         Spacer(modifier = modifier.height(10.dp))

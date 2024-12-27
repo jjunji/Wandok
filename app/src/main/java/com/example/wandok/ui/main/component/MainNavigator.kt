@@ -39,7 +39,7 @@ internal class MainNavigator(
 
     // BottomNavigation 클릭 시 호출
     fun navigate(tab: MainTab) {
-        Timber.tag("test").e("${tab.route}")
+        Timber.tag("MainNavigator").e("${tab.route}")
 
         val navOptions = navOptions {
             popUpTo(navController.graph.findStartDestination().id) {
@@ -80,8 +80,8 @@ internal class MainNavigator(
     }
 
     // 검색 상세 페이지
-    fun navigateToSearchDetail(isbn: String) {
-        navController.navigateSearchDetail(isbn)
+    fun navigateToSearchDetail(isbn: String, isbn13: String) {
+        navController.navigateSearchDetail(isbn, isbn13)
     }
 
     @Composable

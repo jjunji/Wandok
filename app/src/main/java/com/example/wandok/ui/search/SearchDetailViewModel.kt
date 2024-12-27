@@ -8,6 +8,7 @@ import com.example.wandok.common.constants.AppConstant.ERR_CD_400
 import com.example.wandok.common.constants.AppConstant.REQUEST_DELAY
 import com.example.wandok.common.constants.KeyValueConstant
 import com.example.wandok.common.constants.KeyValueConstant.NAV_ARGS_ISBN
+import com.example.wandok.common.constants.KeyValueConstant.NAV_ARGS_ISBN13
 import com.example.wandok.common.extension.onError
 import com.example.wandok.common.extension.onSuccess
 import com.example.wandok.data.model.BookDetail
@@ -43,6 +44,7 @@ class SearchDetailViewModel @Inject constructor(
 
     private fun requestBookDetail() {
         val isbn = savedStateHandle.get<String>(NAV_ARGS_ISBN)
+        val isbn13 = savedStateHandle.get<String>(NAV_ARGS_ISBN13)
         if (isbn.isNullOrEmpty()) {
             // toast
             return

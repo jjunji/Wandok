@@ -18,6 +18,7 @@ data class Book(
     @SerializedName("author") val author: String = "",
     @SerializedName("publisher") val publisher: String = "",
     @SerializedName("isbn") val isbn: String = "",
+    @SerializedName("isbn13") val isbn13: String = "",          // 공용 규격
     @SerializedName("priceStandard") val price: String = "",
     @SerializedName("description") val description: String = ""
 )

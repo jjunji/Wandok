@@ -28,6 +28,7 @@ class HomeDetailViewModel @Inject constructor(
         val isbn: String? = savedStateHandle[NAV_ARGS_ISBN]
         isbn?.let {
             viewModelScope.launch {
+                // room 조회 (isbn: primary key)
                 repository.getMyBook(isbn).collectLatest {
                     _myBook.emit(it)
                 }
