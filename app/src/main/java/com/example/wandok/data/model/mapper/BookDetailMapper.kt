@@ -9,7 +9,7 @@ import java.util.Date
 
 object BookDetailMapper {
     // response to model
-    fun mapToBookDetail(bookDetailResponse: BookDetailResponse): BookDetail {
+    fun mapToBookDetail(bookDetailResponse: BookDetailResponse, bigImage: String? = ""): BookDetail {
         val bookDetail = bookDetailResponse.item
         val tableOfContents = bookDetail
             .bookInfo
@@ -33,7 +33,7 @@ object BookDetailMapper {
             title = bookDetail.title,
             author = bookDetail.author,
             description = bookDetail.description,
-            image = bookDetail.image,
+            image = if(bigImage.isNullOrEmpty()) bookDetail.image else bigImage,
             publisher = bookDetail.publisher,
             tableOfContents = tableOfContents
         )

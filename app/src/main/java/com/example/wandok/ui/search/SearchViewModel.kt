@@ -4,13 +4,13 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.wandok.BuildConfig
 import com.example.wandok.common.LoadState
-import com.example.wandok.common.constants.KeyValueConstant.API_KEY
-import com.example.wandok.common.constants.KeyValueConstant.ITEM_PER_PAGE
-import com.example.wandok.common.constants.KeyValueConstant.MAX_RESULTS
-import com.example.wandok.common.constants.KeyValueConstant.OUTPUT
-import com.example.wandok.common.constants.KeyValueConstant.OUTPUT_TYPE_JS
-import com.example.wandok.common.constants.KeyValueConstant.QUERY
-import com.example.wandok.common.constants.KeyValueConstant.START
+import com.example.wandok.common.constants.API_KEY
+import com.example.wandok.common.constants.ITEM_PER_PAGE
+import com.example.wandok.common.constants.MAX_RESULTS
+import com.example.wandok.common.constants.OUTPUT
+import com.example.wandok.common.constants.OUTPUT_TYPE_JS
+import com.example.wandok.common.constants.QUERY
+import com.example.wandok.common.constants.START
 import com.example.wandok.common.extension.onError
 import com.example.wandok.common.extension.onException
 import com.example.wandok.common.extension.onSuccess
@@ -39,26 +39,20 @@ class SearchViewModel @Inject constructor(
 
     // 새 요청 시, 중앙 로딩 바
     val showCenterLoading: StateFlow<Boolean> = combine(
-        pageStatus.loadState,
-        pageStatus.newRequest
+        pageStatus.loadState, pageStatus.newRequest
     ) { loadState, newRequest ->
         loadState == LoadState.LOADING && newRequest
     }.stateIn(
-        scope = viewModelScope,
-        started = SharingStarted.Eagerly,
-        initialValue = false
+        scope = viewModelScope, started = SharingStarted.Eagerly, initialValue = false
     )
 
     // 페이징 시, 하단 로딩 바
     val showBottomLoading: StateFlow<Boolean> = combine(
-        pageStatus.loadState,
-        pageStatus.newRequest
+        pageStatus.loadState, pageStatus.newRequest
     ) { loadState, newRequest ->
         loadState == LoadState.LOADING && !newRequest
     }.stateIn(
-        scope = viewModelScope,
-        started = SharingStarted.Eagerly,
-        initialValue = false
+        scope = viewModelScope, started = SharingStarted.Eagerly, initialValue = false
     )
 
     fun onKeywordChanged(value: String) {
@@ -80,13 +74,10 @@ class SearchViewModel @Inject constructor(
         viewModelScope.launch {
             val params = params(searchedKeyword.value, if (newRequest) 0 else pageStatus.currentPage + 1)
             pageStatus.setLoadState(LoadState.LOADING, newRequest)
-            repository.getMyBookList(params)
-                .onSuccess {
-                    if (newRequest) pageStatus.init()
-                    pageStatus.notifyPageStatusChanged(it.items, it.countOfAllItems, it.page)
-                }
-                .onError { _, _ -> }
-                .onException { }
+            repository.getMyBookList(params).onSuccess {
+                if (newRequest) pageStatus.init()
+                pageStatus.notifyPageStatusChanged(it.items, it.countOfAllItems, it.page)
+            }.onError { _, _ -> }.onException { }
             pageStatus.setLoadState(LoadState.IDLE)
             refreshing.emit(false)
         }
@@ -106,9 +97,5 @@ class SearchViewModel @Inject constructor(
 }
 
 fun params(keyword: String, page: Int) = hashMapOf(
-    API_KEY to BuildConfig.API_KEY,
-    QUERY to keyword,
-    OUTPUT to OUTPUT_TYPE_JS,
-    MAX_RESULTS to ITEM_PER_PAGE,
-    START to page.toString()
+    API_KEY to BuildConfig.API_KEY, QUERY to keyword, OUTPUT to OUTPUT_TYPE_JS, MAX_RESULTS to ITEM_PER_PAGE, START to page.toString()
 )

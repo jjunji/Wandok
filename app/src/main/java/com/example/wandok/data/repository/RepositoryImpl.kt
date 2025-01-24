@@ -106,4 +106,37 @@ class RepositoryImpl @Inject constructor(
             }
         }
     }
+
+    override suspend fun getCombinedBookDetail(
+        queryMap: HashMap<String, String>,
+        publicQueryMap: HashMap<String, String>
+    ): ResponseState<BookDetail> {
+        val bookDetailResult = remoteDatasource.getBookDetail(queryMap)
+        val seojiInfoResult = remoteDatasource.getBookDetailFromPublic(queryMap)
+
+        return when (bookDetailResult) {
+            is ResponseState.Success -> {
+                if (seojiInfoResult is ResponseState.Success) {
+                    val bigImage = seojiInfoResult.body.seojiInfoList.firstOrNull()?.bigImage
+                    val transformedData = BookDetailMapper.mapToBookDetail(bookDetailResult.body, bigImage)
+                    return ResponseState.Success(transformedData)
+                } else {
+                    val transformedData = BookDetailMapper.mapToBookDetail(bookDetailResult.body)
+                    return ResponseState.Success(transformedData)
+                }
+            }
+            is ResponseState.Error -> {
+                ResponseState.Error(bookDetailResult.code, bookDetailResult.message)
+            }
+
+            is ResponseState.Exception -> {
+                ResponseState.Exception(bookDetailResult.e)
+            }
+
+            else -> {
+                ResponseState.Initial
+            }
+        }
+    }
+
 }

@@ -4,11 +4,20 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.wandok.BuildConfig
+import com.example.wandok.common.constants.API_KEY
 import com.example.wandok.common.constants.AppConstant.ERR_CD_400
 import com.example.wandok.common.constants.AppConstant.REQUEST_DELAY
-import com.example.wandok.common.constants.KeyValueConstant
-import com.example.wandok.common.constants.KeyValueConstant.NAV_ARGS_ISBN
-import com.example.wandok.common.constants.KeyValueConstant.NAV_ARGS_ISBN13
+import com.example.wandok.common.constants.CERT_KEY
+import com.example.wandok.common.constants.ISBN
+import com.example.wandok.common.constants.ITEM_ID
+import com.example.wandok.common.constants.NAV_ARGS_ISBN
+import com.example.wandok.common.constants.NAV_ARGS_ISBN13
+import com.example.wandok.common.constants.OUTPUT
+import com.example.wandok.common.constants.OUTPUT_TYPE_JS
+import com.example.wandok.common.constants.PAGE_NO
+import com.example.wandok.common.constants.PAGE_SIZE
+import com.example.wandok.common.constants.RESULT_STYLE
+import com.example.wandok.common.constants.RESULT_STYLE_JSON
 import com.example.wandok.common.extension.onError
 import com.example.wandok.common.extension.onSuccess
 import com.example.wandok.data.model.BookDetail
@@ -102,9 +111,17 @@ class SearchDetailViewModel @Inject constructor(
 }
 
 fun params(isbn: String) = hashMapOf(
-    KeyValueConstant.API_KEY to BuildConfig.API_KEY,
-    KeyValueConstant.ITEM_ID to isbn,
-    KeyValueConstant.OUTPUT to KeyValueConstant.OUTPUT_TYPE_JS,
+    API_KEY to BuildConfig.API_KEY,
+    ITEM_ID to isbn,
+    OUTPUT to OUTPUT_TYPE_JS
+)
+
+fun publicParams(isbn13: String) = hashMapOf(
+    CERT_KEY to BuildConfig.OPEN_API_KEY,
+    RESULT_STYLE to RESULT_STYLE_JSON,
+    PAGE_NO to "1",
+    PAGE_SIZE to "1",
+    ISBN to isbn13
 )
 
 sealed class AddBookDialogState<out T> {
