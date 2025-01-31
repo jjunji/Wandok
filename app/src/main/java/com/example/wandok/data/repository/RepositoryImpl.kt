@@ -7,6 +7,8 @@ import com.example.wandok.data.model.local.BookDetailEntity
 import com.example.wandok.data.model.mapper.BookDetailMapper
 import com.example.wandok.data.model.remote.BookResponse
 import com.example.wandok.network.ResponseState
+import kotlinx.coroutines.async
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
@@ -110,33 +112,41 @@ class RepositoryImpl @Inject constructor(
     override suspend fun getCombinedBookDetail(
         queryMap: HashMap<String, String>,
         publicQueryMap: HashMap<String, String>
-    ): ResponseState<BookDetail> {
-        val bookDetailResult = remoteDatasource.getBookDetail(queryMap)
-        val seojiInfoResult = remoteDatasource.getBookDetailFromPublic(queryMap)
+    ): ResponseState<BookDetail> = coroutineScope {
+        try {
+            val bookDetailDeferred = async { remoteDatasource.getBookDetail(queryMap) }
+            val seojiInfoDeferred = async { remoteDatasource.getBookDetailFromPublic(publicQueryMap) }
 
-        return when (bookDetailResult) {
-            is ResponseState.Success -> {
-                if (seojiInfoResult is ResponseState.Success) {
-                    val bigImage = seojiInfoResult.body.seojiInfoList.firstOrNull()?.bigImage
+            val bookDetailResult = bookDetailDeferred.await()
+            val seojiInfoResult = seojiInfoDeferred.await()
+
+            val response: ResponseState<BookDetail> = when (bookDetailResult) {
+                is ResponseState.Success -> {
+                    val bigImage = (seojiInfoResult as? ResponseState.Success)
+                        ?.body
+                        ?.seojiInfoList
+                        ?.firstOrNull()
+                        ?.bigImage
+
                     val transformedData = BookDetailMapper.mapToBookDetail(bookDetailResult.body, bigImage)
-                    return ResponseState.Success(transformedData)
-                } else {
-                    val transformedData = BookDetailMapper.mapToBookDetail(bookDetailResult.body)
-                    return ResponseState.Success(transformedData)
+                    ResponseState.Success(transformedData)
+                }
+
+                is ResponseState.Error -> {
+                    ResponseState.Error(bookDetailResult.code, bookDetailResult.message)
+                }
+
+                is ResponseState.Exception -> {
+                    ResponseState.Exception(bookDetailResult.e)
+                }
+
+                else -> {
+                    ResponseState.Initial
                 }
             }
-            is ResponseState.Error -> {
-                ResponseState.Error(bookDetailResult.code, bookDetailResult.message)
-            }
-
-            is ResponseState.Exception -> {
-                ResponseState.Exception(bookDetailResult.e)
-            }
-
-            else -> {
-                ResponseState.Initial
-            }
+            response
+        } catch (e: Exception) {
+            ResponseState.Exception(e)
         }
     }
-
 }

@@ -62,7 +62,7 @@ class SearchDetailViewModel @Inject constructor(
         viewModelScope.launch {
             _bookDetail.emit(ResponseState.Loading)
             delay(REQUEST_DELAY)
-            repository.getBookDetail(queryMap = params(isbn))
+            repository.getCombinedBookDetail(queryMap = params(isbn), publicQueryMap = publicParams(isbn13 ?: ""))
                 .onSuccess {
                     _bookDetail.emit(ResponseState.Success(it))
                 }.onError { _, _ ->

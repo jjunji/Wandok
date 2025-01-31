@@ -47,6 +47,7 @@ import com.example.wandok.ui.core.CustomAppBar
 import com.example.wandok.ui.core.DotsPulsing
 import com.example.wandok.ui.theme.GrayC1
 import kotlinx.coroutines.flow.collectLatest
+import timber.log.Timber
 
 @Composable
 fun SearchDetailRoute(
@@ -119,16 +120,17 @@ fun SearchDetailScreen(
 
 @Composable
 fun BookDetailLayout(modifier: Modifier, item: BookDetail) {
+    Timber.tag("test").e(item.image)
     Column(modifier = modifier.wrapContentHeight()) {
         AsyncImage(
-            model = item.image,
+            model = item.image ,
             contentDescription = null,
             placeholder = painterResource(id = R.drawable.ic_placeholder_book),
             contentScale = ContentScale.FillBounds,
             modifier = modifier
                 .align(Alignment.CenterHorizontally)
                 .width(150.dp)
-                .aspectRatio(1f / 1.4f)
+                .aspectRatio(1f / 1.3f)
         )
         Spacer(modifier = modifier.height(10.dp))
         BookTitle(modifier = modifier, item.title)
