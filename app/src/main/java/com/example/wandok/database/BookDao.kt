@@ -20,6 +20,9 @@ interface BookDao {
     @Query("SELECT * FROM my_book WHERE isbn = :isbn LIMIT 1")
     fun getMyBook(isbn: String): Flow<BookDetailEntity?>
 
+    @Query("SELECT * FROM my_book WHERE progress = 100")
+    fun getWandokList(): Flow<List<BookDetailEntity>>
+
     @Update
     suspend fun updateMyBookStatus(vararg bookEntity: BookDetailEntity): Int
 }

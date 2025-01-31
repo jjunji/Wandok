@@ -70,6 +70,19 @@ class RepositoryImpl @Inject constructor(
             }
     }
 
+    override fun getWandokList(): Flow<List<BookDetail>> {
+        return localDataSource.getWandokList()
+            .map { bookEntityList ->
+                if (bookEntityList.isEmpty()) {
+                    emptyList()
+                } else {
+                    bookEntityList.map { entity ->
+                        BookDetailMapper.mapToBookDetail(entity)
+                    }
+                }
+            }
+    }
+
     override suspend fun getMyBook(isbn: String): Flow<BookDetail?> {
         return localDataSource.getMyBook(isbn).map {
             if (it == null) {

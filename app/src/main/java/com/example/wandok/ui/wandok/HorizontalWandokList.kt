@@ -24,6 +24,7 @@ import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import com.example.wandok.common.extension.pxToDp
 import com.example.wandok.common.extension.toPx
+import com.example.wandok.data.model.BookDetail
 import kotlinx.coroutines.launch
 import kotlin.math.PI
 import kotlin.math.acos
@@ -32,8 +33,9 @@ import kotlin.math.sin
 // TODO: List Blink Issue
 @Composable
 fun HorizontalWandokList(
-    items: List<String>,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    items: List<BookDetail>,
+    onItemClicked: (bookDetail: BookDetail) -> Unit
 ) {
     val coroutineScope = rememberCoroutineScope()
     val listState = rememberLazyListState()
@@ -55,7 +57,7 @@ fun HorizontalWandokList(
         state = listState,
         contentPadding = contentPadding,
         horizontalArrangement = Arrangement.spacedBy(-20.dp),
-        verticalAlignment = Alignment.Bottom
+        verticalAlignment = Alignment.Bottom,
     ) {
         itemsIndexed(items) { index, _ ->
             val itemOffset = (listState.layoutInfo.visibleItemsInfo
@@ -80,7 +82,9 @@ fun HorizontalWandokList(
                     .offset(y = animateYOffset.pxToDp()),
                 yComponent = yComponent,
                 rotationDegree = (alpha * (180 / PI)).toFloat() - 90f,
+                bookDetail = items[index],
                 onItemClicked = {
+                    onItemClicked(it)
                     coroutineScope.launch {
                         listState.animateScrollToItem(index, 0)
                     }

@@ -20,6 +20,8 @@ interface Repository {
 
     suspend fun insertBook(bookEntity: BookDetailEntity)
     fun getAllMyBook(): Flow<List<BookDetail>>
+    fun getWandokList(): Flow<List<BookDetail>>
+
     suspend fun getMyBook(isbn: String): Flow<BookDetail?>
     suspend fun updateMyBookStatus(bookDetailEntity: BookDetailEntity)
 

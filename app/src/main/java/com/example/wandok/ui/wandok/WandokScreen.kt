@@ -19,13 +19,17 @@ import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.wandok.R
+import com.example.wandok.data.model.BookDetail
 import com.example.wandok.ui.core.BodyLargeText
 import com.example.wandok.ui.core.BodyMediumText
 import com.example.wandok.ui.core.H6Text
@@ -45,39 +49,61 @@ val animYOffset = 40.dp
 val firstItemBottomPadding = 20.dp
 
 @Composable
-fun WandokScreen(
-    paddingValues: PaddingValues
+fun WandokRoute(
+    paddingValues: PaddingValues,
+    viewModel: WandokViewModel = hiltViewModel()
 ) {
-    val shape = RoundedCornerShape(topEnd = cornerRadius, bottomEnd = cornerRadius)
+    val wandokList by viewModel.wandokList.collectAsStateWithLifecycle()
+    WandokScreen(
+        paddingValues,
+        wandokList,
+        onItemClicked = {
+            viewModel.selectBook(it)
+        }
+    )
+}
 
+@Composable
+fun WandokScreen(
+    paddingValues: PaddingValues,
+    wandokList: List<BookDetail>,
+    onItemClicked: (bookDetail: BookDetail) -> Unit
+) {
     Box(
         modifier = Modifier
             .fillMaxSize()
             .padding(paddingValues)
     ) {
         ExcludeLeftShadowContainer {
-            Column(
-                modifier = Modifier
-                    .width(312.dp)
-                    .wrapContentHeight()
-                    .background(color = Color.White, shape = shape)
-            ) {
-                NicknameLabel()
-                ContentDivider()
-                WandokInfo()
-                WandokDate()
-                WandokFooter()
-            }
+            Label()
         }
 
         val rowHeight = wandokItemHeight + animYOffset + firstItemBottomPadding
         HorizontalWandokList(
-            items = listOf("1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"),
             modifier = Modifier
                 .align(Alignment.BottomCenter)
                 .fillMaxWidth()
-                .height(rowHeight)
+                .height(rowHeight),
+            items = wandokList,
+            onItemClicked = { onItemClicked(it) }
         )
+    }
+}
+
+@Composable
+fun Label() {
+    val shape = RoundedCornerShape(topEnd = cornerRadius, bottomEnd = cornerRadius)
+    Column(
+        modifier = Modifier
+            .width(312.dp)
+            .wrapContentHeight()
+            .background(color = Color.White, shape = shape)
+    ) {
+        NicknameLabel()
+        ContentDivider()
+        WandokInfo()
+        WandokDate()
+        WandokFooter()
     }
 }
 
