@@ -7,9 +7,10 @@ import com.example.wandok.data.model.local.BookDetailEntity
 import com.example.wandok.data.model.mapper.BookDetailMapper
 import com.example.wandok.data.model.remote.BookResponse
 import com.example.wandok.network.ResponseState
+import kotlinx.coroutines.async
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
-import timber.log.Timber
 import javax.inject.Inject
 
 class RepositoryImpl @Inject constructor(
@@ -84,7 +85,6 @@ class RepositoryImpl @Inject constructor(
     }
 
     override suspend fun getMyBookList(queryMap: HashMap<String, String>): ResponseState<BookResponse> {
-        Timber.tag("test").e("repository ======= get")
         return remoteDatasource.getBookList(queryMap)
     }
 
@@ -106,6 +106,47 @@ class RepositoryImpl @Inject constructor(
             else -> {
                 ResponseState.Initial
             }
+        }
+    }
+
+    override suspend fun getCombinedBookDetail(
+        queryMap: HashMap<String, String>,
+        publicQueryMap: HashMap<String, String>
+    ): ResponseState<BookDetail> = coroutineScope {
+        try {
+            val bookDetailDeferred = async { remoteDatasource.getBookDetail(queryMap) }
+            val seojiInfoDeferred = async { remoteDatasource.getBookDetailFromPublic(publicQueryMap) }
+
+            val bookDetailResult = bookDetailDeferred.await()
+            val seojiInfoResult = seojiInfoDeferred.await()
+
+            val response: ResponseState<BookDetail> = when (bookDetailResult) {
+                is ResponseState.Success -> {
+                    val bigImage = (seojiInfoResult as? ResponseState.Success)
+                        ?.body
+                        ?.seojiInfoList
+                        ?.firstOrNull()
+                        ?.bigImage
+
+                    val transformedData = BookDetailMapper.mapToBookDetail(bookDetailResult.body, bigImage)
+                    ResponseState.Success(transformedData)
+                }
+
+                is ResponseState.Error -> {
+                    ResponseState.Error(bookDetailResult.code, bookDetailResult.message)
+                }
+
+                is ResponseState.Exception -> {
+                    ResponseState.Exception(bookDetailResult.e)
+                }
+
+                else -> {
+                    ResponseState.Initial
+                }
+            }
+            response
+        } catch (e: Exception) {
+            ResponseState.Exception(e)
         }
     }
 }

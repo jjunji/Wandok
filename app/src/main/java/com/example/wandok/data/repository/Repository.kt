@@ -26,4 +26,9 @@ interface Repository {
     /* remote */
     suspend fun getMyBookList(queryMap: HashMap<String, String>): ResponseState<BookResponse>
     suspend fun getBookDetail(queryMap: HashMap<String, String>): ResponseState<BookDetail>
+
+    suspend fun getCombinedBookDetail(
+        queryMap: HashMap<String, String>,
+        publicQueryMap: HashMap<String, String>
+    ): ResponseState<BookDetail>
 }

@@ -3,7 +3,7 @@ package com.example.wandok.ui.home
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.wandok.common.constants.KeyValueConstant.NAV_ARGS_ISBN
+import com.example.wandok.common.constants.NAV_ARGS_ISBN
 import com.example.wandok.data.model.BookDetail
 import com.example.wandok.data.model.local.TableOfContent
 import com.example.wandok.data.model.mapper.BookDetailMapper.mapToEntity
@@ -28,6 +28,7 @@ class HomeDetailViewModel @Inject constructor(
         val isbn: String? = savedStateHandle[NAV_ARGS_ISBN]
         isbn?.let {
             viewModelScope.launch {
+                // room 조회 (isbn: primary key)
                 repository.getMyBook(isbn).collectLatest {
                     _myBook.emit(it)
                 }

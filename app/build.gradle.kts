@@ -31,6 +31,9 @@ android {
         val apiKey = gradleLocalProperties(rootDir, providers).getProperty("api.key")
         buildConfigField("String", "API_KEY", apiKey)
 
+        val openApiKey = gradleLocalProperties(rootDir, providers).getProperty("open.api.key")
+        buildConfigField("String", "OPEN_API_KEY", openApiKey)
+
         kapt {
             arguments {
                 arg("room.schemaLocation", "$projectDir/schemas")

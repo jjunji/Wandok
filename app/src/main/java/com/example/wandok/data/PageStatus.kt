@@ -41,4 +41,8 @@ class PageStatus<T> {
         currentPage = 0
         hasMore = false
     }
+
+    fun loading(): Boolean {
+        return (loadState.value == LoadState.LOADING)
+    }
 }
