@@ -15,7 +15,11 @@ data class BookDetailEntity(
     val publisher: String,
     val tableOfContents: List<TableOfContent>? = null,
     val registrationDate: Date = Date(),
-    val progress: Int = 0
+    val progress: Int = 0,
+    val targetStartTimeMillis: Long? = null,
+    val targetEndTimeMillis: Long? = null,
+    val wandokTimeMillis: Long? = null
+
 )
 
 data class TableOfContent(
