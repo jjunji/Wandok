@@ -36,7 +36,7 @@ import com.example.wandok.ui.theme.WhiteGray
 import com.example.wandok.ui.wandok.state.LabelState
 
 @Composable
-fun Label(labelState: LabelState<BookDetail>, countOfWandok: String) {
+fun Label(labelState: LabelState<BookDetail>, countOfWandok: Int) {
     when (labelState) {
         is LabelState.None -> {
 
@@ -63,7 +63,7 @@ fun Label(labelState: LabelState<BookDetail>, countOfWandok: String) {
 
 // 담은 책 6권 완독!
 @Composable
-fun NicknameLabel(countOfWandok: String) {
+fun NicknameLabel(countOfWandok: Int) {
     Column(
         modifier = Modifier.padding(top = 24.dp, start = 20.dp)
     ) {
@@ -208,5 +208,5 @@ fun WandokFooter() {
 @Composable
 fun PreviewLabel() {
     val labelState = LabelState.Selected(BookDetail("0000"))
-    Label(labelState, "5")
+    Label(labelState, 5)
 }

@@ -19,7 +19,6 @@ data class BookDetailEntity(
     val targetStartTimeMillis: Long? = null,
     val targetEndTimeMillis: Long? = null,
     val wandokTimeMillis: Long? = null
-
 )
 
 data class TableOfContent(
