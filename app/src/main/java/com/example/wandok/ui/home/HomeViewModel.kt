@@ -17,6 +17,7 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.launch
+import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
@@ -55,6 +56,7 @@ class HomeViewModel @Inject constructor(
     private fun loadMyBookList() {
         viewModelScope.launch {
             repository.getAllMyBook().collectLatest {
+                Timber.tag("test").e("orgBookList : $originalBookList")
                 _originalBookList.emit(it)
             }
         }

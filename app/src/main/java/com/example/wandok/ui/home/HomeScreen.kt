@@ -3,6 +3,7 @@ package com.example.wandok.ui.home
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -38,6 +39,7 @@ import com.example.wandok.ui.home.model.StatusFilterUiState
 import com.example.wandok.ui.theme.DarkGray
 import com.example.wandok.ui.theme.Typography
 
+// TODO: 목차 없는 책인 경우 상세 빈화면 노출 됨.
 @Composable
 internal fun HomeRoute(
     paddingValues: PaddingValues,
@@ -88,28 +90,28 @@ fun HomeScreen(
             .padding(padding)
             .fillMaxSize()
     ) {
-//        Column(
-//            modifier = Modifier.fillMaxWidth()
-//        ) {
-//            Text(
-//                modifier = Modifier.padding(top = 40.dp, start = 16.dp),
-//                text = "지훈님이\n읽고 있는 책",
-//                style = Typography.titleLarge
-//            )
-//
-//            // 상태 필터, 정렬 필터 영역
-//            HomeFilter(
-//                sortType = sortFilterUiState.selectedFilter,
-//                onStatusFilterClicked = { onStatusFilterClicked() },
-//                onSortFilterClicked = { onSortFilterClicked() }
-//            )
-//
-//            // 추가한 책 리스트
-//            MyBookList(
-//                bookList = myBookList,
-//                onItemClicked = { onItemClicked(it) }
-//            )
-//        }
+        Column(
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Text(
+                modifier = Modifier.padding(top = 40.dp, start = 16.dp),
+                text = "지훈님이\n읽고 있는 책",
+                style = Typography.titleLarge
+            )
+
+            // 상태 필터, 정렬 필터 영역
+            HomeFilter(
+                sortType = sortFilterUiState.selectedFilter,
+                onStatusFilterClicked = { onStatusFilterClicked() },
+                onSortFilterClicked = { onSortFilterClicked() }
+            )
+
+            // 추가한 책 리스트
+            MyBookList(
+                bookList = myBookList,
+                onItemClicked = { onItemClicked(it) }
+            )
+        }
     }
 
     if (statusFilterUiState.show) {

@@ -19,9 +19,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.wandok.R
+import com.example.wandok.common.extension.toFormattedDate
+import com.example.wandok.common.extension.toYearMonthDay
 import com.example.wandok.data.model.BookDetail
 import com.example.wandok.ui.core.BodyLargeText
 import com.example.wandok.ui.core.BodyMediumText
@@ -35,8 +38,11 @@ import com.example.wandok.ui.theme.Orange500
 import com.example.wandok.ui.theme.WhiteGray
 import com.example.wandok.ui.wandok.state.LabelState
 
+val labelShape = RoundedCornerShape(topEnd = cornerRadius, bottomEnd = cornerRadius)
+val footerShape = RoundedCornerShape(bottomEnd = cornerRadius)
+
 @Composable
-fun Label(labelState: LabelState<BookDetail>, countOfWandok: Int) {
+fun WandokLabel(labelState: LabelState<BookDetail>, countOfWandok: Int) {
     when (labelState) {
         is LabelState.None -> {
 
@@ -49,13 +55,13 @@ fun Label(labelState: LabelState<BookDetail>, countOfWandok: Int) {
                 modifier = Modifier
                     .width(312.dp)
                     .wrapContentHeight()
-                    .background(color = Color.White, shape = shape)
+                    .background(color = Color.White, shape = labelShape)
             ) {
                 NicknameLabel(countOfWandok)
                 ContentDivider()
                 WandokInfo(data.title, data.author)
-                WandokDate()
-                WandokFooter()
+                WandokDate(data.targetStartTimeMillis, data.targetEndTimeMillis)
+                WandokFooter(data.wandokTimeMillis)
             }
         }
     }
@@ -102,9 +108,7 @@ fun WandokInfo(title: String, author: String) {
     Column(
         modifier = Modifier.padding(start = 20.dp)
     ) {
-        BodyLargeText(
-            text = title, maxLines = 2, color = Gray3D
-        )
+        BodyLargeText(text = title, maxLines = 2, color = Gray3D, textAlign = TextAlign.Start)
         BodyMediumText(text = author, color = Gray3D)
     }
 }
@@ -122,26 +126,35 @@ fun ContentDivider() {
 
 // 시작일, 종료일
 @Composable
-fun WandokDate() {
+fun WandokDate(
+    targetStartTimeMillis: Long?,
+    targetEndTimeMillis: Long?
+) {
     Column(
         modifier = Modifier.padding(start = 20.dp, top = 17.dp)
     ) {
+        val targetStartDate = targetStartTimeMillis?.toFormattedDate() ?: "-"
+        val targetEndDate = targetEndTimeMillis?.toFormattedDate() ?: "-"
+
         BodyMediumText(text = stringResource(id = R.string.common_target_start_date), color = Gray8B)
-        BodyLargeText(modifier = Modifier.padding(top = 3.dp), text = "2024. 06. 20", color = Gray3D)
+        BodyLargeText(modifier = Modifier.padding(top = 3.dp), text = targetStartDate, color = Gray3D)
         BodyMediumText(modifier = Modifier.padding(top = 13.dp), text = stringResource(id = R.string.common_target_end_date), color = Gray8B)
-        BodyLargeText(modifier = Modifier.padding(top = 3.dp), text = "2024. 06. 20", color = Gray3D)
+        BodyLargeText(modifier = Modifier.padding(top = 3.dp), text = targetEndDate, color = Gray3D)
     }
 }
 
 @Composable
-fun WandokFooter() {
-    val shape = RoundedCornerShape(bottomEnd = cornerRadius)
+fun WandokFooter(
+    wandokTimeMillis: Long?
+) {
+    val (year, month, day) = wandokTimeMillis.toYearMonthDay()
+
     Box(
         modifier = Modifier
             .padding(top = 25.dp)
             .height(54.dp)
             .fillMaxWidth()
-            .backGroundWithGradient(shape = shape, Orange100, Orange500),
+            .backGroundWithGradient(shape = footerShape, Orange100, Orange500),
     ) {
         BodyLargeText(
             modifier = Modifier
@@ -161,7 +174,7 @@ fun WandokFooter() {
                 modifier = Modifier.alignByBaseline(),
                 color = Color.White,
                 bold = true,
-                text = "2024"
+                text = year
             )
             BodyMediumText(
                 modifier = Modifier
@@ -175,7 +188,7 @@ fun WandokFooter() {
                 modifier = Modifier.alignByBaseline(),
                 color = Color.White,
                 bold = true,
-                text = "06"
+                text = month
             )
             BodyMediumText(
                 modifier = Modifier
@@ -189,7 +202,7 @@ fun WandokFooter() {
                 modifier = Modifier.alignByBaseline(),
                 color = Color.White,
                 bold = true,
-                text = "20"
+                text = day
             )
             BodyMediumText(
                 modifier = Modifier
@@ -207,6 +220,6 @@ fun WandokFooter() {
 @Preview(showBackground = true)
 @Composable
 fun PreviewLabel() {
-    val labelState = LabelState.Selected(BookDetail("0000"))
-    Label(labelState, 5)
+    val labelState = LabelState.Selected(BookDetail("0000", title = "가나다"))
+    WandokLabel(labelState, 5)
 }

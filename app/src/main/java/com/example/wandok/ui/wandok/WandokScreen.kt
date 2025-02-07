@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentSize
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -25,7 +24,6 @@ val wandokItemWidth = 110.dp
 val wandokItemHeight = 150.dp
 val animYOffset = 40.dp
 val firstItemBottomPadding = 20.dp
-val shape = RoundedCornerShape(topEnd = cornerRadius, bottomEnd = cornerRadius)
 
 @Composable
 fun WandokRoute(
@@ -58,7 +56,7 @@ fun WandokScreen(
             .padding(paddingValues)
     ) {
         ExcludeLeftShadowContainer {
-            Label(labelState, wandokList.size)
+            WandokLabel(labelState, wandokList.size)
         }
 
         val rowHeight = wandokItemHeight + animYOffset + firstItemBottomPadding
