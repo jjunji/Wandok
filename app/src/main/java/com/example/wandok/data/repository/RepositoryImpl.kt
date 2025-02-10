@@ -137,8 +137,7 @@ class RepositoryImpl @Inject constructor(
                 is ResponseState.Success -> {
                     val bigImage = (seojiInfoResult as? ResponseState.Success)
                         ?.body
-                        ?.seojiInfoList
-                        ?.firstOrNull()
+                        ?.seojiInfo
                         ?.bigImage
 
                     val transformedData = BookDetailMapper.mapToBookDetail(bookDetailResult.body, bigImage)

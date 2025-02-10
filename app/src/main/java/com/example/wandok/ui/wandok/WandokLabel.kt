@@ -45,7 +45,6 @@ val footerShape = RoundedCornerShape(bottomEnd = cornerRadius)
 fun WandokLabel(labelState: LabelState<BookDetail>, countOfWandok: Int) {
     when (labelState) {
         is LabelState.None -> {
-
         }
 
         is LabelState.Selected -> {
