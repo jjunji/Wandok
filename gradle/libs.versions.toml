@@ -10,6 +10,7 @@ material3 = "1.3.0-beta05"
 ktx = "1.9.0"
 androidxLifecycle = "2.7.0"
 okhttp = "4.9.0"
+playServicesBase = "18.5.0"
 retrofit = "2.9.0"
 kotlinxSerializationJson = "1.7.0"
 retrofitKotlinxSerializationConverter = "1.0.0"
@@ -34,6 +35,9 @@ gson = "2.10.1"
 glideCompose = "1.0.0-beta01"
 coil = "2.6.0"
 detekt = "1.23.6"
+firebaseBom = "33.8.0"
+googleServices = "4.4.2"
+paletteKtx = "1.0.0"
 
 [libraries]
 androidx-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "ktx" }
@@ -104,8 +108,16 @@ spinkit = { group = "com.github.ybq", name = "Android-SpinKit", version.ref = "s
 timber = { group = "com.jakewharton.timber", name = "timber", version.ref = "timber" }
 bookContentParser = { group = "com.github.ejjang2030", name = "BookContentParser", version.ref ="bookContentParser"}
 
+# Firebase
+firebase-bom = { group = "com.google.firebase", name = "firebase-bom", version.ref = "firebaseBom"}
+firebase-analytics = { group = "com.google.firebase", name = "firebase-analytics"}
+firebase-inappmessaging = { group = "com.google.firebase", name = "firebase-inappmessaging-display"}
+
 # verify
 detekt-formatting = { module = "io.gitlab.arturbosch.detekt:detekt-formatting", version.ref = "detekt" }
+
+play-services-base = { module = "com.google.android.gms:play-services-base", version.ref = "playServicesBase" }
+androidx-palette-ktx = { group = "androidx.palette", name = "palette-ktx", version.ref = "paletteKtx" }
 
 [plugins]
 compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
@@ -116,6 +128,7 @@ kotlin-parcelize = { id = "org.jetbrains.kotlin.plugin.parcelize", version.ref =
 hilt = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 detekt = { id = "io.gitlab.arturbosch.detekt", version.ref = "detekt" }
+google-services = { id = "com.google.gms.google-services", version.ref = "googleServices" }
 
 [bundles]
 lifecycle = ["lifecycle-runtime-ktx", "lifecycle-viewmodel", "lifecycle-viewmodel-savedstate", "lifecycle-livedata-ktx"]

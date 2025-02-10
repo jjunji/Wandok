@@ -15,6 +15,7 @@ interface LocalDatasource {
     fun getLoginHistory(): Boolean
 
     fun getAllMyBookList(): Flow<List<BookDetailEntity>>
+    fun getWandokList(): Flow<List<BookDetailEntity>>
     suspend fun insertBook(bookDetailEntity: BookDetailEntity)
     suspend fun getMyBook(isbn: String): Flow<BookDetailEntity?>
     suspend fun updateMyBookStatus(bookDetailEntity: BookDetailEntity)

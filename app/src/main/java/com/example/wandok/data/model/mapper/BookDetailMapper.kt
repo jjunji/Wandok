@@ -49,7 +49,10 @@ object BookDetailMapper {
             publisher = entity.publisher,
             tableOfContents = entity.tableOfContents ?: emptyList(),
             registrationTimeMillis = entity.registrationDate.time,
-            progress = entity.progress
+            progress = entity.progress,
+            targetStartTimeMillis = entity.targetStartTimeMillis,
+            targetEndTimeMillis = entity.targetEndTimeMillis,
+            wandokTimeMillis = entity.wandokTimeMillis
         )
     }
 
@@ -63,7 +66,10 @@ object BookDetailMapper {
             publisher = this.publisher,
             tableOfContents = this.tableOfContents,
             registrationDate = Date(this.registrationTimeMillis),
-            progress = this.progress
+            progress = this.progress,
+            targetStartTimeMillis = this.targetStartTimeMillis,
+            targetEndTimeMillis = this.targetEndTimeMillis,
+            wandokTimeMillis = this.wandokTimeMillis
         )
     }
 }

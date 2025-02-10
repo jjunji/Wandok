@@ -50,6 +50,10 @@ class LocalDatasourceImpl @Inject constructor(
         return database.bookDao().getAllMyBook()
     }
 
+    override fun getWandokList(): Flow<List<BookDetailEntity>> {
+        return database.bookDao().getWandokList()
+    }
+
     override suspend fun insertBook(bookDetailEntity: BookDetailEntity) {
         database.bookDao().insertBook(bookDetailEntity)
     }

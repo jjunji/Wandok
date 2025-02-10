@@ -17,13 +17,15 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.example.wandok.R
+import com.example.wandok.data.model.BookDetail
 
 @Composable
 fun WandokRow(
     modifier: Modifier,
     yComponent: Float,
     rotationDegree: Float,
-    onItemClicked: () -> Unit
+    bookDetail: BookDetail,
+    onItemClicked: (clickedItem: BookDetail) -> Unit
 ) {
     Box(
         modifier = modifier
@@ -35,13 +37,13 @@ fun WandokRow(
                 rotationZ = rotationDegree
             }
             .clickable {
-                onItemClicked()
+                onItemClicked(bookDetail)
             }
     ) {
         AsyncImage(
-            model = "https://image.aladin.co.kr/product/32064/57/coversum/k212834895_1.jpg",
+            model = bookDetail.image,
             contentDescription = null,
-            placeholder = painterResource(id = R.drawable.img_sample),
+            placeholder = painterResource(id = R.drawable.ic_placeholder_book),
             contentScale = ContentScale.FillBounds,
             modifier = Modifier
                 .align(Alignment.BottomCenter)

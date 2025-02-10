@@ -39,6 +39,7 @@ import com.example.wandok.ui.home.model.StatusFilterUiState
 import com.example.wandok.ui.theme.DarkGray
 import com.example.wandok.ui.theme.Typography
 
+// TODO: 목차 없는 책인 경우 상세 빈화면 노출 됨.
 @Composable
 internal fun HomeRoute(
     paddingValues: PaddingValues,

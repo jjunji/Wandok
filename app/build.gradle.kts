@@ -10,6 +10,7 @@ plugins {
     alias(libs.plugins.detekt)
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.kotlin.serialization)
+    alias(libs.plugins.google.services)
 }
 
 android {
@@ -117,6 +118,7 @@ tasks.register<io.gitlab.arturbosch.detekt.Detekt>("detektPreview") {
 }
 
 dependencies {
+    implementation(libs.androidx.palette.ktx)
     androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.androidx.espresso)
     androidTestImplementation(libs.junit)
@@ -181,4 +183,11 @@ dependencies {
     implementation(libs.paging.compose)
 
     detektPlugins(libs.detekt.formatting)
+
+    // firebase
+    implementation(platform(libs.firebase.bom))
+    implementation(libs.firebase.analytics)
+    implementation(libs.firebase.inappmessaging)
+
+    implementation(libs.play.services.base)
 }
