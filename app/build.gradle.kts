@@ -118,6 +118,7 @@ tasks.register<io.gitlab.arturbosch.detekt.Detekt>("detektPreview") {
 }
 
 dependencies {
+    implementation(libs.androidx.palette.ktx)
     androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.androidx.espresso)
     androidTestImplementation(libs.junit)

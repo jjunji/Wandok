@@ -1,5 +1,7 @@
 package com.example.wandok.ui.wandok
 
+import android.content.Context
+import android.graphics.drawable.BitmapDrawable
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -15,13 +17,24 @@ import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.toArgb
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.palette.graphics.Palette
+import coil.ImageLoader
+import coil.request.ImageRequest
+import coil.request.SuccessResult
 import com.example.wandok.R
 import com.example.wandok.common.extension.toFormattedDate
 import com.example.wandok.common.extension.toYearMonthDay
@@ -33,7 +46,6 @@ import com.example.wandok.ui.core.backGroundWithGradient
 import com.example.wandok.ui.theme.Gray3D
 import com.example.wandok.ui.theme.Gray8B
 import com.example.wandok.ui.theme.Orange100
-import com.example.wandok.ui.theme.Orange300
 import com.example.wandok.ui.theme.Orange500
 import com.example.wandok.ui.theme.WhiteGray
 import com.example.wandok.ui.wandok.state.LabelState
@@ -43,12 +55,21 @@ val footerShape = RoundedCornerShape(bottomEnd = cornerRadius)
 
 @Composable
 fun WandokLabel(labelState: LabelState<BookDetail>, countOfWandok: Int) {
+    val context = LocalContext.current
     when (labelState) {
         is LabelState.None -> {
         }
 
         is LabelState.Selected -> {
             val data = labelState.bookDetail
+            var startColor by remember { mutableStateOf(Orange100) }
+            var endColor by remember { mutableStateOf(Orange500) }
+
+            LaunchedEffect(data.image) {
+                val colors = extractColorsFromUrl(context, data.image)
+                startColor = colors.first
+                endColor = colors.second
+            }
 
             Column(
                 modifier = Modifier
@@ -56,11 +77,11 @@ fun WandokLabel(labelState: LabelState<BookDetail>, countOfWandok: Int) {
                     .wrapContentHeight()
                     .background(color = Color.White, shape = labelShape)
             ) {
-                NicknameLabel(countOfWandok)
+                NicknameLabel(countOfWandok, endColor)
                 ContentDivider()
                 WandokInfo(data.title, data.author)
                 WandokDate(data.targetStartTimeMillis, data.targetEndTimeMillis)
-                WandokFooter(data.wandokTimeMillis)
+                WandokFooter(data.wandokTimeMillis, startColor, endColor)
             }
         }
     }
@@ -68,7 +89,7 @@ fun WandokLabel(labelState: LabelState<BookDetail>, countOfWandok: Int) {
 
 // 담은 책 6권 완독!
 @Composable
-fun NicknameLabel(countOfWandok: Int) {
+fun NicknameLabel(countOfWandok: Int, bottomLineColor: Color) {
     Column(
         modifier = Modifier.padding(top = 24.dp, start = 20.dp)
     ) {
@@ -82,7 +103,7 @@ fun NicknameLabel(countOfWandok: Int) {
                         .height(4.dp)
                         .offset(y = (-4).dp)
                         .align(Alignment.BottomCenter)
-                        .background(color = Orange300)
+                        .background(color = bottomLineColor)
                 )
                 H6Text(
                     modifier = Modifier.wrapContentWidth(),
@@ -144,16 +165,17 @@ fun WandokDate(
 
 @Composable
 fun WandokFooter(
-    wandokTimeMillis: Long?
+    wandokTimeMillis: Long?,
+    startColor: Color,
+    endColor: Color
 ) {
     val (year, month, day) = wandokTimeMillis.toYearMonthDay()
-
     Box(
         modifier = Modifier
             .padding(top = 25.dp)
             .height(54.dp)
             .fillMaxWidth()
-            .backGroundWithGradient(shape = footerShape, Orange100, Orange500),
+            .backGroundWithGradient(shape = footerShape, startColor, endColor),
     ) {
         BodyLargeText(
             modifier = Modifier
@@ -213,7 +235,27 @@ fun WandokFooter(
             )
         }
     }
+}
 
+suspend fun extractColorsFromUrl(context: Context, imageUrl: String): Pair<Color, Color> {
+    val imageLoader = ImageLoader(context)
+    val request = ImageRequest.Builder(context)
+        .data(imageUrl)
+        .allowHardware(false) // Bitmap 변환을 위해 필요
+        .build()
+
+    val result = (imageLoader.execute(request) as? SuccessResult)?.drawable
+    val bitmap = (result as? BitmapDrawable)?.bitmap
+
+    return if (bitmap != null) {
+        val palette = Palette.from(bitmap).generate()
+        val dominant = palette.dominantSwatch?.rgb ?: Orange100.toArgb()
+        val vibrant = palette.vibrantSwatch?.rgb ?: Orange500.toArgb()
+
+        Color(dominant) to Color(vibrant)
+    } else {
+        Orange100 to Orange500
+    }
 }
 
 @Preview(showBackground = true)
@@ -221,4 +263,10 @@ fun WandokFooter(
 fun PreviewLabel() {
     val labelState = LabelState.Selected(BookDetail("0000", title = "가나다"))
     WandokLabel(labelState, 5)
+}
+
+@Preview(showBackground = true)
+@Composable
+fun PreviewWandokFooter() {
+    WandokFooter(1243252346234L, Orange100, Orange500)
 }

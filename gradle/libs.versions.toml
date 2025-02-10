@@ -37,6 +37,7 @@ coil = "2.6.0"
 detekt = "1.23.6"
 firebaseBom = "33.8.0"
 googleServices = "4.4.2"
+paletteKtx = "1.0.0"
 
 [libraries]
 androidx-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "ktx" }
@@ -116,6 +117,7 @@ firebase-inappmessaging = { group = "com.google.firebase", name = "firebase-inap
 detekt-formatting = { module = "io.gitlab.arturbosch.detekt:detekt-formatting", version.ref = "detekt" }
 
 play-services-base = { module = "com.google.android.gms:play-services-base", version.ref = "playServicesBase" }
+androidx-palette-ktx = { group = "androidx.palette", name = "palette-ktx", version.ref = "paletteKtx" }
 
 [plugins]
 compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
